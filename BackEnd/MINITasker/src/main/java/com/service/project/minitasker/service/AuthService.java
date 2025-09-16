@@ -11,4 +11,6 @@ public interface AuthService {
     String register(RegisterDTO registerDTO);
 
     User findByUsername(String username);
+
+    User getUserById(String userId);
 }

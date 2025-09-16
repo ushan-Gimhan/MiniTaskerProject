@@ -3,12 +3,14 @@ package com.service.project.minitasker.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

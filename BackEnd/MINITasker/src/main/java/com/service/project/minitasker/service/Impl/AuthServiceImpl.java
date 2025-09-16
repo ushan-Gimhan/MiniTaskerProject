@@ -63,4 +63,19 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("User not found with username: " + username);
         }
     }
+
+    @Override
+    public User getUserById(String userId) {
+        try {
+            Long id = Long.parseLong(userId); // convert string to long
+            Optional<User> optionalUser = userRepository.findById(id);
+            if (optionalUser.isPresent()) {
+                return optionalUser.get();
+            } else {
+                throw new RuntimeException("User not found with ID: " + userId);
+            }
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid user ID format: " + userId);
+        }
+    }
 }
