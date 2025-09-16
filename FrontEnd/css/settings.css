@@ -1,0 +1,179 @@
+/* ---------- Base Styles ---------- */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f6f9;
+    color: #333;
+}
+
+.section {
+    padding: 2rem;
+}
+
+/* ---------- Container ---------- */
+.settings-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    gap: 2rem;
+}
+
+/* ---------- Card Styles ---------- */
+.card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #111;
+}
+
+/* ---------- Form Inputs ---------- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+select {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+    outline: none;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background: #f59e0b;
+    color: #fff;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.btn:hover {
+    background: #fbbf24;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.btn-primary {
+    background: #fbbf24;
+    color: #fff;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* ---------- Toggle Switch ---------- */
+.toggle-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 999px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.toggle-group input {
+    display: none;
+}
+
+.slider {
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 999px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    top: 1px;
+    left: 1px;
+    transition: 0.3s;
+}
+
+input:checked + .slider::before {
+    transform: translateX(20px);
+    background: #fbbf24;
+}
+
+input:checked + .slider {
+    background: #93c5fd;
+}
+
+/* ---------- Payment Methods ---------- */
+.payment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 12px;
+    background: #f9f9f9;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.payment-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.payment-info img {
+    border-radius: 6px;
+    width: 48px;
+    height: 30px;
+    object-fit: cover;
+}

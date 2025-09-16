@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>User Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1173d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-stone-900 dark:text-white">
+<div class="relative flex min-h-screen size-full">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+           class="fixed inset-y-0 left-0 z-20 flex-col hidden w-64 p-4 space-y-6 transition-transform duration-300 transform -translate-x-full bg-background-light dark:bg-background-dark md:flex md:relative md:translate-x-0">
+        <div class="flex items-center gap-3 px-2">
+            <span class="text-2xl font-bold text-primary">Microtask</span>
+        </div>
+        <nav class="flex-grow space-y-2">
+            <a href="userManagement.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary">
+                <span class="material-symbols-outlined">group</span>
+                <span>User Management</span>
+            </a>
+            <a href="taskReports.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+                <span class="material-symbols-outlined">assessment</span>
+                <span>Task Reports</span>
+            </a>
+            <a href="dis.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+                <span class="material-symbols-outlined">gavel</span>
+                <span>Dispute Resolution</span>
+            </a>
+            <a href="Admin.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+                <span class="material-symbols-outlined">monitoring</span>
+                <span>Platform Analytics</span>
+            </a>
+            <a href="content.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+                <span class="material-symbols-outlined">policy</span>
+                <span>Content Moderation</span>
+            </a>
+            <a href="Announsment.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+                <span class="material-symbols-outlined">campaign</span>
+                <span>System Announcements</span>
+            </a>
+
+            <!-- Divider -->
+            <hr class="my-4 border-stone-300 dark:border-stone-700"/>
+
+            <!-- Logout Button -->
+            <a href="Home.html"
+               class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40">
+                <span class="material-symbols-outlined">logout</span>
+                <span>Logout</span>
+            </a>
+        </nav>
+
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex flex-col flex-1">
+        <!-- Mobile Header -->
+        <header class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark/50 sticky top-0 z-10 backdrop-blur-sm md:hidden">
+            <button class="text-stone-900 dark:text-white" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+                <span class="material-symbols-outlined text-3xl"> menu </span>
+            </button>
+            <h1 class="text-lg font-bold">Manage Users</h1>
+            <div class="w-8"></div>
+        </header>
+
+        <!-- Content -->
+        <main class="flex-grow p-4 space-y-8">
+
+            <!-- Search -->
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">search</span>
+                <input type="text"
+                       placeholder="Search users by name or email"
+                       class="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-background-dark py-2 pl-10 pr-4 focus:border-primary focus:ring-primary"/>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex gap-3">
+                <button class="flex h-10 items-center justify-center gap-x-2 rounded-md bg-gray-200 dark:bg-gray-800 px-4">
+                    <p class="text-sm font-medium">Status</p>
+                    <span class="material-symbols-outlined text-base">expand_more</span>
+                </button>
+                <button class="flex h-10 items-center justify-center gap-x-2 rounded-md bg-gray-200 dark:bg-gray-800 px-4">
+                    <p class="text-sm font-medium">Sort</p>
+                    <span class="material-symbols-outlined text-base">expand_more</span>
+                </button>
+            </div>
+
+            <!-- Statistics -->
+            <section>
+                <h2 class="text-2xl font-bold mb-4">User Statistics</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="flex flex-col gap-2 p-4 rounded-lg bg-background-light dark:bg-primary/10 border border-stone-200 dark:border-primary/20">
+                        <p class="text-base font-medium text-stone-600 dark:text-stone-300">Total Users</p>
+                        <p class="text-3xl font-bold">1,234</p>
+                    </div>
+                    <div class="flex flex-col gap-2 p-4 rounded-lg bg-background-light dark:bg-primary/10 border border-stone-200 dark:border-primary/20">
+                        <p class="text-base font-medium text-stone-600 dark:text-stone-300">Active Users</p>
+                        <p class="text-3xl font-bold">1,100</p>
+                    </div>
+                    <div class="flex flex-col gap-2 p-4 rounded-lg bg-background-light dark:bg-primary/10 border border-stone-200 dark:border-primary/20">
+                        <p class="text-base font-medium text-stone-600 dark:text-stone-300">Suspended</p>
+                        <p class="text-3xl font-bold">134</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users List -->
+            <section>
+                <h2 class="text-2xl font-bold mb-4">User Accounts</h2>
+                <div class="space-y-2">
+                    <!-- Example user -->
+                    <div class="flex items-center gap-4 rounded-lg p-3 hover:bg-primary/10 cursor-pointer bg-background-light dark:bg-background-dark border border-stone-200 dark:border-primary/20">
+                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOqebx-5eHkYATgAW9DkI_5ofZCYL3yCsVRHykesX43Y-cXKwZqM1cwLDVKa2N36GtjROl-sEkrtGXWO9BkGPMJXrCFi2kDYc6VA1TxAY4DA-dibIeweZbqUfibIGfYmHaTTCGonlj3ddqHJOTg0N8dxLcsWfGbJqQbSH7NUfDTbwD-bizLAZHwbUwexSNY9kfuIZjNQbd7KlnszS0zbbWkiBhu98wCcmKE_HM6LubgsOzEEickRxHRkJUN5OTYc5JJWRrVfT8Z_sS"
+                             alt="Samuel Fernando" class="w-12 h-12 rounded-full object-cover"/>
+                        <div class="flex-1">
+                            <p class="font-medium">Samuel Fernando</p>
+                            <p class="text-sm text-stone-500 dark:text-stone-400 truncate">samuel.fernando@example.com</p>
+                        </div>
+                        <span class="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
+                    </div>
+                    <!-- More users ... -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+</body>
+</html>

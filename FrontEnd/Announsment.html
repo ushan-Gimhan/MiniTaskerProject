@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>System Announcements</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1173d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            display: ["Inter", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "0.5rem",
+          },
+        },
+      },
+    };
+  </script>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-stone-900 dark:text-white">
+<div class="relative flex min-h-screen size-full">
+
+  <!-- Sidebar -->
+  <aside id="sidebar"
+         class="fixed inset-y-0 left-0 z-20 flex-col hidden w-64 p-4 space-y-6 transition-transform duration-300 transform -translate-x-full bg-background-light dark:bg-background-dark md:flex md:relative md:translate-x-0">
+    <div class="flex items-center gap-3 px-2">
+      <span class="text-2xl font-bold text-primary">Microtask</span>
+    </div>
+    <nav class="flex-grow space-y-2">
+      <a href="userManagement.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+        <span class="material-symbols-outlined">group</span>
+        <span>User Management</span>
+      </a>
+      <a href="taskReports.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+        <span class="material-symbols-outlined">assessment</span>
+        <span>Task Reports</span>
+      </a>
+      <a href="dis.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+        <span class="material-symbols-outlined">gavel</span>
+        <span>Dispute Resolution</span>
+      </a>
+      <a href="Admin.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+        <span class="material-symbols-outlined">monitoring</span>
+        <span>Platform Analytics</span>
+      </a>
+      <a href="content.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
+        <span class="material-symbols-outlined">policy</span>
+        <span>Content Moderation</span>
+      </a>
+      <a href="Announsment.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary">
+        <span class="material-symbols-outlined">campaign</span>
+        <span>System Announcements</span>
+      </a>
+
+      <!-- Divider -->
+      <hr class="my-4 border-stone-300 dark:border-stone-700"/>
+
+      <!-- Logout Button -->
+      <a href="Home.html"
+         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
+      text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40">
+        <span class="material-symbols-outlined">logout</span>
+        <span>Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex flex-col flex-1">
+    <!-- Mobile Header -->
+    <header class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark/50 sticky top-0 z-10 backdrop-blur-sm md:hidden">
+      <button class="text-stone-900 dark:text-white"
+              onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+        <span class="material-symbols-outlined text-3xl"> menu </span>
+      </button>
+      <h1 class="text-lg font-bold">Announcements</h1>
+      <div class="w-8"></div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-grow p-4 space-y-8">
+
+      <!-- New Announcement -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">Create Announcement</h2>
+        <div class="space-y-3">
+          <input type="text" placeholder="Subject"
+                 class="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-background-dark p-3 focus:border-primary focus:ring-primary"/>
+          <textarea placeholder="Compose your message"
+                    class="w-full min-h-32 rounded-md border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-background-dark p-3 resize-none focus:border-primary focus:ring-primary"></textarea>
+        </div>
+      </section>
+
+      <!-- Target Audience -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">Target Audience</h2>
+        <div class="flex gap-3 flex-wrap">
+          <button class="px-4 py-2 rounded-md bg-primary text-white text-sm font-medium">All Users</button>
+          <button class="px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-sm font-medium">Specific Groups</button>
+          <button class="px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-800 text-sm font-medium">Active Users</button>
+        </div>
+      </section>
+
+      <!-- Announcement History -->
+      <section>
+        <h2 class="text-2xl font-bold mb-4">Announcement History</h2>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-4 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-stone-200 dark:border-primary/20">
+            <div class="flex items-center justify-center w-12 h-12 rounded-md bg-primary/20 text-primary">
+              <span class="material-symbols-outlined">campaign</span>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">New Task Category Added</p>
+              <p class="text-sm text-stone-500 dark:text-stone-400">Sent: 2024-01-15</p>
+            </div>
+          </li>
+          <li class="flex items-center gap-4 p-3 rounded-lg bg-background-light dark:bg-background-dark border border-stone-200 dark:border-primary/20">
+            <div class="flex items-center justify-center w-12 h-12 rounded-md bg-primary/20 text-primary">
+              <span class="material-symbols-outlined">campaign</span>
+            </div>
+            <div class="flex-1">
+              <p class="font-medium">Maintenance Update</p>
+              <p class="text-sm text-stone-500 dark:text-stone-400">Sent: 2024-01-10</p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="p-4 bg-background-light dark:bg-background-dark/50 border-t border-gray-200 dark:border-gray-700 sticky bottom-0">
+      <button class="w-full h-12 flex items-center justify-center rounded-md bg-primary text-white text-sm font-bold tracking-wide">
+        Send Announcement
+      </button>
+    </footer>
+  </div>
+</div>
+</body>
+</html>

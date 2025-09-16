@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskCoin Lanka</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <div class="nav-container">
+        <a href="#" class="logo">MINI<span>Tasker</span></a>
+        <div class="user-info">
+            <span id="headerUsername">Welcome back, User!</span>
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="notification-badge">3</div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Container -->
+<div class="main-container">
+    <!-- Content Area -->
+    <div class="content-area">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-change positive">+12%</div>
+                </div>
+                <div class="stat-value">$2,450</div>
+                <div class="stat-label">Total Earnings</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-change positive">+5</div>
+                </div>
+                <div class="stat-value">127</div>
+                <div class="stat-label">Tasks Completed</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-change positive">+0.1</div>
+                </div>
+                <div class="stat-value">4.8</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-change negative">-2</div>
+                </div>
+                <div class="stat-value">23</div>
+                <div class="stat-label">Active Tasks</div>
+            </div>
+        </div>
+
+        <!-- Available Tasks -->
+        <div class="section-card">
+            <div class="section-header">
+                <div class="section-title">
+                    📋 Available Tasks
+                </div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterTasks('all')">All</button>
+                    <button class="filter-tab" onclick="filterTasks('high-paying')">High Paying</button>
+                    <button class="filter-tab" onclick="filterTasks('quick')">Quick Tasks</button>
+                    <button class="filter-tab" onclick="filterTasks('new')">New</button>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="task-list" id="taskList">
+                    <!-- Dynamic tasks will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="quick-actions">
+            <h3>⚡ Quick Actions</h3>
+            <button class="action-btn" onclick="openModal('earnings')">
+                <div class="action-icon">💳</div>
+                <div>View Earnings</div>
+            </button>
+            <button class="action-btn" onclick="window.location.href='task.html#profile'">
+                <div class="action-icon">👤</div>
+                <div>Update Profile</div>
+            </button>
+            <button class="action-btn" onclick="openModal('support')">
+                <div class="action-icon">🎧</div>
+                <div>Contact Support</div>
+            </button>
+            <button class="action-btn" onclick="window.location.href='task.html'">
+                <div class="action-icon">🔍</div>
+                <div>Create New Tasks</div>
+            </button>
+            <button class="action-btn" onclick="window.location.href='Home.html'">
+                <div class="action-icon">🔒</div>
+                <div>Logout</div>
+            </button>
+        </div>
+
+        <div class="progress-chart">
+            <div class="chart-header">
+                <h3 class="chart-title">📈 Weekly Progress</h3>
+                <select class="time-filter">
+                    <option>This Week</option>
+                    <option>Last Week</option>
+                    <option>This Month</option>
+                </select>
+            </div>
+            <div class="progress-text">Tasks Completed: 18 of 25</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 72%"></div>
+            </div>
+            <div class="progress-text">Weekly Goal: $500 | Current: $380</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 76%"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Task Submission Modal -->
+<div id="taskSubmissionModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeTaskForm()">&times;</span>
+        <h2>💰 Top Up / Submit Task</h2>
+
+        <form id="taskSubmissionForm">
+            <!-- Hidden Fields -->
+            <input type="hidden" id="taskId" name="task_id">
+            <input type="hidden" id="workerId" name="worker_id" value="1">
+            <input type="hidden" id="submissionStatus" name="status" value="PENDING">
+
+            <div class="form-section">
+                <div class="form-section-title">📎 Proof of Work</div>
+                <div class="form-group">
+                    <label for="proofUrl" class="form-label">Upload Proof File <span class="required">*</span></label>
+                    <div class="file-upload-container">
+                        <div class="file-upload-area" onclick="document.getElementById('proofFile').click()">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">Click to upload or drag & drop</div>
+                            <div class="upload-hint">Screenshots, documents, videos (Max 10MB)</div>
+                        </div>
+                        <input type="file" id="proofFile" class="file-input" accept="image/*,.pdf,.doc,.docx,.txt,.zip" required>
+                        <div id="fileSelected" class="file-selected" style="display: none;"></div>
+                    </div>
+                    <input type="hidden" id="proofUrl" name="proofUrl">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">📝 Work Description</div>
+                <div class="form-group">
+                    <textarea id="description" name="description" class="form-control"
+                              placeholder="Please describe your completed work..." required></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-section-title">💬 Additional Information</div>
+                <div class="form-group">
+                    <textarea id="reviewComment" name="reviewComment" class="form-control"
+                              placeholder="Additional comments (optional)"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>MINI Tasker</h3>
+            <p>Sri Lanka's premier microtask platform connecting workers and clients for mutual benefit.</p>
+        </div>
+        <div class="footer-section">
+            <h3>For Workers</h3>
+            <a href="#">Browse Tasks</a>
+            <a href="#">How to Earn</a>
+            <a href="#">Payment Info</a>
+            <a href="#">Worker Guide</a>
+        </div>
+        <div class="footer-section">
+            <h3>For Clients</h3>
+            <a href="#">Post Tasks</a>
+            <a href="#">Pricing</a>
+            <a href="#">Client Guide</a>
+            <a href="#">Task Examples</a>
+        </div>
+        <div class="footer-section">
+            <h3>Support</h3>
+            <a href="#">Help Center</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2024 MINI Tasker. Developed by S.K.M Ushan Gimhan (ID: 241711098). All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>

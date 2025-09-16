@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Submission</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
+<div class="flex h-full min-h-screen w-full flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-10 flex items-center border-b border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark p-4">
+    <button class="text-foreground-light dark:text-foreground-dark">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </button>
+    <h1 class="flex-1 text-center text-lg font-bold">New Submission</h1>
+    <div class="w-6"></div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-1 overflow-y-auto p-4">
+    <form class="space-y-6 max-w-2xl mx-auto bg-white dark:bg-input-dark p-6 rounded-lg shadow">
+
+      <!-- Task ID -->
+      <div>
+        <label for="taskId" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Task ID</label>
+        <input type="number" id="taskId" name="taskId" placeholder="Enter Task ID"
+               class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
+          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"/>
+      </div>
+
+      <!-- Worker ID -->
+      <div>
+        <label for="workerId" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Worker ID</label>
+        <input type="number" id="workerId" name="workerId" placeholder="Enter Worker ID"
+               class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
+          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"/>
+      </div>
+
+      <!-- Proof URL -->
+      <div>
+        <label for="proofUrl" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Proof URL</label>
+        <input type="text" id="proofUrl" name="proofUrl" placeholder="https://..."
+               class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
+          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"/>
+      </div>
+
+      <!-- Status -->
+      <div>
+        <label for="status" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Status</label>
+        <select id="status" name="status"
+                class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
+          text-foreground-light dark:text-foreground-dark">
+          <option value="PENDING">PENDING</option>
+          <option value="APPROVED">APPROVED</option>
+          <option value="REJECTED">REJECTED</option>
+        </select>
+      </div>
+
+      <!-- Review Comment -->
+      <div>
+        <label for="reviewComment" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Review Comment</label>
+        <textarea id="reviewComment" name="reviewComment" rows="3" placeholder="Feedback from reviewer..."
+                  class="form-textarea w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
+          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"></textarea>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Description</label>
+        <textarea id="description" name="description" rows="4" placeholder="Describe your submission..."
+                  class="form-textarea w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
+          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"></textarea>
+      </div>
+
+      <!-- Submit -->
+      <div>
+        <button type="submit"
+                class="w-full rounded-lg bg-primary py-3 text-base font-bold text-white shadow-lg shadow-primary/30
+          transition-transform duration-200 active:scale-95">
+          Submit
+        </button>
+      </div>
+    </form>
+  </main>
+
+</div>
+</body>
+</html>

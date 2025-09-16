@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Job - MiniTasker</title>
+    <link rel="stylesheet" href="css/taskCreate.css">
+    <link rel="stylesheet" href="css/taskHistory.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/settings.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* Hide sections by default */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* Active link style */
+        .menu ul li a.active-link {
+            background: #334155; /* Darker color for active */
+            color: #fbbf24; /* Highlight color */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="nav-container">
+        <a href="#" class="logo">MINI<span>Tasker</span></a>
+        <div class="user-info">
+            <span id="headerUsername">Welcome back, User!</span>
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="notification-badge">3</div>
+        </div>
+    </div>
+</div>
+<!-- Enhanced Sidebar -->
+<div class="sidebar">
+    <div class="profile">
+        <img src="https://via.placeholder.com/100" alt="Profile">
+        <div class="profile-info">
+            <h3>Ushan Gimhan</h3>
+            <p class="balance">Balance: $0.11 USD</p>
+            <p class="username">@ushan19333</p>
+        </div>
+    </div>
+
+    <div class="menu">
+        <ul>
+            <li><a href="#" onclick="window.location.href='dashboard.html'">Dashboard</a></li>
+            <li><a href="#"  data-section="createJob">Create Job</a></li>
+            <li><a href="#" data-section="taskHistory">Job History</a></li>
+        </ul>
+        <ul>
+            <li><a href="#"  data-section="wallet">Wallet</a></li>
+        </ul>
+
+        <h4>Account</h4>
+        <ul>
+            <li><a href="#" data-section="profile">Profile</a></li>
+            <li><a href="#" data-section="notifications">Notifications</a></li>
+            <li><a href="#" data-section="settings">Settings</a></li>
+            <li><a href="#" onclick="window.location.href='Home.html'">Logout</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Enhanced Main Content -->
+<div class="main">
+
+    <!-- Create Job Form -->
+    <section id="createJob" class="section active">
+    <form id="jobForm" class="form-section">
+        <h2>Create New Job</h2>
+
+        <div id="messageArea"></div>
+
+        <div class="form-group">
+            <label for="category">Category <span class="required">*</span></label>
+            <select id="category" required>
+                <option value="">Select Category</option>
+                <option value="data-entry">Data Entry</option>
+                <option value="survey">Survey</option>
+                <option value="app-testing">App Testing</option>
+                <option value="content-creation">Content Creation</option>
+                <option value="research">Research</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="title">Job Title <span class="required">*</span></label>
+            <input type="text" id="title" placeholder="Enter a descriptive job title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="proof">Job Proof <span class="required">*</span></label>
+            <select id="proof" required>
+                <option value="">Select Proof Type</option>
+                <option value="screenshot">Screenshot</option>
+                <option value="text-entry">Text Entry</option>
+                <option value="both">Both Required</option>
+                <option value="file-upload">File Upload</option>
+            </select>
+        </div>
+
+        <div class="inline-inputs">
+            <div class="form-group">
+                <label for="quantity">Quantity <span class="required">*</span></label>
+                <input type="number" id="quantity" value="10" min="1" max="1000" required>
+            </div>
+            <div class="form-group">
+                <label for="workerEarn">Worker Reward <span class="required">*</span></label>
+                <input type="number" id="workerEarn" value="0.14" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="totalBudget">Total Budget</label>
+                <input type="text" id="totalBudget" value="1.40 USD" readonly style="background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #6b7280;">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="jobImage">Upload Job Image (Optional)</label>
+            <input type="file" id="jobImage" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Job Description</label>
+            <textarea id="description" placeholder="Provide detailed instructions for workers. Include what they need to do, any specific requirements, and submission guidelines..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+            Create Job
+        </button>
+    </form>
+    </section>
+    <!-- Task History Section -->
+    <section id="taskHistory" class="section">
+        <div class="form-section">
+            <h2>Task History</h2>
+
+            <!-- Tabs -->
+            <div class="tab-nav">
+                <button class="tab-link active" data-status="all">All</button>
+                <button class="tab-link" data-status="completed">Completed</button>
+                <button class="tab-link" data-status="pending">Pending</button>
+                <button class="tab-link" data-status="rejected">Rejected</button>
+            </div>
+
+            <!-- Task List -->
+            <div id="taskList">
+                <!-- All Tasks -->
+                <div class="task-item" data-status="completed">
+                    <p class="task-title">Data Entry for Product Catalog</p>
+                    <p class="task-client">Client: Tech Solutions Inc.</p>
+                    <p class="coin-value completed">+150 coins</p>
+                    <span class="status-badge status-completed">Finished Jobs</span>
+                </div>
+
+                <div class="task-item" data-status="completed">
+                    <p class="task-title">Image Tagging for Fashion Items</p>
+                    <p class="task-client">Client: Global Retail Ltd.</p>
+                    <p class="coin-value completed">+200 coins</p>
+                    <span class="status-badge status-completed">Completed</span>
+                </div>
+
+                <div class="task-item" data-status="pending">
+                    <p class="task-title">Survey on Consumer Preferences</p>
+                    <p class="task-client">Client: Local Business Group</p>
+                    <p class="coin-value pending">+100 coins</p>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+
+                <div class="task-item" data-status="rejected">
+                    <p class="task-title">Transcription of Audio Files</p>
+                    <p class="task-client">Client: Media Insights</p>
+                    <p class="coin-value rejected">+120 coins</p>
+                    <span class="status-badge status-rejected">Rejected</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="profile" class="section">
+        <div class="profile-card">
+            <h2>Edit Profile</h2>
+
+            <!-- Message Box -->
+            <div id="message" class="message"></div>
+
+            <!-- Profile Form -->
+            <form id="profileForm">
+                <div class="avatar-section">
+                    <div class="avatar-container">
+                        <div id="avatarPreview" class="avatar-preview">👤</div>
+                        <label for="avatarInput" class="avatar-upload-btn" title="Upload profile picture">📸</label>
+                        <input type="file" id="avatarInput" accept="image/*">
+                    </div>
+                    <div class="avatar-hint">Click to change profile picture (Max 5MB)</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your username" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email1" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" placeholder="Enter your location">
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" placeholder="Tell something about yourself"></textarea>
+                </div>
+
+                <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+        </div>
+    </section>
+    <section id="wallet" class="section">
+            <!-- Header -->
+        <h2>Wallet</h2>
+
+            <!-- Main Content -->
+            <main class="task-main">
+                <!-- Current Balance Card -->
+                <div class="task-item glass" style="justify-content:center; flex-direction:column; text-align:center;">
+                    <p class="task-client">Current Balance</p>
+                    <p class="task-title" style="font-size:2rem;">12,500</p>
+                    <p class="task-client">Coins</p>
+                </div>
+
+                <!-- Transaction History Title -->
+                <h2 style="margin-top:2rem; margin-bottom:1rem; font-size:1.25rem; font-weight:700;">Transaction History</h2>
+
+                <!-- Transaction List -->
+                <div class="task-main">
+                    <!-- Earned Coins -->
+                    <div class="task-item glass">
+                        <div class="task-info">
+                            <p class="task-title">Earned Coins</p>
+                            <p class="task-client">Task Completion</p>
+                        </div>
+                        <div class="task-rewards">
+                            <p class="coin-value completed">+500</p>
+                            <span class="status-badge status-completed">Completed</span>
+                        </div>
+                    </div>
+
+                    <!-- Withdrawal -->
+                    <div class="task-item glass">
+                        <div class="task-info">
+                            <p class="task-title">Withdrawal</p>
+                            <p class="task-client">Payout Request</p>
+                        </div>
+                        <div class="task-rewards">
+                            <p class="coin-value rejected">-1,000</p>
+                            <span class="status-badge status-rejected">Rejected</span>
+                        </div>
+                    </div>
+
+                    <!-- More Transactions -->
+                    <div class="task-item glass">
+                        <div class="task-info">
+                            <p class="task-title">Earned Coins</p>
+                            <p class="task-client">Task Completion</p>
+                        </div>
+                        <div class="task-rewards">
+                            <p class="coin-value completed">+200</p>
+                            <span class="status-badge status-completed">Completed</span>
+                        </div>
+                    </div>
+
+                    <div class="task-item glass">
+                        <div class="task-info">
+                            <p class="task-title">Earned Coins</p>
+                            <p class="task-client">Task Completion</p>
+                        </div>
+                        <div class="task-rewards">
+                            <p class="coin-value completed">+150</p>
+                            <span class="status-badge status-completed">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </section>
+    <section id="notifications" class="section">
+        <div class="profile-card glass">
+            <h2 style="margin-bottom:1.5rem;">Notifications</h2>
+
+            <main class="task-main">
+                <!-- Notification List -->
+                <div class="task-main">
+                    <!-- Task Approved -->
+                    <div class="task-item glass">
+                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:#fbbf24; color:#fbbf24;">
+                                ✅
+                            </div>
+                            <div>
+                                <p class="task-title">Task Approved</p>
+                                <p class="task-client">Your task 'Data Entry for Survey' has been approved. You've earned 50 coins.</p>
+                            </div>
+                        </div>
+                        <div class="task-rewards" style="flex-shrink:0;">
+                            <span class="status-badge status-completed">2h ago</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Received -->
+                    <div class="task-item glass">
+                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:rgba(16,185,129,0.1); color:#10b981;">
+                                💰
+                            </div>
+                            <div>
+                                <p class="task-title">Payment Received</p>
+                                <p class="task-client">Your payment of 1000 coins has been processed. Check your balance.</p>
+                            </div>
+                        </div>
+                        <div class="task-rewards" style="flex-shrink:0;">
+                            <span class="status-badge status-completed">1d ago</span>
+                        </div>
+                    </div>
+
+                    <!-- Task Rejected -->
+                    <div class="task-item glass">
+                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:rgba(239,68,68,0.1); color:#ef4444;">
+                                ❌
+                            </div>
+                            <div>
+                                <p class="task-title">Task Rejected</p>
+                                <p class="task-client">Your task 'Image Tagging' has been rejected due to incorrect tags. Please review and resubmit.</p>
+                            </div>
+                        </div>
+                        <div class="task-rewards" style="flex-shrink:0;">
+                            <span class="status-badge status-rejected">3d ago</span>
+                        </div>
+                    </div>
+
+                    <!-- Bonus Received -->
+                    <div class="task-item glass">
+                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
+                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:rgba(59,130,246,0.1); color:#3b82f6;">
+                                🎁
+                            </div>
+                            <div>
+                                <p class="task-title">Bonus Received</p>
+                                <p class="task-client">You've received a bonus of 20 coins for completing 10 tasks this week.</p>
+                            </div>
+                        </div>
+                        <div class="task-rewards" style="flex-shrink:0;">
+                            <span class="status-badge status-completed">5d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </section>
+    <section id="settings" class="section">
+        <div class="settings-container">
+            <!-- Profile Settings -->
+            <div class="card">
+                <h2 class="card-title">Profile Settings</h2>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" value="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="john.doe@example.com" value="john.doe@example.com">
+                </div>
+                <button type="button" class="btn">Change Password</button>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="card">
+                <h2 class="card-title">Notification Preferences</h2>
+                <div class="toggle-group">
+                    <label>Job Status Updates
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <label>New Messages
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                    <label>Promotional Emails
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="card">
+                <h2 class="card-title">Payment Methods</h2>
+                <div class="payment-item">
+                    <div class="payment-info">
+                        <img src="https://via.placeholder.com/48x30" alt="Visa Card">
+                        <span>Visa **** 1234</span>
+                    </div>
+                    <button class="btn btn-danger">Remove</button>
+                </div>
+                <button type="button" class="btn btn-primary w-full">Add New Method</button>
+            </div>
+
+            <!-- Language Settings -->
+            <div class="card">
+                <h2 class="card-title">Language Settings</h2>
+                <select id="language" name="language">
+                    <option>English</option>
+                    <option>Sinhala</option>
+                    <option>Tamil</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+</div>
+<script src="js/taskCreate.js"></script>
+<script src="js/profile.js"></script>
+<script>
+    // Sidebar navigation toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const defaultLink = document.querySelector('.menu ul li a[data-section="createJob"]'); // replace "create-task" with the actual section ID
+        if (defaultLink) {
+            // Show the default section
+            document.getElementById(defaultLink.getAttribute('data-section')).classList.add('active');
+
+            // Highlight the default link
+            defaultLink.classList.add('active-link');
+        }
+
+        // Add click events for menu links
+        document.querySelectorAll('.menu ul li a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const sectionId = this.getAttribute('data-section');
+
+                // Show selected section
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+
+                // Highlight active link
+                document.querySelectorAll('.menu ul li a').forEach(a => a.classList.remove('active-link'));
+                this.classList.add('active-link');
+            });
+        });
+    });
+
+    // --------------------- Top-Up JS ---------------------
+    const topupMessageArea = document.getElementById("topupMessageArea");
+    function showTopupMessage(message, type='success'){
+        topupMessageArea.innerHTML = `<div class="message ${type}" style="display:block;">${message}</div>`;
+        setTimeout(()=> topupMessageArea.innerHTML='', 3000);
+    }
+
+    $("#topupForm").on("submit", async function(e){
+        e.preventDefault();
+        const submitBtn = document.getElementById("submitTopup");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Processing...";
+
+        try {
+            const amount = parseFloat($("#topupAmount").val());
+            const method = $("#paymentMethod").val();
+
+            if(!amount || !method){
+                throw new Error("Please enter a valid amount and select a payment method");
+            }
+
+            // Simulate backend API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            showTopupMessage(`Successfully topped up $${amount.toFixed(2)} via ${method}`, 'success');
+            $("#topupForm")[0].reset();
+        } catch(err){
+            showTopupMessage(err.message, 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Top Up";
+        }
+    });
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - MINI Tasker</title>
+    <link rel="stylesheet" href="css/signUp.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- Background Effects -->
+<div class="bg-pattern"></div>
+<!--<div class="floating-coins">-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--</div>-->
+
+<!-- Back Button -->
+<a href="#" class="back-btn" onclick="history.back()">← Back to Home</a>
+
+<!-- Main Signup Container -->
+<div class="signup-container">
+    <!-- Header -->
+    <div class="signup-header">
+        <div class="logo">MINI<span>Tasker</span> </div>
+        <p class="signup-subtitle">Join the community!</p>
+        <p class="welcome-text">Create your account and start earning</p>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        Account created successfully! Please check your email for verification.
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage">
+        Please fix the errors below and try again.
+    </div>
+
+    <!-- User Type Selection -->
+    <div class="user-type-selection">
+        <div class="user-type-title">I want to join as:</div>
+        <div class="user-type-options">
+            <div class="user-type-card" data-type="WORKER" onclick="selectUserType('WORKER')">
+                <div class="user-type-icon">👷</div>
+                <div class="user-type-name">Worker</div>
+                <div class="user-type-desc">Complete tasks and earn money</div>
+            </div>
+            <div class="user-type-card" data-type="CLIENT" onclick="selectUserType('CLIENT')">
+                <div class="user-type-icon">💼</div>
+                <div class="user-type-name">Client</div>
+                <div class="user-type-desc">Post tasks and get work done</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Form -->
+    <form class="signup-form" id="signupForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="UserName" class="form-label">User Name</label>
+                <input
+                        type="text"
+                        id="UserName"
+                        name="UserName"
+                        class="form-input"
+                        placeholder="Enter User Name"
+                        required
+                >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    placeholder="Enter your email"
+                    required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    class="form-input"
+                    placeholder="Enter phone number (+94 7XXXXXXXX)"
+                    required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="password-container">
+                <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-input"
+                        placeholder="Create a strong password"
+                        required
+                >
+                <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                    👁️
+                </button>
+            </div>
+            <div class="password-requirements">
+                <div class="requirement" id="length">• At least 8 characters</div>
+                <div class="requirement" id="uppercase">• One uppercase letter</div>
+                <div class="requirement" id="lowercase">• One lowercase letter</div>
+                <div class="requirement" id="number">• One number</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <div class="password-container">
+                <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        class="form-input"
+                        placeholder="Confirm your password"
+                        required
+                >
+                <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                    👁️
+                </button>
+            </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="terms-group">
+            <input type="checkbox" id="terms" name="terms" class="terms-checkbox" required>
+            <div class="terms-text">
+                I agree to the <a href="#" onclick="showTerms()">Terms of Service</a> and
+                <a href="#" onclick="showPrivacy()">Privacy Policy</a>. I also consent to receive
+                marketing communications from TaskCoin Lanka.
+            </div>
+        </div>
+
+        <button type="submit" class="btn-signup" id="signupBtn" disabled>
+            Create Account
+        </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+        <span>Or sign up with</span>
+    </div>
+
+    <!-- Social Signup -->
+    <div class="social-signup">
+        <button class="social-btn google">
+            <span>G</span>
+            Google
+        </button>
+        <button class="social-btn facebook">
+            <span>f</span>
+            Facebook
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="signup-footer">
+        Already have an account?
+        <a href="#" onclick="showLogin()">Sign In</a>
+    </div>
+</div>
+<script src="js/signUp.js"></script>
+</body>
+</html>

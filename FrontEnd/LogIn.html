@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MINI Tasker</title>
+    <link rel="stylesheet" href="css/LogIn.css">
+
+    <!-- ✅ jQuery loaded before logIn.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- Background Effects -->
+<div class="bg-pattern"></div>
+<!--<div class="floating-coins">-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--    <div class="coin">🪙</div>-->
+<!--</div>-->
+
+<!-- Back Button -->
+<a href="#" class="back-btn" onclick="history.back()">← Back to Home</a>
+
+<!-- Main Login Container -->
+<div class="login-container">
+    <!-- Header -->
+    <div class="login-header">
+        <div class="logo">MINI<span>Tasker</span></div>
+        <p class="login-subtitle">Welcome back!</p>
+        <p class="welcome-text">Sign in to continue earning</p>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage" style="display: none;">
+        Invalid username or password. Please try again.
+    </div>
+
+    <!-- Login Form -->
+    <form class="login-form" id="loginForm">
+        <div class="form-group">
+            <label for="username" class="form-label">User Name</label>
+            <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="form-input"
+                    placeholder="Enter your User Name"
+                    required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <div class="password-container">
+                <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-input"
+                        placeholder="Enter your password"
+                        required
+                >
+                <button type="button" class="password-toggle" onclick="togglePassword()">
+                    👁️
+                </button>
+            </div>
+        </div>
+
+        <div class="form-options">
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
+            </div>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+            Sign In
+        </button>
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+        <span>Or continue with</span>
+    </div>
+
+    <!-- Social Login -->
+    <div class="social-login">
+        <button type="button" class="social-btn google">
+            <span>G</span>
+            Google
+        </button>
+        <button type="button" class="social-btn facebook">
+            <span>f</span>
+            Facebook
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="login-footer">
+        Don't have an account?
+        <a href="Signup.html">Create Account</a>
+    </div>
+</div>
+
+<!-- ✅ Your JS must load last -->
+<script src="js/logIn.js"></script>
+</body>
+</html>
