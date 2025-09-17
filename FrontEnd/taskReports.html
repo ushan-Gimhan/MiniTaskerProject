@@ -1034,19 +1034,18 @@
   <!-- Task Reports Section -->
   <section id="task-reports" class="dashboard-section" style="display: none;">
     <div class="dashboard-header">
-      <h1>Task Reports</h1>
-      <p>Manage and review reported tasks on the platform.</p>
+      <h1>Task Management</h1>
+      <p>Manage tasks on the platform.</p>
     </div>
 
     <!-- Stats Grid -->
     <section class="stats-grid">
       <div class="stat-card">
-        <div class="title"><i class="fas fa-flag"></i> Total Reports</div>
+        <div class="title"><i class="fas fa-flag"></i> Total Tasks</div>
         <div class="value">234</div>
-        <div class="change positive"><i class="fas fa-arrow-up"></i> 6.1% from last week</div>
       </div>
       <div class="stat-card">
-        <div class="title"><i class="fas fa-check-circle"></i> Resolved</div>
+        <div class="title"><i class="fas fa-check-circle"></i> Approved</div>
         <div class="value">180</div>
         <div class="change positive"><i class="fas fa-arrow-up"></i> 4.5% from last week</div>
       </div>
@@ -1066,23 +1065,22 @@
     <section>
       <div class="section-header">
         <h2>Reported Tasks</h2>
-        <div class="actions">
-          <button><i class="fas fa-plus"></i> Add Report</button>
-        </div>
       </div>
 
       <div class="table-container">
         <table>
           <thead>
-          <tr>
-            <th>Task</th>
-            <th>Reporter</th>
-            <th>Status</th>
-            <th>Last Update</th>
-            <th>Actions</th>
+          <tr class="bg-gray-100 dark:bg-gray-800">
+            <th class="p-2 border">Task</th>
+            <th class="p-2 border">User</th>
+            <th class="p-2 border">Total Quantity</th>
+            <th class="p-2 border">Total Price</th>
+            <th class="p-2 border">Status</th>
+            <th class="p-2 border">Description</th>
+            <th class="p-2 border">Actions</th>
           </tr>
           </thead>
-          <tbody>
+          <tbody id="reported-tasks-body">
           <tr>
             <td>Data Entry for Survey</td>
             <td>@User123</td>
@@ -1129,15 +1127,6 @@
           </tr>
           </tbody>
         </table>
-      </div>
-
-      <!-- Pagination -->
-      <div class="pagination">
-        <button><i class="fas fa-chevron-left"></i> Previous</button>
-        <button class="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>Next <i class="fas fa-chevron-right"></i></button>
       </div>
     </section>
   </section>
@@ -1414,5 +1403,6 @@
   });
 </script>
 <script src="js/UserManagement.js"></script>
+<script src="js/TaskManagement.js"></script>
 </body>
 </html>
