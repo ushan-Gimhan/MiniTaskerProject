@@ -101,7 +101,6 @@ async function loadTasks(token) {
                     >Delete</button>
                 </td>
             `;
-
             tbody.appendChild(tr);
 
             // Only Save button for status change
