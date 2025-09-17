@@ -60,12 +60,49 @@ async function loadUserDetails(token) {
         });
     });
 }
+async function loadSidebarProfile() {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) return;
+
+    try {
+        // Step 1: Get user
+        const user = await loadUserDetails(token);
+
+        // Step 2: Get profile by userId
+        $.ajax({
+            url: `http://localhost:8080/profile/get/${user.id}`,
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` },
+            success: function(profile) {
+                const sidebarProfile = $(".sidebar .profile");
+                if (!sidebarProfile.length) return;
+
+                // Set values with fallbacks
+                const avatarUrl = profile && profile.avatarUrl ? profile.avatarUrl : "https://via.placeholder.com/100";
+                const username = user.username ? `@${user.username}` : "@user";
+                const balance = user.walletBalance;
+
+                sidebarProfile.find("img").attr("src", avatarUrl);
+                sidebarProfile.find(".balance").text(`Balance: $${balance} USD`);
+                sidebarProfile.find(".username").text(username);
+            },
+            error: function(err) {
+                console.error("Failed to fetch profile:", err);
+            }
+        });
+    } catch (err) {
+        console.error("Failed to load user details:", err);
+    }
+}
+
+// Call it
+loadSidebarProfile();
 
 // --------------------- Header Fallback ---------------------
-function updateHeader(username) {
-    const headerEl = document.getElementById("headerUsername");
-    if (headerEl) headerEl.textContent = `Welcome, ${username}!`;
-}
+// function updateHeader(username) {
+//     const headerEl = document.getElementById("headerUsername");
+//     if (headerEl) headerEl.textContent = `Welcome, ${username}!`;
+// }
 
 // --------------------- Budget Calculation ---------------------
 const quantityInput = document.getElementById("quantity");
