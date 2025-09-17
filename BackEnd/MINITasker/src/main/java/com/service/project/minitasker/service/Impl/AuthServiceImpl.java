@@ -13,6 +13,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -78,4 +79,14 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Invalid user ID format: " + userId);
         }
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll(); // fetch all users from DB
+        if (users.isEmpty()) {
+            throw new RuntimeException("No users found");
+        }
+        return users;
+    }
+
 }

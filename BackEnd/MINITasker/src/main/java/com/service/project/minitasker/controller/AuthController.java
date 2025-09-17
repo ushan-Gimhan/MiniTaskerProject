@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -55,4 +57,27 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid or expired token");
         }
     }
+    @GetMapping("/users")
+    public ResponseEntity<ApiResponse> getAllUsers() {
+        try {
+            List<User> users = authServiceImpl.getAllUsers(); // fetch from service
+
+            return ResponseEntity.ok(
+                    new ApiResponse(
+                            200,
+                            "Users fetched successfully",
+                            users
+                    )
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(
+                    new ApiResponse(
+                            500,
+                            "Failed to fetch users: " + e.getMessage(),
+                            null
+                    )
+            );
+        }
+    }
+
 }

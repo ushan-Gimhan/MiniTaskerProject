@@ -49,7 +49,7 @@ $(document).ready(function () {
                     // Redirect based on role
                     if (userRole === "ADMIN") {
                         alert("Welcome Admin! Redirecting to Admin Dashboard...");
-                        window.location.href = "Admin.html";
+                        window.location.href = "taskReports.html";
                     } else if (userRole === "USER") {
                         alert("Login successful! Redirecting to User Dashboard...");
                         window.location.href = "dashboard.html";

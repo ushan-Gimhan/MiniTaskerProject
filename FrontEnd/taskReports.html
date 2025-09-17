@@ -1,168 +1,1418 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>Task Reports</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            primary: "#1173d4",
-            "background-light": "#f6f7f8",
-            "background-dark": "#101922",
-          },
-          fontFamily: {
-            display: ["Inter", "sans-serif"],
-          },
-          borderRadius: {
-            DEFAULT: "0.5rem",
-          },
-        },
-      },
-    };
-  </script>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Microtask</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    :root {
+      --bg-color-dark: #1E293B;
+      --text-color-light: #F8FAFC;
+      --text-color-secondary: #94A3B8;
+      --primary-color: #3B82F6;
+      --primary-color-hover: #2563EB;
+      --sidebar-bg: #111827;
+      --card-bg: #1F2937;
+      --border-color: #334155;
+      --active-link-bg: #334155;
+      --active-link-color: #F8FAFC;
+      --red-color: #EF4444;
+      --green-color: #22C55E;
+      --yellow-color: #FBBF24;
+      --purple-color: #8B5CF6;
+      --cyan-color: #06B6D4;
+      --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color-dark);
+      color: var(--text-color-light);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 100;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .sidebar.collapsed {
+      width: 70px;
+    }
+
+    .sidebar.collapsed .logo span,
+    .sidebar.collapsed nav ul li a span {
+      display: none;
+    }
+
+    .sidebar.collapsed .logo {
+      text-align: center;
+    }
+
+    .sidebar.collapsed nav ul li a {
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .sidebar.collapsed nav ul li a i {
+      margin-right: 0;
+    }
+
+    .sidebar.collapsed .logout a {
+      justify-content: center;
+    }
+
+    .toggle-sidebar {
+      position: absolute;
+      top: 20px;
+      right: -15px;
+      width: 30px;
+      height: 30px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 101;
+    }
+
+    .toggle-sidebar i {
+      color: white;
+      font-size: 14px;
+    }
+
+    .sidebar .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 40px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+    }
+
+    .sidebar .logo i {
+      margin-right: 10px;
+      font-size: 28px;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .sidebar nav ul li {
+      margin-bottom: 5px;
+    }
+
+    .sidebar nav ul li a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: var(--text-color-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all var(--transition-speed) ease;
+      position: relative;
+    }
+
+    .sidebar nav ul li a:hover {
+      background-color: var(--active-link-bg);
+      color: var(--active-link-color);
+      transform: translateX(5px);
+    }
+
+    .sidebar nav ul li a.active {
+      background-color: var(--active-link-bg);
+      color: var(--active-link-color);
+      font-weight: 600;
+    }
+
+    .sidebar nav ul li a.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background-color: var(--primary-color);
+      border-radius: 0 4px 4px 0;
+    }
+
+    .sidebar nav ul li a i {
+      margin-right: 10px;
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar .logout {
+      margin-top: auto;
+    }
+
+    .sidebar .logout a {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      color: var(--red-color);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .sidebar .logout a:hover {
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 30px;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .main-content.expanded {
+      margin-left: -180px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      background-color: var(--bg-color-dark);
+      padding: 10px 20px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 8px 15px;
+      width: 400px;
+      transition: all var(--transition-speed) ease;
+      border: 1px solid transparent;
+    }
+
+    .search-bar:focus-within {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .search-bar i {
+      margin-right: 10px;
+      color: var(--text-color-secondary);
+    }
+
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-color-light);
+      width: 100%;
+      font-size: 15px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .user-profile .dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 200px;
+      padding: 10px 0;
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all var(--transition-speed) ease;
+    }
+
+    .user-profile:hover .dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .user-profile .dropdown a {
+      display: block;
+      padding: 10px 20px;
+      color: var(--text-color-light);
+      text-decoration: none;
+      transition: background-color var(--transition-speed) ease;
+    }
+
+    .user-profile .dropdown a:hover {
+      background-color: var(--active-link-bg);
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+      border: 2px solid var(--primary-color);
+    }
+
+    .user-profile span {
+      font-weight: 600;
+    }
+
+    .dashboard-header {
+      margin-bottom: 30px;
+    }
+
+    .dashboard-header h1 {
+      font-size: 28px;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .dashboard-header p {
+      color: var(--text-color-secondary);
+      font-size: 15px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+    }
+
+    .stat-card:nth-child(1)::before {
+      background-color: var(--primary-color);
+    }
+
+    .stat-card:nth-child(2)::before {
+      background-color: var(--green-color);
+    }
+
+    .stat-card:nth-child(3)::before {
+      background-color: var(--red-color);
+    }
+
+    .stat-card:nth-child(4)::before {
+      background-color: var(--purple-color);
+    }
+
+    .stat-card .title {
+      font-size: 16px;
+      color: var(--text-color-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-card .title i {
+      margin-right: 8px;
+      font-size: 18px;
+    }
+
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-color-light);
+      margin-bottom: 5px;
+    }
+
+    .stat-card .change {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    .stat-card .change.positive {
+      color: var(--green-color);
+    }
+
+    .stat-card .change.negative {
+      color: var(--red-color);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header h2 {
+      font-size: 22px;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .section-header .actions button {
+      background-color: var(--primary-color);
+      color: var(--text-color-light);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all var(--transition-speed) ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-header .actions button i {
+      margin-right: 8px;
+    }
+
+    .section-header .actions button:hover {
+      background-color: var(--primary-color-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 40px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    table th, table td {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    table th {
+      color: var(--text-color-secondary);
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    table td {
+      color: var(--text-color-light);
+      font-size: 15px;
+    }
+
+    table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    table tbody tr {
+      transition: background-color var(--transition-speed) ease;
+    }
+
+    table tbody tr:hover {
+      background-color: #2D3748;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-badge.pending {
+      background-color: rgba(251, 191, 36, 0.2);
+      color: var(--yellow-color);
+    }
+
+    .status-badge.approved {
+      background-color: rgba(34, 197, 94, 0.2);
+      color: var(--green-color);
+    }
+
+    .status-badge.rejected {
+      background-color: rgba(239, 68, 68, 0.2);
+      color: var(--red-color);
+    }
+
+    .status-badge.active {
+      background-color: rgba(59, 130, 246, 0.2);
+      color: var(--primary-color);
+    }
+
+    .status-badge.suspended {
+      background-color: rgba(100, 116, 139, 0.2);
+      color: #64748B;
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+    }
+
+    .action-buttons button {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      cursor: pointer;
+      margin-right: 10px;
+      font-size: 14px;
+      transition: all var(--transition-speed) ease;
+      padding: 5px 8px;
+      border-radius: 4px;
+    }
+
+    .action-buttons button:hover {
+      color: var(--primary-color-hover);
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .action-buttons button.delete-btn {
+      color: var(--red-color);
+    }
+
+    .action-buttons button.delete-btn:hover {
+      color: #DC2626;
+      background-color: rgba(239, 68, 68, 0.1);
+    }
+
+    .action-buttons button.activate-btn {
+      color: var(--green-color);
+    }
+
+    .action-buttons button.activate-btn:hover {
+      color: #16A34A;
+      background-color: rgba(34, 197, 94, 0.1);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    .pagination button {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-color-light);
+      padding: 8px 15px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+      display: flex;
+      align-items: center;
+    }
+
+    .pagination button:hover:not(.active) {
+      background-color: #2D3748;
+      border-color: var(--primary-color);
+    }
+
+    .pagination button.active {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: var(--text-color-light);
+      font-weight: 600;
+    }
+
+    /* Task Reports Section Styles */
+    .task-reports-section {
+      display: none;
+    }
+
+    .filters {
+      margin-bottom: 20px;
+    }
+
+    .filter-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .filter-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-color-light);
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .filter-button:hover {
+      background-color: #2D3748;
+      border-color: var(--primary-color);
+    }
+
+    .reported-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .task-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: all var(--transition-speed) ease;
+    }
+
+    .task-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .task-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      background-color: rgba(59, 130, 246, 0.2);
+      color: var(--primary-color);
+      flex-shrink: 0;
+    }
+
+    .task-details {
+      flex-grow: 1;
+    }
+
+    .task-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .task-reporter {
+      font-size: 14px;
+      color: var(--text-color-secondary);
+    }
+
+    .task-arrow {
+      color: var(--text-color-secondary);
+    }
+
+    /* Responsive design */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 70px;
+      }
+
+      .sidebar .logo span,
+      .sidebar nav ul li a span {
+        display: none;
+      }
+
+      .sidebar .logo {
+        text-align: center;
+        justify-content: center;
+      }
+
+      .sidebar nav ul li a {
+        justify-content: center;
+        padding: 12px;
+      }
+
+      .sidebar nav ul li a i {
+        margin-right: 0;
+      }
+
+      .sidebar .logout a {
+        justify-content: center;
+      }
+
+      .main-content {
+        margin-left: -180px;
+      }
+
+      .search-bar {
+        width: 300px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .search-bar {
+        width: 100%;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .section-header .actions {
+        width: 100%;
+      }
+
+      .section-header .actions button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .filter-buttons {
+        flex-direction: column;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card, .table-container, .task-card {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--card-bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-color-secondary);
+    }
+    /* Section container */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem; /* spacing below header */
+    }
+
+    /* Section title */
+    .section-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1f2937; /* dark text */
+    }
+
+    /* Action buttons */
+    .section-header .actions button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: #1173d4; /* primary */
+      color: #fff;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+
+    .section-header .actions button:hover {
+      background-color: #0e5bbd; /* darker shade on hover */
+    }
+
+    /* Input and textarea */
+    .table-container input,
+    .table-container textarea {
+      width: 100%;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db; /* gray border */
+      padding: 0.75rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .table-container input:focus,
+    .table-container textarea:focus {
+      border-color: #1173d4;
+      box-shadow: 0 0 0 3px rgba(17, 115, 212, 0.2);
+      outline: none;
+    }
+
+    /* Dark mode overrides */
+    .dark .section-header h2 {
+      color: #f9fafb;
+    }
+
+    .dark .table-container input,
+    .dark .table-container textarea {
+      background-color: #101922;
+      border-color: #374151;
+      color: #f9fafb;
+    }
+
+    .dark .table-container input::placeholder,
+    .dark .table-container textarea::placeholder {
+      color: #9ca3af;
+    }
+
+  </style>
+  <!-- Font Awesome for icons (CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
-<body class="font-display bg-background-light dark:bg-background-dark text-stone-900 dark:text-white">
-<div class="relative flex min-h-screen size-full">
-
-  <!-- Sidebar -->
-  <aside id="sidebar" class="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col space-y-6 p-4 transition-transform duration-300 transform -translate-x-full bg-background-light dark:bg-background-dark md:flex md:relative md:translate-x-0">
-    <div class="flex items-center gap-3 px-2">
-      <span class="text-2xl font-bold text-primary">Microtask</span>
-    </div>
-    <nav class="flex-grow space-y-2">
-      <a href="userManagement.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
-      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
-        <span class="material-symbols-outlined">group</span>
-        <span>User Management</span>
-      </a>
-      <a href="taskReports.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg bg-primary/10 text-primary">
-        <span class="material-symbols-outlined">assessment</span>
-        <span>Task Reports</span>
-      </a>
-      <a href="dis.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
-      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
-        <span class="material-symbols-outlined">gavel</span>
-        <span>Dispute Resolution</span>
-      </a>
-      <a href="Admin.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
-      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
-        <span class="material-symbols-outlined">monitoring</span>
-        <span>Platform Analytics</span>
-      </a>
-      <a href="content.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
-      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
-        <span class="material-symbols-outlined">policy</span>
-        <span>Content Moderation</span>
-      </a>
-      <a href="Announsment.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
-      text-stone-600 dark:text-stone-300 hover:bg-primary/10 hover:text-primary">
-        <span class="material-symbols-outlined">campaign</span>
-        <span>System Announcements</span>
-      </a>
-
-      <!-- Divider -->
-      <hr class="my-4 border-stone-300 dark:border-stone-700"/>
-
-      <!-- Logout Button -->
-      <a href="Home.html"
-         class="flex items-center gap-3 px-4 py-2 text-sm font-medium rounded-lg
-      text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40">
-        <span class="material-symbols-outlined">logout</span>
-        <span>Logout</span>
-      </a>
-    </nav>
-  </aside>
-
-  <!-- Main content -->
-  <div class="flex flex-1 flex-col">
-    <!-- Mobile header -->
-    <header class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark/50 sticky top-0 z-10 backdrop-blur-sm md:hidden">
-      <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')" class="text-stone-900 dark:text-white">
-        <span class="material-symbols-outlined text-3xl">menu</span>
-      </button>
-      <h1 class="text-lg font-bold">Task Reports</h1>
-      <div class="w-8"></div>
-    </header>
-
-    <main class="flex-grow p-4">
-      <!-- Filters -->
-      <section class="mb-6">
-        <h2 class="text-xl font-bold mb-3">Filters</h2>
-        <div class="flex gap-3">
-          <button class="flex items-center gap-2 rounded-lg bg-gray-200 dark:bg-gray-700/50 px-4 py-2 text-sm font-medium text-gray-800 dark:text-gray-300">
-            <span>Status</span>
-            <span class="material-symbols-outlined text-base">expand_more</span>
-          </button>
-          <button class="flex items-center gap-2 rounded-lg bg-gray-200 dark:bg-gray-700/50 px-4 py-2 text-sm font-medium text-gray-800 dark:text-gray-300">
-            <span>Date</span>
-            <span class="material-symbols-outlined text-base">expand_more</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- Reported Tasks -->
-      <section class="space-y-3">
-        <div class="flex items-center gap-4 p-3 rounded-lg bg-white dark:bg-gray-800/50">
-          <div class="shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 dark:bg-primary/20">
-            <span class="material-symbols-outlined text-primary">flag</span>
-          </div>
-          <div class="flex-1">
-            <p class="font-medium text-base">Task Title: Data Entry for Survey</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Reported by: User123</p>
-          </div>
-          <span class="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
-        </div>
-
-        <div class="flex items-center gap-4 p-3 rounded-lg bg-white dark:bg-gray-800/50">
-          <div class="shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 dark:bg-primary/20">
-            <span class="material-symbols-outlined text-primary">flag</span>
-          </div>
-          <div class="flex-1">
-            <p class="font-medium text-base">Task Title: Image Tagging</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Reported by: User456</p>
-          </div>
-          <span class="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
-        </div>
-
-        <div class="flex items-center gap-4 p-3 rounded-lg bg-white dark:bg-gray-800/50">
-          <div class="shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 dark:bg-primary/20">
-            <span class="material-symbols-outlined text-primary">flag</span>
-          </div>
-          <div class="flex-1">
-            <p class="font-medium text-base">Task Title: Content Moderation</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Reported by: User789</p>
-          </div>
-          <span class="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
-        </div>
-
-        <div class="flex items-center gap-4 p-3 rounded-lg bg-white dark:bg-gray-800/50">
-          <div class="shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 dark:bg-primary/20">
-            <span class="material-symbols-outlined text-primary">flag</span>
-          </div>
-          <div class="flex-1">
-            <p class="font-medium text-base">Task Title: Translation Review</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Reported by: User101</p>
-          </div>
-          <span class="material-symbols-outlined text-gray-400 dark:text-gray-500">chevron_right</span>
-        </div>
-      </section>
-    </main>
+<body>
+<aside class="sidebar">
+  <div class="toggle-sidebar">
+    <i class="fas fa-chevron-left"></i>
   </div>
+  <div class="logo">
+    <i class="fas fa-tasks"></i>
+    <span>Microtask</span>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#" class="active" data-section="user-management"><i class="fas fa-users"></i> <span>User Management</span></a></li>
+      <li><a href="#" data-section="task-reports"><i class="fas fa-clipboard-list"></i> <span>Task Reports</span></a></li>
+      <li><a href="#" data-section="dispute-resolution"><i class="fas fa-gavel"></i> <span>Worker Submissions</span></a></li>
+      <li><a href="#" ><i class="fas fa-chart-line"></i> <span>Platform Analytics</span></a></li>
+      <li><a href="#"><i class="fas fa-shield-alt"></i> <span>Content Moderation</span></a></li>
+      <li><a href="#" data-section="announcements"><i class="fas fa-bullhorn"></i> <span>System Announcements</span></a></li>
+      <li><a href="#"><i class="fas fa-check-circle"></i> <span>Worker Submissions</span></a></li>
+    </ul>
+  </nav>
+  <div class="logout">
+    <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header>
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Search users by name or email">
+    </div>
+    <div class="user-profile">
+      <img src="https://via.placeholder.com/40/3B82F6/FFFFFF?text=SF" alt="Samuel Fernando">
+      <span>Samuel Fernando</span>
+      <div class="dropdown">
+        <a href="#"><i class="fas fa-user"></i> Profile</a>
+        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- User Management Section (Default) -->
+  <section id="user-management" class="dashboard-section">
+    <div class="dashboard-header">
+      <h1>User Management</h1>
+      <p>Overview of all user accounts and their activities.</p>
+    </div>
+
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-users"></i> Total Users</div>
+        <div class="value">1,234</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 5.2% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-user-check"></i> Active Users</div>
+        <div class="value">1,100</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 2.7% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-user-slash"></i> Suspended</div>
+        <div class="value">134</div>
+        <div class="change negative"><i class="fas fa-arrow-down"></i> 1.3% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-user-plus"></i> New Signups (Today)</div>
+        <div class="value">15</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 3.8% from yesterday</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>User Accounts</h2>
+        <div class="actions">
+          <button><i class="fas fa-plus"></i> Add New User</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>User</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Last Activity</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/30/3B82F6/FFFFFF?text=JD" alt="John Doe" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                John Doe
+              </div>
+            </td>
+            <td>john.doe@example.com</td>
+            <td>Client</td>
+            <td><span class="status-badge active">Active</span></td>
+            <td>2 hours ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button><i class="fas fa-edit"></i></button>
+              <button class="delete-btn"><i class="fas fa-user-slash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/30/22C55E/FFFFFF?text=JS" alt="Jane Smith" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                Jane Smith
+              </div>
+            </td>
+            <td>jane.smith@example.com</td>
+            <td>Worker</td>
+            <td><span class="status-badge suspended">Suspended</span></td>
+            <td>3 days ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button><i class="fas fa-edit"></i></button>
+              <button class="activate-btn"><i class="fas fa-user-check"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/30/FBBF24/FFFFFF?text=RM" alt="Robert Miller" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                Robert Miller
+              </div>
+            </td>
+            <td>robert.m@example.com</td>
+            <td>Client</td>
+            <td><span class="status-badge active">Active</span></td>
+            <td>1 day ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button><i class="fas fa-edit"></i></button>
+              <button class="delete-btn"><i class="fas fa-user-slash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/30/EF4444/FFFFFF?text=AL" alt="Alice Lee" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                Alice Lee
+              </div>
+            </td>
+            <td>alice.l@example.com</td>
+            <td>Worker</td>
+            <td><span class="status-badge active">Active</span></td>
+            <td>5 hours ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button><i class="fas fa-edit"></i></button>
+              <button class="delete-btn"><i class="fas fa-user-slash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center;">
+                <img src="https://via.placeholder.com/30/64748B/FFFFFF?text=TJ" alt="Tom Jackson" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+                Tom Jackson
+              </div>
+            </td>
+            <td>tom.j@example.com</td>
+            <td>Client</td>
+            <td><span class="status-badge active">Active</span></td>
+            <td>Just now</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button><i class="fas fa-edit"></i></button>
+              <button class="delete-btn"><i class="fas fa-user-slash"></i></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <button><i class="fas fa-chevron-left"></i> Previous</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>Next <i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+  </section>
+
+  <!-- Task Reports Section -->
+  <section id="task-reports" class="dashboard-section" style="display: none;">
+    <div class="dashboard-header">
+      <h1>Task Reports</h1>
+      <p>Manage and review reported tasks on the platform.</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-flag"></i> Total Reports</div>
+        <div class="value">234</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 6.1% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-check-circle"></i> Resolved</div>
+        <div class="value">180</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 4.5% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-hourglass-half"></i> Pending</div>
+        <div class="value">54</div>
+        <div class="change negative"><i class="fas fa-arrow-down"></i> 2.0% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-plus-circle"></i> New (Today)</div>
+        <div class="value">12</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 3.2% from yesterday</div>
+      </div>
+    </section>
+
+    <!-- Reported Tasks Table -->
+    <section>
+      <div class="section-header">
+        <h2>Reported Tasks</h2>
+        <div class="actions">
+          <button><i class="fas fa-plus"></i> Add Report</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th>Task</th>
+            <th>Reporter</th>
+            <th>Status</th>
+            <th>Last Update</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Data Entry for Survey</td>
+            <td>@User123</td>
+            <td><span class="status-badge active">Pending</span></td>
+            <td>2 hours ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button class="resolve-btn"><i class="fas fa-check-circle"></i></button>
+              <button class="delete-btn"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Image Tagging</td>
+            <td>@User456</td>
+            <td><span class="status-badge active">Pending</span></td>
+            <td>1 day ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button class="resolve-btn"><i class="fas fa-check-circle"></i></button>
+              <button class="delete-btn"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Content Moderation</td>
+            <td>@User789</td>
+            <td><span class="status-badge suspended">In Review</span></td>
+            <td>5 hours ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button class="resolve-btn"><i class="fas fa-check-circle"></i></button>
+              <button class="delete-btn"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>Translation Review</td>
+            <td>@User101</td>
+            <td><span class="status-badge active">Pending</span></td>
+            <td>3 hours ago</td>
+            <td class="action-buttons">
+              <button><i class="fas fa-eye"></i></button>
+              <button class="resolve-btn"><i class="fas fa-check-circle"></i></button>
+              <button class="delete-btn"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button><i class="fas fa-chevron-left"></i> Previous</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>Next <i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+  </section>
+
+  <section id="dispute-resolution" class="dashboard-section" style="display: none;">
+    <div class="dashboard-header">
+      <h1>Dispute Resolution</h1>
+      <p>Overview of ongoing disputes and resolution actions.</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-exclamation-circle"></i> Total Disputes</div>
+        <div class="value">56</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 8.1% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-check-circle"></i> Resolved</div>
+        <div class="value">42</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 4.5% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-balance-scale"></i> Pending</div>
+        <div class="value">14</div>
+        <div class="change negative"><i class="fas fa-arrow-down"></i> 1.2% from last week</div>
+      </div>
+      <div class="stat-card">
+        <div class="title"><i class="fas fa-plus-circle"></i> New (Today)</div>
+        <div class="value">3</div>
+        <div class="change positive"><i class="fas fa-arrow-up"></i> 2.1% from yesterday</div>
+      </div>
+    </section>
+
+    <!-- Dispute Table -->
+    <section>
+      <div class="section-header">
+        <h2>Recent Disputes</h2>
+        <div class="actions">
+          <button type="button"><i class="fas fa-folder-plus"></i> New Dispute</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+          <tr>
+            <th scope="col">Dispute ID</th>
+            <th scope="col">Task</th>
+            <th scope="col">Client</th>
+            <th scope="col">Worker</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last Update</th>
+            <th scope="col">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>#12345</td>
+            <td>Data Entry for Product Listings</td>
+            <td>@SamanthaR</td>
+            <td>@RohanK</td>
+            <td><span class="status-badge active">Pending</span></td>
+            <td>2 hours ago</td>
+            <td class="action-buttons">
+              <button type="button" aria-label="View"><i class="fas fa-eye"></i></button>
+              <button type="button" aria-label="Edit"><i class="fas fa-edit"></i></button>
+              <button type="button" class="resolve-btn" aria-label="Resolve"><i class="fas fa-check-circle"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>#12346</td>
+            <td>Logo Design</td>
+            <td>@MarkT</td>
+            <td>@AliceL</td>
+            <td><span class="status-badge suspended">In Review</span></td>
+            <td>1 day ago</td>
+            <td class="action-buttons">
+              <button type="button" aria-label="View"><i class="fas fa-eye"></i></button>
+              <button type="button" aria-label="Edit"><i class="fas fa-edit"></i></button>
+              <button type="button" class="resolve-btn" aria-label="Resolve"><i class="fas fa-check-circle"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>#12347</td>
+            <td>Data Cleaning Task</td>
+            <td>@TomJ</td>
+            <td>@JaneS</td>
+            <td><span class="status-badge resolved">Resolved</span></td>
+            <td>5 hours ago</td>
+            <td class="action-buttons">
+              <button type="button" aria-label="View"><i class="fas fa-eye"></i></button>
+              <button type="button" aria-label="Edit"><i class="fas fa-edit"></i></button>
+              <button type="button" class="delete-btn" aria-label="Delete"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination">
+        <button type="button"><i class="fas fa-chevron-left"></i> Previous</button>
+        <button type="button" class="active">1</button>
+        <button type="button">2</button>
+        <button type="button">3</button>
+        <button type="button">Next <i class="fas fa-chevron-right"></i></button>
+      </div>
+    </section>
+  </section>
+  <section id="announcements" class="dashboard-section" style="display: none;">
+    <!-- Main Content -->
+    <div class="flex flex-col flex-1">
+      <!-- Mobile Header -->
+      <header class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark/50 sticky top-0 z-10 backdrop-blur-sm md:hidden">
+        <button class="text-stone-900 dark:text-white"
+                onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+          <span class="material-symbols-outlined text-3xl"> menu </span>
+        </button>
+        <h1 class="text-lg font-bold">Announcements</h1>
+        <div class="w-8"></div>
+      </header>
+
+      <!-- Content -->
+      <main class="flex-grow p-4 space-y-8">
+
+        <!-- Announcements Section -->
+        <section>
+          <div class="dashboard-header">
+            <h1>System Announcements</h1>
+            <p>Manage and view important system-wide announcements.</p>
+          </div>
+
+          <!-- Stats Grid -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="title"><i class="fas fa-bullhorn"></i> Total Announcements</div>
+              <div class="value">120</div>
+              <div class="change positive"><i class="fas fa-arrow-up"></i> 6.2% this month</div>
+            </div>
+            <div class="stat-card">
+              <div class="title"><i class="fas fa-check-circle"></i> Sent</div>
+              <div class="value">110</div>
+              <div class="change positive"><i class="fas fa-arrow-up"></i> 4.8% this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="title"><i class="fas fa-hourglass-half"></i> Pending</div>
+              <div class="value">5</div>
+              <div class="change negative"><i class="fas fa-arrow-down"></i> 1.1% this week</div>
+            </div>
+            <div class="stat-card">
+              <div class="title"><i class="fas fa-plus-circle"></i> New (Today)</div>
+              <div class="value">3</div>
+              <div class="change positive"><i class="fas fa-arrow-up"></i> 2.4% from yesterday</div>
+            </div>
+          </section>
+
+          <!-- Create Announcement -->
+          <section>
+            <div class="section-header">
+              <h2>Create Announcement</h2>
+              <div class="actions">
+                <button><i class="fas fa-paper-plane"></i> Send</button>
+              </div>
+            </div>
+            <div class="table-container p-4">
+              <input type="text" placeholder="Subject"
+                     class="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-background-dark p-3 mb-3"/>
+              <textarea placeholder="Compose your message"
+                        class="w-full min-h-32 rounded-md border border-gray-300 dark:border-gray-700 bg-background-light dark:bg-background-dark p-3 resize-none"></textarea>
+            </div>
+          </section>
+
+          <!-- Announcement History -->
+          <section>
+            <div class="section-header">
+              <h2>Announcement History</h2>
+            </div>
+
+            <div class="table-container">
+              <table>
+                <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Date Sent</th>
+                  <th>Audience</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>New Task Category Added</td>
+                  <td>2024-01-15</td>
+                  <td>All Users</td>
+                  <td><span class="status-badge active">Sent</span></td>
+                  <td class="action-buttons">
+                    <button><i class="fas fa-eye"></i></button>
+                    <button><i class="fas fa-edit"></i></button>
+                    <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Maintenance Update</td>
+                  <td>2024-01-10</td>
+                  <td>Active Users</td>
+                  <td><span class="status-badge suspended">Pending</span></td>
+                  <td class="action-buttons">
+                    <button><i class="fas fa-eye"></i></button>
+                    <button><i class="fas fa-edit"></i></button>
+                    <button class="delete-btn"><i class="fas fa-trash"></i></button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+              <button><i class="fas fa-chevron-left"></i> Previous</button>
+              <button class="active">1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+          </section>
+        </section>
+
+      </main>
+    </div>
+
+  </section>
+
 </div>
+
+<script>
+  // Toggle sidebar functionality
+  document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+    document.querySelector('.sidebar').classList.toggle('collapsed');
+    document.querySelector('.main-content').classList.toggle('expanded');
+
+    const icon = this.querySelector('i');
+    if (icon.classList.contains('fa-chevron-left')) {
+      icon.classList.replace('fa-chevron-left', 'fa-chevron-right');
+    } else {
+      icon.classList.replace('fa-chevron-right', 'fa-chevron-left');
+    }
+  });
+
+  // Section navigation
+  document.querySelectorAll('.sidebar nav ul li a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      // Remove active class from all links
+      document.querySelectorAll('.sidebar nav ul li a').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Add active class to clicked link
+      this.classList.add('active');
+
+      // Hide all sections
+      document.querySelectorAll('.dashboard-section').forEach(section => {
+        section.style.display = 'none';
+      });
+
+      // Show the selected section
+      const sectionId = this.getAttribute('data-section');
+      if (sectionId) {
+        document.getElementById(sectionId).style.display = 'block';
+      }
+    });
+  });
+</script>
+<script src="js/UserManagement.js"></script>
 </body>
 </html>
