@@ -110,21 +110,28 @@ $(document).ready(function () {
 
             taskList.append(taskItem);
 
+            // --------- Apply Button: Open Modal Only ----------
             taskItem.find(".apply-btn").on('click', function (e) {
                 e.stopPropagation();
 
-                // Use global currentUserId for workerId
-                applyForTask(token, task.id, window.currentUserId, "", "")
-                    .then(res => {
-                        console.log("✅ Applied:", res);
-                        openTaskForm();
-                        $("#taskSubmissionModal .modal-title").text(`Submit Task: ${task.title}`);
-                    })
-                    .catch(err => {
-                        alert("❌ Failed to apply: " + err.message);
-                    });
+                // Open modal
+                openTaskForm();
+
+                // Fill modal with task info
+                $("#taskTitle").text(task.title || "Untitled Task");
+                $("#taskDescription").html(`
+                    <p>${task.description || ''}</p>
+                    <ul>
+                        <li>💰 Reward: ${task.rewardPerTask != null ? '$' + task.rewardPerTask : '-'}</li>
+                        <li>🗂 Vacancy Available: ${task.totalQuantity || 0}</li>
+                    </ul>
+                `);
+
+                // Set hidden task ID for later submission
+                $("#taskId").val(task.id);
             });
 
+            // Optional: open details on card click
             taskItem.on('click', function () {
                 alert(`Opening task details for: ${task.title || 'Task'}`);
             });
@@ -165,16 +172,51 @@ $(document).ready(function () {
 // --------------------- Task Submission Modal ---------------------
 function openTaskForm() {
     $('#taskSubmissionModal').fadeIn();
+    $('body').addClass('modal-open');
 }
 function closeTaskForm() {
     $('#taskSubmissionModal').fadeOut();
+    $('body').removeClass('modal-open');
 }
 
-// --------------------- Apply Task API ---------------------
-async function applyForTask(token, taskId, workerId, proofUrl, description) {
-    return new Promise((resolve, reject) => {
+// --------------------- Task Form Submission with ImgBB Upload ---------------------
+$("#taskSubmissionForm").on("submit", async function (e) {
+    e.preventDefault();
+
+    const token = localStorage.getItem('jwtToken');
+    const taskId = $("#taskId").val();
+    const workerId = window.currentUserId;
+    const description = $("#descriptionWork").val();
+    const reviewComment = $("#reviewComment").val();
+    const file = $("#proofFile")[0].files[0];
+
+    if (!file) {
+        alert("Please select a proof file to submit!");
+        return;
+    }
+
+    // ---------------- Upload file to ImgBB ----------------
+    const imgbbApiKey = "b56b8866f0ddb6ccb4adcf435a94347b"; // <-- Replace with your API key
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+        const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await imgbbResponse.json();
+
+        if (!result.success) {
+            throw new Error("ImgBB upload failed");
+        }
+
+        const proofUrl = result.data.url; // ImgBB returns the public URL
+
+        // ---------------- Submit Task with Proof URL ----------------
         $.ajax({
-            url: `http://localhost:8080/submission/create`,
+            url: "http://localhost:8080/submission/create",
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -183,19 +225,24 @@ async function applyForTask(token, taskId, workerId, proofUrl, description) {
             data: JSON.stringify({
                 taskId: taskId,
                 workerId: workerId,
-                proofUrl: proofUrl || "",
-                status: "PENDING",
-                reviewComment: "",
-                description: description || ""
+                description: description,
+                proofUrl: proofUrl,
+                reviewComment: reviewComment,
+                status: "PENDING"
             }),
             success: function (response) {
-                console.log("✅ Submission created:", response);
-                resolve(response);
+                alert("✅ Task submitted successfully!");
+                closeTaskForm();
+                console.log("Submission response:", response);
             },
             error: function (xhr, status, error) {
-                console.error("❌ applyForTask error:", status, error, xhr.responseText);
-                reject(new Error(`Failed to apply task (status ${xhr.status})`));
+                alert("❌ Failed to submit task: " + xhr.responseText);
             }
         });
-    });
-}
+
+    } catch (err) {
+        console.error(err);
+        alert("❌ Failed to upload proof image: " + err.message);
+    }
+});
+

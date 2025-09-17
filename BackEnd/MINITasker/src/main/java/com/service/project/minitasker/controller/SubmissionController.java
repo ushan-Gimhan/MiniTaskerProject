@@ -19,7 +19,6 @@ public class SubmissionController {
 
     @PostMapping("/create")
     public ResponseEntity<Submission> createSubmission(@RequestBody SubmissionDTO submission) {
-        System.out.println();
         return ResponseEntity.ok(submissionServiceImpl.createSubmission(submission));
     }
 
