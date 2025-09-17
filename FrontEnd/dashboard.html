@@ -7,6 +7,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/SubmitForm.css">
 </head>
 <body>
 <!-- Header -->
@@ -135,51 +136,76 @@
 <div id="taskSubmissionModal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-btn" onclick="closeTaskForm()">&times;</span>
-        <h2>💰 Top Up / Submit Task</h2>
+        <h2>💰Submit Task</h2>
 
-        <form id="taskSubmissionForm">
-            <!-- Hidden Fields -->
-            <input type="hidden" id="taskId" name="task_id">
-            <input type="hidden" id="workerId" name="worker_id" value="1">
-            <input type="hidden" id="submissionStatus" name="status" value="PENDING">
+        <!-- Back Button -->
+        <button type="button" class="back-btn" onclick="closeTaskForm()">← Back</button>
 
-            <div class="form-section">
-                <div class="form-section-title">📎 Proof of Work</div>
-                <div class="form-group">
-                    <label for="proofUrl" class="form-label">Upload Proof File <span class="required">*</span></label>
-                    <div class="file-upload-container">
-                        <div class="file-upload-area" onclick="document.getElementById('proofFile').click()">
-                            <div class="upload-icon">📁</div>
-                            <div class="upload-text">Click to upload or drag & drop</div>
-                            <div class="upload-hint">Screenshots, documents, videos (Max 10MB)</div>
-                        </div>
-                        <input type="file" id="proofFile" class="file-input" accept="image/*,.pdf,.doc,.docx,.txt,.zip" required>
-                        <div id="fileSelected" class="file-selected" style="display: none;"></div>
+        <!-- Task Information Section -->
+        <div class="task-info">
+            <h3 id="taskTitle">Task Title Here</h3>
+            <div id="taskDescription" class="task-description">
+                <p>Here is the full description of the task. It can include multiple lines, instructions, or details that the worker needs to complete the task.</p>
+                <ul>
+                    <li>Step 1: Do this first</li>
+                    <li>Step 2: Then do that</li>
+                    <li>Step 3: Finish up and submit proof</li>
+                </ul>
+            </div>
+            <p><strong>Reward:</strong> <span id="taskReward">0</span></p>
+        </div>
+
+
+        <div class="modal-body">
+            <form id="taskSubmissionForm">
+                <!-- Hidden Fields -->
+                <input type="hidden" id="taskId" name="task_id">
+                <input type="hidden" id="workerId" name="worker_id" value="1">
+                <input type="hidden" id="submissionStatus" name="status" value="PENDING">
+
+                <!-- 1. Describe Work -->
+                <div class="form-section">
+                    <div class="form-section-title">📝 Describe Your Completed Work</div>
+                    <div class="form-group">
+                        <textarea id="descriptionWork" name="descriptionWork" class="form-control"
+                                  placeholder="Please describe your completed work..." required></textarea>
                     </div>
-                    <input type="hidden" id="proofUrl" name="proofUrl">
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="form-section-title">📝 Work Description</div>
-                <div class="form-group">
-                    <textarea id="description" name="description" class="form-control"
-                              placeholder="Please describe your completed work..." required></textarea>
+                <!-- 2. Proof of Work Upload -->
+                <div class="form-section">
+                    <div class="form-section-title">📎 Proof of Work</div>
+                    <div class="form-group">
+                        <label for="proofUrl" class="form-label">Upload Proof File <span class="required">*</span></label>
+                        <div class="file-upload-container">
+                            <div class="file-upload-area" onclick="document.getElementById('proofFile').click()">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">Click to upload or drag & drop</div>
+                                <div class="upload-hint">Screenshots, documents, videos (Max 10MB)</div>
+                            </div>
+                            <input type="file" id="proofFile" class="file-input" accept="image/*,.pdf,.doc,.docx,.txt,.zip" required>
+                            <div id="fileSelected" class="file-selected" style="display: none;"></div>
+                        </div>
+                        <input type="hidden" id="proofUrl" name="proofUrl">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-section">
-                <div class="form-section-title">💬 Additional Information</div>
-                <div class="form-group">
-                    <textarea id="reviewComment" name="reviewComment" class="form-control"
-                              placeholder="Additional comments (optional)"></textarea>
+                <!-- 3. Additional Information -->
+                <div class="form-section">
+                    <div class="form-section-title">💬 Additional Information</div>
+                    <div class="form-group">
+                        <textarea id="reviewComment" name="reviewComment" class="form-control"
+                                  placeholder="Additional comments (optional)"></textarea>
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit" class="submit-btn">Submit</button>
-        </form>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
     </div>
 </div>
+
+
 
 
 

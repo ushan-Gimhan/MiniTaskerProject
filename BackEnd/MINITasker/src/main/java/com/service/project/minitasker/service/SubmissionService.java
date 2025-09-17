@@ -1,12 +1,13 @@
 package com.service.project.minitasker.service;
 
+import com.service.project.minitasker.dto.SubmissionDTO;
 import com.service.project.minitasker.entity.Submission;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SubmissionService {
-    Submission createSubmission(Submission submission);
+    Submission createSubmission(SubmissionDTO submission);
 
     // Get all submissions
     List<Submission> getAllSubmissions();
@@ -15,7 +16,7 @@ public interface SubmissionService {
     Optional<Submission> getSubmissionById(Long id);
 
     // Update a submission
-    Submission updateSubmission(Long id, Submission submission);
+    Submission updateSubmission(Long id, SubmissionDTO submission);
 
     // Delete a submission
     void deleteSubmission(Long id);

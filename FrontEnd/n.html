@@ -1,96 +1,697 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Create Submission</title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Submission Modal - Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      padding: 20px;
+    }
+
+    /* Demo Dashboard Elements */
+    .demo-dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .demo-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .demo-header h1 {
+      color: #1f2937;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .demo-task-card {
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .demo-task-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(251, 191, 36, 0.15);
+    }
+
+    .demo-task-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+
+    .demo-task-description {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .demo-task-reward {
+      color: #10b981;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    .apply-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .apply-btn:hover {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(5px);
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      position: relative;
+      background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+      margin: 2% auto;
+      padding: 0;
+      width: 90%;
+      max-width: 700px;
+      max-height: 90vh;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      overflow: hidden;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+      color: white;
+      padding: 25px 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(45deg, #fbbf24 0%, #f59e0b 100%);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #cbd5e1;
+      font-size: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+    }
+
+    .modal-body {
+      padding: 30px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+
+    .form-section {
+      margin-bottom: 30px;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .form-section:nth-child(1) { animation-delay: 0.1s; }
+    .form-section:nth-child(2) { animation-delay: 0.2s; }
+    .form-section:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #fbbf24;
+      display: inline-block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .required {
+      color: #ef4444;
+      font-weight: bold;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #ffffff 0%, #f9fafb 100%);
+      font-family: inherit;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.15);
+      background: #ffffff;
+    }
+
+    .form-control::placeholder {
+      color: #9ca3af;
+    }
+
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* File Upload Styles */
+    .file-upload-container {
+      position: relative;
+    }
+
+    .file-upload-area {
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #f9fafb 0%, #ffffff 100%);
+    }
+
+    .file-upload-area:hover {
+      border-color: #fbbf24;
+      background: linear-gradient(145deg, #fef3c7 0%, #fffbeb 100%);
+    }
+
+    .file-upload-area.dragover {
+      border-color: #10b981;
+      background: linear-gradient(145deg, #d1fae5 0%, #ecfdf5 100%);
+    }
+
+    .upload-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.7;
+    }
+
+    .upload-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 5px;
+    }
+
+    .upload-hint {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-selected {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
+      border: 1px solid #10b981;
+      border-radius: 8px;
+      color: #065f46;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .file-selected .file-icon {
+      font-size: 1.2rem;
+    }
+
+    .file-selected .remove-file {
+      margin-left: auto;
+      cursor: pointer;
+      color: #ef4444;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .file-selected .remove-file:hover {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      color: white;
+      border: none;
+      padding: 18px 30px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 8px 25px rgba(251, 191, 36, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(251, 191, 36, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 20px rgba(251, 191, 36, 0.3);
+    }
+
+    .submit-btn.loading {
+      background: linear-gradient(135deg, #9ca3af, #6b7280);
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .submit-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        max-height: 95vh;
+      }
+
+      .modal-header {
+        padding: 20px 25px;
+      }
+
+      .modal-title {
+        font-size: 1.3rem;
+      }
+
+      .modal-body {
+        padding: 25px 20px;
+      }
+
+      .file-upload-area {
+        padding: 30px 15px;
+      }
+
+      .upload-icon {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* Success Animation */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .success-icon {
+      font-size: 4rem;
+      color: #10b981;
+      margin-bottom: 20px;
+      animation: bounceIn 0.6s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0.3); opacity: 0; }
+      50% { transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .success-text {
+      font-size: 1.2rem;
+      color: #065f46;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .success-subtext {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    /* Modal open body style */
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
 </head>
+<body>
+<!-- Demo Dashboard -->
+<div class="demo-dashboard">
+  <div class="demo-header">
+    <h1>TaskCoin Lanka Dashboard</h1>
+    <p>Click "Apply Task" to see the submission form</p>
+  </div>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
-<div class="flex h-full min-h-screen w-full flex-col">
+  <div class="task-grid">
+    <div class="demo-task-card">
+      <div class="demo-task-title">Data Entry for E-commerce</div>
+      <div class="demo-task-description">Enter product details from images into our system. No experience required, training provided.</div>
+      <div class="demo-task-reward">+150 coins</div>
+      <button class="apply-btn" onclick="openTaskForm('task001', 'Data Entry for E-commerce', 150)">Apply Task</button>
+    </div>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-10 flex items-center border-b border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark p-4">
-    <button class="text-foreground-light dark:text-foreground-dark">
-      <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-        <path d="M15 18l-6-6 6-6"></path>
-      </svg>
-    </button>
-    <h1 class="flex-1 text-center text-lg font-bold">New Submission</h1>
-    <div class="w-6"></div>
-  </header>
+    <div class="demo-task-card">
+      <div class="demo-task-title">Social Media Content Review</div>
+      <div class="demo-task-description">Review and categorize social media posts for content moderation purposes.</div>
+      <div class="demo-task-reward">+200 coins</div>
+      <button class="apply-btn" onclick="openTaskForm('task002', 'Social Media Content Review', 200)">Apply Task</button>
+    </div>
 
-  <!-- Main -->
-  <main class="flex-1 overflow-y-auto p-4">
-    <form class="space-y-6 max-w-2xl mx-auto bg-white dark:bg-input-dark p-6 rounded-lg shadow">
-
-      <!-- Task ID -->
-      <div>
-        <label for="taskId" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Task ID</label>
-        <input type="number" id="taskId" name="taskId" placeholder="Enter Task ID"
-               class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
-          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"/>
-      </div>
-
-      <!-- Worker ID -->
-      <div>
-        <label for="workerId" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Worker ID</label>
-        <input type="number" id="workerId" name="workerId" placeholder="Enter Worker ID"
-               class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
-          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"/>
-      </div>
-
-      <!-- Proof URL -->
-      <div>
-        <label for="proofUrl" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Proof URL</label>
-        <input type="text" id="proofUrl" name="proofUrl" placeholder="https://..."
-               class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
-          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"/>
-      </div>
-
-      <!-- Status -->
-      <div>
-        <label for="status" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Status</label>
-        <select id="status" name="status"
-                class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
-          text-foreground-light dark:text-foreground-dark">
-          <option value="PENDING">PENDING</option>
-          <option value="APPROVED">APPROVED</option>
-          <option value="REJECTED">REJECTED</option>
-        </select>
-      </div>
-
-      <!-- Review Comment -->
-      <div>
-        <label for="reviewComment" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Review Comment</label>
-        <textarea id="reviewComment" name="reviewComment" rows="3" placeholder="Feedback from reviewer..."
-                  class="form-textarea w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
-          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"></textarea>
-      </div>
-
-      <!-- Description -->
-      <div>
-        <label for="description" class="block text-sm font-medium text-muted-light dark:text-muted-dark mb-1">Description</label>
-        <textarea id="description" name="description" rows="4" placeholder="Describe your submission..."
-                  class="form-textarea w-full rounded-lg border-border-light dark:border-border-dark bg-input-light dark:bg-input-dark
-          text-foreground-light dark:text-foreground-dark placeholder:text-muted-light dark:placeholder:text-muted-dark"></textarea>
-      </div>
-
-      <!-- Submit -->
-      <div>
-        <button type="submit"
-                class="w-full rounded-lg bg-primary py-3 text-base font-bold text-white shadow-lg shadow-primary/30
-          transition-transform duration-200 active:scale-95">
-          Submit
-        </button>
-      </div>
-    </form>
-  </main>
-
+    <div class="demo-task-card">
+      <div class="demo-task-title">Survey Participation</div>
+      <div class="demo-task-description">Complete a 10-minute survey about consumer preferences for a local business.</div>
+      <div class="demo-task-reward">+75 coins</div>
+      <button class="apply-btn" onclick="openTaskForm('task003', 'Survey Participation', 75)">Apply Task</button>
+    </div>
+  </div>
 </div>
+
+<!-- Task Submission Modal -->
+<div id="taskSubmissionModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modalTitle">Submit Task Completion</h2>
+      <span class="close-btn" onclick="closeTaskForm()">&times;</span>
+    </div>
+
+    <div class="modal-body">
+      <form id="taskSubmissionForm">
+        <!-- Hidden Fields -->
+        <input type="hidden" id="taskId" name="task_id">
+        <input type="hidden" id="workerId" name="worker_id" value="1">
+        <input type="hidden" id="submissionStatus" name="status" value="PENDING">
+
+        <div class="form-section">
+          <div class="form-section-title">Proof of Work</div>
+          <div class="form-group">
+            <label for="proofUrl" class="form-label">Upload Proof File <span class="required">*</span></label>
+            <div class="file-upload-container">
+              <div class="file-upload-area" onclick="document.getElementById('proofFile').click()">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">Click to upload or drag & drop</div>
+                <div class="upload-hint">Screenshots, documents, videos (Max 10MB)</div>
+              </div>
+              <input type="file" id="proofFile" class="file-input" accept="image/*,.pdf,.doc,.docx,.txt,.zip" required>
+              <div id="fileSelected" class="file-selected" style="display: none;">
+                <span class="file-icon">📄</span>
+                <span class="file-name"></span>
+                <span class="file-size"></span>
+                <span class="remove-file" onclick="removeFile()">✕</span>
+              </div>
+            </div>
+            <input type="hidden" id="proofUrl" name="proofUrl">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Work Description</div>
+          <div class="form-group">
+            <label for="description" class="form-label">Describe your completed work <span class="required">*</span></label>
+            <textarea id="description" name="description" class="form-control"
+                      placeholder="Please provide detailed description of the work you completed..."
+                      required></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Additional Information</div>
+          <div class="form-group">
+            <label for="reviewComment" class="form-label">Additional comments (optional)</label>
+            <textarea id="reviewComment" name="reviewComment" class="form-control"
+                      placeholder="Any additional information or comments..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Submit Task for Review
+        </button>
+      </form>
+
+      <!-- Success Message (Hidden by default) -->
+      <div class="success-message" id="successMessage">
+        <div class="success-icon">✅</div>
+        <div class="success-text">Task Submitted Successfully!</div>
+        <div class="success-subtext">Your submission is now under review. You'll be notified once it's approved.</div>
+        <button class="submit-btn" onclick="closeTaskForm()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentTaskData = {};
+
+  // Open Task Form Modal
+  function openTaskForm(taskId, taskTitle, reward) {
+    currentTaskData = { id: taskId, title: taskTitle, reward: reward };
+
+    // Set task data
+    document.getElementById('taskId').value = taskId;
+    document.getElementById('modalTitle').textContent = `Submit: ${taskTitle} (+${reward} coins)`;
+
+    // Show modal
+    document.getElementById('taskSubmissionModal').style.display = 'block';
+    document.body.classList.add('modal-open');
+
+    // Reset form to initial state
+    resetFormState();
+  }
+
+  // Close Task Form Modal
+  function closeTaskForm() {
+    document.getElementById('taskSubmissionModal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+    resetFormState();
+  }
+
+  // Reset form to initial state
+  function resetFormState() {
+    document.getElementById('taskSubmissionForm').reset();
+    document.getElementById('fileSelected').style.display = 'none';
+    document.getElementById('successMessage').style.display = 'none';
+    document.querySelector('.modal-body form').style.display = 'block';
+    document.getElementById('submitBtn').classList.remove('loading');
+  }
+
+  // File upload handling
+  document.getElementById('proofFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      displaySelectedFile(file);
+    }
+  });
+
+  // Drag and drop functionality
+  const uploadArea = document.querySelector('.file-upload-area');
+
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      document.getElementById('proofFile').files = files;
+      displaySelectedFile(files[0]);
+    }
+  });
+
+  // Display selected file
+  function displaySelectedFile(file) {
+    const fileSelected = document.getElementById('fileSelected');
+    const fileName = file.name;
+    const fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+
+    fileSelected.querySelector('.file-name').textContent = fileName;
+    fileSelected.querySelector('.file-size').textContent = fileSize;
+    fileSelected.style.display = 'flex';
+  }
+
+  // Remove selected file
+  function removeFile() {
+    document.getElementById('proofFile').value = '';
+    document.getElementById('fileSelected').style.display = 'none';
+  }
+
+  // Form submission
+  document.getElementById('taskSubmissionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.classList.add('loading');
+    submitBtn.textContent = 'Submitting...';
+
+    // Simulate API call
+    setTimeout(() => {
+      // Hide form and show success message
+      document.querySelector('.modal-body form').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'block';
+
+      // Reset button
+      submitBtn.classList.remove('loading');
+      submitBtn.textContent = 'Submit Task for Review';
+    }, 2000);
+  });
+
+  // Close modal when clicking outside
+  window.addEventListener('click', function(event) {
+    const modal = document.getElementById('taskSubmissionModal');
+    if (event.target === modal) {
+      closeTaskForm();
+    }
+  });
+
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      closeTaskForm();
+    }
+  });
+</script>
 </body>
 </html>

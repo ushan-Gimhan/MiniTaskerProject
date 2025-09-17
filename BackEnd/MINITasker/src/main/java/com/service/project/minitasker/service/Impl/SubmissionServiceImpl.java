@@ -1,5 +1,6 @@
 package com.service.project.minitasker.service.Impl;
 
+import com.service.project.minitasker.dto.SubmissionDTO;
 import com.service.project.minitasker.entity.Submission;
 import com.service.project.minitasker.entity.Task;
 import com.service.project.minitasker.entity.User;
@@ -22,18 +23,23 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final UserRepository userRepository;
 
     @Override
-    public Submission createSubmission(Submission submission) {
+    public Submission createSubmission(SubmissionDTO dto) {
         // Validate Task
-        Task task = taskRepository.findById(Math.toIntExact(submission.getTask().getId()))
-                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + submission.getTask().getId()));
+        Task task = taskRepository.findById(Math.toIntExact(dto.getTaskId()))
+                .orElseThrow(() -> new RuntimeException("Task not found with ID: " + dto.getTaskId()));
 
-        // Validate Worker/User
-        User worker = userRepository.findById(submission.getWorker().getId())
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + submission.getWorker().getId()));
+        // Validate Worker
+        User worker = userRepository.findById(dto.getWorkerId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + dto.getWorkerId()));
 
-        // Assign back to make sure we use the managed entities
+        // Build Submission entity
+        Submission submission = new Submission();
         submission.setTask(task);
         submission.setWorker(worker);
+        submission.setProofUrl(dto.getProofUrl());
+        submission.setStatus(dto.getStatus());
+        submission.setReviewComment(dto.getReviewComment());
+        submission.setDescription(dto.getDescription());
 
         return submissionRepository.save(submission);
     }
@@ -49,25 +55,28 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Submission updateSubmission(Long id, Submission submission) {
+    public Submission updateSubmission(Long id, SubmissionDTO dto) {
         return submissionRepository.findById(id).map(existing -> {
-            // Validate Task if changed
-            if (submission.getTask() != null) {
-                Task task = taskRepository.findById(Math.toIntExact(submission.getTask().getId()))
-                        .orElseThrow(() -> new RuntimeException("Task not found with ID: " + submission.getTask().getId()));
+
+            // Update Task if provided
+            if (dto.getTaskId() != null) {
+                Task task = taskRepository.findById(Math.toIntExact(dto.getTaskId()))
+                        .orElseThrow(() -> new RuntimeException("Task not found with ID: " + dto.getTaskId()));
                 existing.setTask(task);
             }
 
-            // Validate Worker if changed
-            if (submission.getWorker() != null) {
-                User worker = userRepository.findById(submission.getWorker().getId())
-                        .orElseThrow(() -> new RuntimeException("User not found with ID: " + submission.getWorker().getId()));
+            // Update Worker if provided
+            if (dto.getWorkerId() != null) {
+                User worker = userRepository.findById(dto.getWorkerId())
+                        .orElseThrow(() -> new RuntimeException("User not found with ID: " + dto.getWorkerId()));
                 existing.setWorker(worker);
             }
 
-            existing.setProofUrl(submission.getProofUrl());
-            existing.setStatus(submission.getStatus());
-            existing.setReviewComment(submission.getReviewComment());
+            if (dto.getProofUrl() != null) existing.setProofUrl(dto.getProofUrl());
+            if (dto.getStatus() != null) existing.setStatus(dto.getStatus());
+            if (dto.getReviewComment() != null) existing.setReviewComment(dto.getReviewComment());
+            if (dto.getDescription() != null) existing.setDescription(dto.getDescription());
+
             return submissionRepository.save(existing);
         }).orElseThrow(() -> new RuntimeException("Submission not found with id: " + id));
     }

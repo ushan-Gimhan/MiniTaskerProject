@@ -1,5 +1,6 @@
 package com.service.project.minitasker.controller;
 
+import com.service.project.minitasker.dto.SubmissionDTO;
 import com.service.project.minitasker.entity.Submission;
 import com.service.project.minitasker.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,8 @@ public class SubmissionController {
     private final SubmissionService submissionServiceImpl;
 
     @PostMapping("/create")
-    public ResponseEntity<Submission> createSubmission(@RequestBody Submission submission) {
+    public ResponseEntity<Submission> createSubmission(@RequestBody SubmissionDTO submission) {
+        System.out.println();
         return ResponseEntity.ok(submissionServiceImpl.createSubmission(submission));
     }
 
@@ -34,7 +36,7 @@ public class SubmissionController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody Submission submission) {
+    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody SubmissionDTO submission) {
         return ResponseEntity.ok(submissionServiceImpl.updateSubmission(id, submission));
     }
 
