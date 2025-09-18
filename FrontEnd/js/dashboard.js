@@ -68,10 +68,15 @@ function initializeDashboard() {
     });
 }
 
-// --------------------- Task AJAX and Rendering ---------------------
-$(document).ready(function () {
-    const apiURL = "http://localhost:8080/task/getAll";
+$(document).ready(async function () {
+    const apiURL = "http://localhost:8080/task/approved";
     const token = localStorage.getItem('jwtToken');
+
+    // Assume you already have the logged-in username
+    const user = await loadUserDetails(token);
+    const username = user.username || "User";
+
+    // fallback if not set
 
     function renderTasks(tasks) {
         const taskList = $("#taskList");
@@ -84,7 +89,7 @@ $(document).ready(function () {
         });
 
         if (!Array.isArray(tasks) || tasks.length === 0) {
-            taskList.html("<p class='text-gray-500'>No tasks found.</p>");
+            taskList.html("<p class='text-gray-500'>No approved tasks available.</p>");
             return;
         }
 
@@ -109,48 +114,23 @@ $(document).ready(function () {
             `);
 
             taskList.append(taskItem);
-
-            // --------- Apply Button: Open Modal Only ----------
-            taskItem.find(".apply-btn").on('click', function (e) {
-                e.stopPropagation();
-
-                // Open modal
-                openTaskForm();
-
-                // Fill modal with task info
-                $("#taskTitle").text(task.title || "Untitled Task");
-                $("#taskDescription").html(`
-                    <p>${task.description || ''}</p>
-                    <ul>
-                        <li>💰 Reward: ${task.rewardPerTask != null ? '$' + task.rewardPerTask : '-'}</li>
-                        <li>🗂 Vacancy Available: ${task.totalQuantity || 0}</li>
-                    </ul>
-                `);
-
-                // Set hidden task ID for later submission
-                $("#taskId").val(task.id);
-            });
-
-            // Optional: open details on card click
-            taskItem.on('click', function () {
-                alert(`Opening task details for: ${task.title || 'Task'}`);
-            });
         });
     }
 
-    function loadTasks(callback) {
+    function loadTasks() {
         $.ajax({
-            url: apiURL,
-            type: "GET",
+            url: "http://localhost:8080/task/approved",
+            type: "POST", // Use POST since GET + body is not standard
+            contentType: "application/json",
             dataType: "json",
-            headers: { "Authorization": `Bearer ${token}` },
+            headers: {"Authorization": `Bearer ${token}`},
+            data: JSON.stringify({username: username}), // Wrap in user object if backend expects it
             success: function (response) {
-                console.log("✅ Got tasks:", response);
+                console.log("✅ Approved tasks:", response);
                 renderTasks(response);
-                if (callback) callback(response);
             },
             error: function (xhr) {
-                console.error("❌ Error fetching tasks", xhr.responseText);
+                console.error("❌ Error fetching tasks:", xhr.responseText);
                 $("#taskList").html(`<p class='text-red-500'>Failed to load tasks. (${xhr.status})</p>`);
             }
         });
@@ -245,4 +225,3 @@ $("#taskSubmissionForm").on("submit", async function (e) {
         alert("❌ Failed to upload proof image: " + err.message);
     }
 });
-

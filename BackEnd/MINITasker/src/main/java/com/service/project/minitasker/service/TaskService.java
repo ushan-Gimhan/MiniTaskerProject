@@ -8,4 +8,6 @@ public interface TaskService {
     Task createTask(TaskDTO taskDTO, String imageName);
     List<Task> getAllTasks();
     Task getTaskById(Long id);
+
+    List<Task> getAllApprovedTasks(Long id);
 }

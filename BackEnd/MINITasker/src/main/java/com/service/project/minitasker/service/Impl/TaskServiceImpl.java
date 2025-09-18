@@ -116,4 +116,9 @@ public class TaskServiceImpl implements TaskService {
                 )
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
     }
+
+    @Override
+    public List<Task> getAllApprovedTasks(Long currentUserId) {
+        return taskRepository.findByStatusAndClientIdNot("APPROVED", currentUserId);
+    }
 }

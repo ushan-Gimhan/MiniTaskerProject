@@ -3,10 +3,12 @@ package com.service.project.minitasker.controller;
 import com.service.project.minitasker.dto.TaskDTO;
 import com.service.project.minitasker.dto.TaskResponse;
 import com.service.project.minitasker.entity.Task;
-import com.service.project.minitasker.service.Impl.TaskServiceImpl;
+import com.service.project.minitasker.entity.User;
+import com.service.project.minitasker.service.AuthService;
 import com.service.project.minitasker.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskServiceImpl;
+    private final AuthService authService;
 
     @PostMapping("/create")
     public ResponseEntity<TaskResponse> createTask(@RequestBody TaskDTO taskDTO) {
@@ -43,6 +46,14 @@ public class TaskController {
         Task task = taskServiceImpl.getTaskById(id);
         return ResponseEntity.ok(task);
     }
+
+    @PostMapping("/approved")
+    public ResponseEntity<List<Task>> getAllApprovedTasks(@RequestBody User user) {
+        User currentUser = authService.findByUsername(user.getUsername());
+        List<Task> tasks = taskServiceImpl.getAllApprovedTasks(currentUser.getId());
+        return ResponseEntity.ok(tasks);
+    }
+
 
 
 
