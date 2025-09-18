@@ -1,15 +1,5 @@
 let selectedUserType = '';
 
-// User type selection
-function selectUserType(type) {
-    selectedUserType = type;
-    document.querySelectorAll('.user-type-card').forEach(card => {
-        card.classList.remove('selected');
-    });
-    document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-    validateForm();
-}
-
 // Password toggle
 function togglePassword(inputId) {
     const passwordInput = document.getElementById(inputId);
@@ -63,7 +53,7 @@ function validateForm() {
     const isPhoneValid = /^(\+94|0)?[0-9]{9}$/.test(phone.replace(/\s/g, ''));
 
     const isFormValid = UserName && isEmailValid && isPhoneValid &&
-        isPasswordValid && doPasswordsMatch && terms && selectedUserType;
+        isPasswordValid && doPasswordsMatch && terms;
 
     document.getElementById('signupBtn').disabled = !isFormValid;
     return isFormValid;
@@ -86,7 +76,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     }
 
     const formData = {
-        role: selectedUserType,
+        role: "USER",
         username: document.getElementById('UserName').value.trim(),
         email: document.getElementById('email').value.trim(),
         mobile: document.getElementById('phone').value.trim(),

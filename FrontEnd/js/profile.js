@@ -46,9 +46,10 @@ function loadUserProfile() {
                     if (profile) {
                         profileData.profile = profile;
 
-                        $('#fullName').val(user.fullName || '');
+                        $('#fullName').val(profile.fullName || '');
                         $('#username').val(user.username || '');
                         $('#email1').val(user.email || '');
+                        $('#Number').val(user.mobile || '');
                         $('#location').val(profile.location || '');
                         $('#bio').val(profile.bio || '');
 
