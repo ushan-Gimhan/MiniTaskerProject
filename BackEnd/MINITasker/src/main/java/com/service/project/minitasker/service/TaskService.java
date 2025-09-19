@@ -10,4 +10,6 @@ public interface TaskService {
     Task getTaskById(Long id);
 
     List<Task> getAllApprovedTasks(Long id);
+
+    List<Task> getTasksByUserId(Long userId);
 }

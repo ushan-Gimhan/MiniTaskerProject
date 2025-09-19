@@ -68,15 +68,13 @@ function initializeDashboard() {
     });
 }
 
+// --------------------- Load & Render Tasks ---------------------
 $(document).ready(async function () {
     const apiURL = "http://localhost:8080/task/approved";
     const token = localStorage.getItem('jwtToken');
 
-    // Assume you already have the logged-in username
     const user = await loadUserDetails(token);
     const username = user.username || "User";
-
-    // fallback if not set
 
     function renderTasks(tasks) {
         const taskList = $("#taskList");
@@ -113,18 +111,24 @@ $(document).ready(async function () {
                 </div>
             `);
 
+            // ✅ Hook Apply button
+            taskItem.find(".apply-btn").on("click", function () {
+                $("#taskId").val(task.id); // set hidden input with taskId
+                openTaskForm(); // show modal
+            });
+
             taskList.append(taskItem);
         });
     }
 
     function loadTasks() {
         $.ajax({
-            url: "http://localhost:8080/task/approved",
-            type: "POST", // Use POST since GET + body is not standard
+            url: apiURL,
+            type: "POST", // using POST
             contentType: "application/json",
             dataType: "json",
             headers: {"Authorization": `Bearer ${token}`},
-            data: JSON.stringify({username: username}), // Wrap in user object if backend expects it
+            data: JSON.stringify({username: username}),
             success: function (response) {
                 console.log("✅ Approved tasks:", response);
                 renderTasks(response);
@@ -176,7 +180,7 @@ $("#taskSubmissionForm").on("submit", async function (e) {
     }
 
     // ---------------- Upload file to ImgBB ----------------
-    const imgbbApiKey = "b56b8866f0ddb6ccb4adcf435a94347b"; // <-- Replace with your API key
+    const imgbbApiKey = "b56b8866f0ddb6ccb4adcf435a94347b"; // Replace with your key
     const formData = new FormData();
     formData.append("image", file);
 
@@ -215,7 +219,7 @@ $("#taskSubmissionForm").on("submit", async function (e) {
                 closeTaskForm();
                 console.log("Submission response:", response);
             },
-            error: function (xhr, status, error) {
+            error: function (xhr) {
                 alert("❌ Failed to submit task: " + xhr.responseText);
             }
         });

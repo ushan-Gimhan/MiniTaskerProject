@@ -50,7 +50,9 @@
         <ul>
             <li><a href="#" onclick="window.location.href='dashboard.html'">Dashboard</a></li>
             <li><a href="#"  data-section="createJob">Create Job</a></li>
-            <li><a href="#" data-section="taskHistory">Job History</a></li>
+            <li><a href="#" data-section="taskHistory">Create Job History</a></li>
+            <li><a href="#" data-section="jobHistory">Apply Job History</a></li>
+
         </ul>
         <ul>
             <li><a href="#"  data-section="wallet">Wallet</a></li>
@@ -180,6 +182,26 @@
             </div>
         </div>
     </section>
+    <!-- Task History Section -->
+    <section id="jobHistory" class="section">
+        <div class="form-section">
+            <h2>Create Job History</h2>
+
+            <!-- Tabs -->
+            <div class="tab-nav">
+                <button class="tab-link active" data-status="all">All</button>
+                <button class="tab-link" data-status="completed">Completed</button>
+                <button class="tab-link" data-status="pending">Pending</button>
+                <button class="tab-link" data-status="rejected">Rejected</button>
+            </div>
+
+            <!-- Task List -->
+            <div id="jobList">
+                <!-- Task items will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
 
     <section id="profile" class="section">
         <div class="profile-card">
@@ -376,20 +398,6 @@
     </section>
     <section id="settings" class="section">
         <div class="settings-container">
-            <!-- Profile Settings -->
-            <div class="card">
-                <h2 class="card-title">Profile Settings</h2>
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" placeholder="John Doe" value="John Doe">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="john.doe@example.com" value="john.doe@example.com">
-                </div>
-                <button type="button" class="btn">Change Password</button>
-            </div>
-
             <!-- Notification Preferences -->
             <div class="card">
                 <h2 class="card-title">Notification Preferences</h2>
@@ -435,8 +443,10 @@
     </section>
 
 </div>
+
 <script src="js/taskCreate.js"></script>
 <script src="js/profile.js"></script>
+<script src="js/TaskHistory.js"></script>
 <script>
     // Sidebar navigation toggle
     document.addEventListener('DOMContentLoaded', () => {

@@ -121,4 +121,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllApprovedTasks(Long currentUserId) {
         return taskRepository.findByStatusAndClientIdNot("APPROVED", currentUserId);
     }
+
+    @Override
+    public List<Task> getTasksByUserId(Long userId) {
+        return taskRepository.findByClientId(userId);
+    }
 }
