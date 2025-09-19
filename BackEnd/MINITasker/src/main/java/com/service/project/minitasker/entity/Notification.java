@@ -1,9 +1,15 @@
 package com.service.project.minitasker.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "notifications")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +20,7 @@ public class Notification {
     private User user;
 
     private String message;
-    private boolean isRead = false;
+    private String status;
     private String timestamp;
 }
 

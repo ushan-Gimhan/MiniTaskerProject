@@ -39,7 +39,7 @@ async function loadSubmissions(token) {
                 <td>#${sub.id}</td>
                 <td>${sub.task?.title || ''}</td>
                 <td>@${sub.task?.client?.username || ''}</td>
-                <td>@${sub.worker?.username || ''}</td>
+                <td>@${sub.user?.username || ''}</td>
                 <td class="status-cell" style="color:${getStatusColor(sub.status)};">${sub.status || 'Unknown'}</td>
                 <td>${sub.reviewComment || '<i style="color:#9ca3af;">No review</i>'}</td>
                 <td>${sub.description || '<i style="color:#9ca3af;">N/A</i>'}</td>
