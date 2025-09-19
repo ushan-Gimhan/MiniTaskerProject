@@ -16,7 +16,7 @@ window.addEventListener('load', async function () {
     }
 });
 
-// --------------------- Load Tasks List (Dark Theme) ---------------------
+// --------------------- Load Tasks List with Update ---------------------
 async function loadTasks(token) {
     try {
         const res = await fetch("http://localhost:8080/task/getAll", {
@@ -55,96 +55,108 @@ async function loadTasks(token) {
                 transition: all 0.3s ease;
             `;
 
-            // Add hover effect
+            // Hover effect
             tr.addEventListener('mouseenter', () => tr.style.backgroundColor = '#374151');
             tr.addEventListener('mouseleave', () => tr.style.backgroundColor = '#1f2937');
-
+            // Status color function
+            function getStatusColor(status) {
+                if (status === "Pending") return "#f59e0b";
+                if (status === "Approved") return "#10b981";
+                if (status === "Rejected") return "#ef4444";
+                return "#d1d5db";
+            }
             tr.innerHTML = `
-                <td style="padding:0.75rem; border:1px solid #374151; color:#f3f4f6; font-weight:500;">${task.title || ''}</td>
-                <td style="padding:0.75rem; border:1px solid #374151; color:#d1d5db;">${task.client?.username || ''}</td>
-                <td style="padding:0.75rem; border:1px solid #374151; color:#d1d5db;">${task.totalQuantity || 0}</td>
-                <td style="padding:0.75rem; border:1px solid #374151; color:#d1d5db;">${task.totalPrice || 0}</td>
-                <td style="padding:0.75rem; border:1px solid #374151;">
-                    <select style="
-        width:100%; padding:0.5rem; background-color:#374151; color:#f3f4f6;
-        border:1px solid #4b5563; border-radius:0.5rem; font-size:0.875rem; outline:none;
-        cursor:pointer; transition: all 0.3s ease;"
-        onfocus="this.style.borderColor='#1173d4'; this.style.boxShadow='0 0 0 2px rgba(17,115,212,0.2)';"
-        onblur="this.style.borderColor='#4b5563'; this.style.boxShadow='none';"
-        onchange="
-            if(this.value === 'Pending'){ this.style.color='#f59e0b'; }
-            else if(this.value === 'Approved'){ this.style.color='#10b981'; }
-            else if(this.value === 'Rejected'){ this.style.color='#ef4444'; }
-        "
->
-                        <option value="Pending" ${task.status === 'Pending' ? 'selected' : ''} style="background:#374151; color:#f59e0b;">Pending</option>
-                        <option value="Approved" ${task.status === 'Approved' ? 'selected' : ''} style="background:#374151; color:#10b981;">Approved</option>
-                        <option value="Rejected" ${task.status === 'Rejected' ? 'selected' : ''} style="background:#374151; color:#ef4444;">Rejected</option>
-                    </select>
+                <td style="padding:0.75rem; border:1px solid #374151; color:#f3f4f6; font-weight:500;">
+                    ${task.title || ''}
                 </td>
-                <td style="padding:0.6rem; border:1px solid #374151; color:#d1d5db;">${task.description || ''}</td>
+                <td style="padding:0.75rem; border:1px solid #374151; color:#d1d5db;">
+                    ${task.client?.username || ''}
+                </td>
+                <td style="padding:0.75rem; border:1px solid #374151; color:#d1d5db;">
+                    ${task.totalQuantity || 0}
+                </td>
+                <td style="padding:0.75rem; border:1px solid #374151; color:#d1d5db;">
+                    ${task.totalPrice || 0}
+                </td>
+                <td class="status-cell" style="padding:0.75rem; border:1px solid #374151; color:${getStatusColor(task.status)};">
+                    ${task.status || 'Unknown'}
+                </td>
+                <td style="padding:0.6rem; border:1px solid #374151; color:#d1d5db;">
+                    ${task.description || ''}
+                </td>
                 <td style="padding:0.75rem; border:1px solid #374151;">
-                    <button style="
+                    <button class="update-btn" style="
                         background: linear-gradient(135deg, #1173d4 0%, #0ea5e9 100%);
                         color:white; border:none; padding:0.5rem 1rem; border-radius:0.5rem;
                         cursor:pointer; font-weight:500; font-size:0.875rem; transition: all 0.3s ease;
                         box-shadow: 0 2px 8px rgba(17,115,212,0.3);"
                         onmouseover="this.style.background='linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(17,115,212,0.4)';"
                         onmouseout="this.style.background='linear-gradient(135deg, #1173d4 0%, #0ea5e9 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(17,115,212,0.3)';"
-                    >Save</button>
-                    <button style="
-                        background: red;
-                        color:white; border:none; padding:0.5rem 1rem; border-radius:0.5rem;
-                        cursor:pointer; font-weight:500; font-size:0.875rem; transition: all 0.3s ease ;"
-                        onmouseover="this.style.background='linear-gradient(135deg, #f87171 0%, #dc2626 100%)'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(220,38,38,0.4)';"
-                        onmouseout="this.style.background='linear-gradient(135deg, #dc2626 0%, #f87171 100%)'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(220,38,38,0.3)';"
-                    >Delete</button>
+                    >Update</button>
                 </td>
             `;
+
             tbody.appendChild(tr);
 
-            // Only Save button for status change
-            tr.querySelector("button").addEventListener("click", () => updateTask(token, task.id, tr));
-        });
+            // Update button click event
+            tr.querySelector(".update-btn").addEventListener("click", () => {
+                // Replace the status cell with a select dropdown
+                const statusCell = tr.children[4]; // 5th td
+                const currentStatus = task.status || "Pending";
 
-        // Table styling
-        const table = tbody.closest('table');
-        if (table) {
-            table.style.cssText = `
-                background-color: #111827;
-                border-collapse: collapse;
-                width: 100%;
-                border-radius: 0.75rem;
-                overflow: hidden;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            `;
-
-            table.querySelectorAll('th').forEach(th => {
-                th.style.cssText = `
-                    background-color: #1f2937;
-                    color: #f3f4f6;
-                    padding: 1rem 0.75rem;
-                    text-align: left;
-                    font-weight:600;
-                    font-size:0.875rem;
-                    text-transform: uppercase;
-                    letter-spacing:0.05em;
-                    border:1px solid #374151;
+                statusCell.innerHTML = `
+                    <select style="
+                        width:100%; padding:0.5rem; background-color:#374151; color:#f3f4f6;
+                        border:1px solid #4b5563; border-radius:0.5rem; font-size:0.875rem; outline:none;
+                        cursor:pointer;"
+                    >
+                        <option value="Pending" ${currentStatus === 'Pending' ? 'selected' : ''}>PENDING</option>
+                        <option value="APPROVED" ${currentStatus === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+                        <option value="Rejected" ${currentStatus === 'Rejected' ? 'selected' : ''}>REJECT</option>
+                    </select>
+                    <button class="save-status-btn" style="
+                        margin-top:0.3rem; width:100%; background:#10b981; color:white; border:none; padding:0.4rem; border-radius:0.3rem;
+                        cursor:pointer;"
+                    >Save</button>
                 `;
+
+                // Save status event
+                statusCell.querySelector(".save-status-btn").addEventListener("click", async () => {
+                    const newStatus = statusCell.querySelector("select").value;
+
+                    try {
+                        const updateRes = await fetch(`http://localhost:8080/task/update/${task.id}`, {
+                            method: "PUT",
+                            headers: {
+                                "Authorization": `Bearer ${token}`,
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ status: newStatus })
+                        });
+
+                        if (!updateRes.ok) throw new Error(`Update failed: ${updateRes.status}`);
+
+                        task.status = newStatus; // Update local task object
+                        // Reload the row to show new status
+                        statusCell.textContent = newStatus;
+                        if (newStatus === "Pending") statusCell.style.color = "#f59e0b";
+                        if (newStatus === "APPROVED") statusCell.style.color = "#10b981";
+                        if (newStatus === "Rejected") statusCell.style.color = "#ef4444";
+                        alert("✅ Status updated successfully!");
+                    } catch (err) {
+                        console.error(err);
+                        alert("❌ Failed to update status.");
+                    }
+                });
             });
-        }
+        });
 
     } catch (err) {
         console.error("Failed to load tasks:", err);
-        const tbody = document.querySelector("#reported-tasks-body");
-        tbody.innerHTML = `<tr>
-            <td colspan="7" style="
-                text-align:center; color:#ef4444; padding:2rem; background-color:#1f2937;
-                border:1px solid #374151; font-weight:500;
-            ">Failed to load tasks. Please try again.</td>
-        </tr>`;
     }
 }
+
+
 // --------------------- Update Task ---------------------
 async function updateTask(token, taskId, row) {
     const updatedTask = {
@@ -204,3 +216,25 @@ document.querySelector("#task-search-input")?.addEventListener("input", function
         row.style.display = title.includes(searchTerm) || user.includes(searchTerm) ? "" : "none";
     });
 });
+// ✅ Update Task via PUT
+function updateTask(taskId, updatedTaskData) {
+    const token = localStorage.getItem("jwtToken");
+
+    $.ajax({
+        url: `http://localhost:8080/task/update/${taskId}`,
+        type: "PUT",
+        contentType: "application/json",
+        dataType: "json",
+        headers: { "Authorization": `Bearer ${token}` },
+        data: JSON.stringify(updatedTaskData),
+        success: function (response) {
+            console.log("✅ Task updated:", response);
+            alert("Task updated successfully!");
+        },
+        error: function (xhr) {
+            console.error("❌ Error updating task:", xhr.responseText);
+            alert("Failed to update task. (" + xhr.status + ")");
+        }
+    });
+}
+

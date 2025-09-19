@@ -126,4 +126,15 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getTasksByUserId(Long userId) {
         return taskRepository.findByClientId(userId);
     }
+
+    @Override
+    public Task updateTask(Long id, Task updatedTask) {
+        Task existingTask = taskRepository.findById(Math.toIntExact(id))
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
+
+        existingTask.setStatus(updatedTask.getStatus());
+
+        return taskRepository.save(existingTask);
+    }
+
 }
