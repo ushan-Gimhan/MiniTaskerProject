@@ -3,6 +3,7 @@ package com.service.project.minitasker.service.Impl;
 import com.service.project.minitasker.dto.TaskDTO;
 import com.service.project.minitasker.entity.Task;
 import com.service.project.minitasker.entity.User;
+import com.service.project.minitasker.repo.SubmissionRepository;
 import com.service.project.minitasker.repo.TaskRepository;
 import com.service.project.minitasker.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +15,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final SubmissionRepository submissionRepository;
 
     public Task createTask(TaskDTO taskDTO, String imageName) {
         String uploadedImageUrl = null;
@@ -100,7 +103,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public Task getTaskById(Long id) {
-        return taskRepository.findById(Math.toIntExact(id))
+        return taskRepository.findById(id)
                 .map(task -> Task.builder()
                         .id(task.getId())
                         .title(task.getTitle())
@@ -119,7 +122,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllApprovedTasks(Long currentUserId) {
-        return taskRepository.findByStatusAndClientIdNot("APPROVED", currentUserId);
+//        return taskRepository.findByStatusAndClientIdNot("APPROVED", currentUserId);
+        // 1️⃣ Get all tasks approved by admin and NOT created by the current user
+        List<Task> approvedTasks = taskRepository.findByStatusAndClientIdNot("APPROVED", currentUserId);
+
+        // 2️⃣ Filter out tasks where the user has already submitted (pending or approved)
+        List<Task> availableTasks = approvedTasks.stream()
+                .filter(task -> !submissionRepository.existsByTask_IdAndUser_Id(task.getId(), currentUserId))
+                .collect(Collectors.toList());
+
+        return availableTasks;
     }
 
     @Override
@@ -129,7 +141,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(Long id, Task updatedTask) {
-        Task existingTask = taskRepository.findById(Math.toIntExact(id))
+        Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));
 
         existingTask.setStatus(updatedTask.getStatus());

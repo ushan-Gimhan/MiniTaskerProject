@@ -25,7 +25,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public Submission createSubmission(SubmissionDTO dto) {
         // Validate Task
-        Task task = taskRepository.findById(Math.toIntExact(dto.getTaskId()))
+        Task task = taskRepository.findById(dto.getTaskId())
                 .orElseThrow(() -> new RuntimeException("Task not found with ID: " + dto.getTaskId()));
 
         // Validate Worker
@@ -35,7 +35,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         // Build Submission entity
         Submission submission = new Submission();
         submission.setTask(task);
-        submission.setWorker(worker);
+        submission.setUser(worker);
         submission.setProofUrl(dto.getProofUrl());
         submission.setStatus(dto.getStatus());
         submission.setReviewComment(dto.getReviewComment());
@@ -60,7 +60,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 
             // Update Task if provided
             if (dto.getTaskId() != null) {
-                Task task = taskRepository.findById(Math.toIntExact(dto.getTaskId()))
+                Task task = taskRepository.findById(dto.getTaskId())
                         .orElseThrow(() -> new RuntimeException("Task not found with ID: " + dto.getTaskId()));
                 existing.setTask(task);
             }
@@ -69,7 +69,7 @@ public class SubmissionServiceImpl implements SubmissionService {
             if (dto.getWorkerId() != null) {
                 User worker = userRepository.findById(dto.getWorkerId())
                         .orElseThrow(() -> new RuntimeException("User not found with ID: " + dto.getWorkerId()));
-                existing.setWorker(worker);
+                existing.setUser(worker);
             }
 
             if (dto.getProofUrl() != null) existing.setProofUrl(dto.getProofUrl());
@@ -88,4 +88,14 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
         submissionRepository.deleteById(id);
     }
+    @Override
+    public List<Task> getAllSubmittedTasksByUser(Long userId) {
+        List<Submission> submissions = submissionRepository.findByUserId(userId);
+        return submissions.stream().map(sub -> {
+            Task task = sub.getTask();
+            task.setSubmissionStatus(sub.getStatus()); // attach submission status
+            return task;
+        }).toList();
+    }
+
 }

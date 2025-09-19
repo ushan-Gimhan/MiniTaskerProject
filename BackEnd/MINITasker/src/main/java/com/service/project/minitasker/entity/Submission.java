@@ -17,11 +17,13 @@ public class Submission {
 
     @ManyToOne
     @JoinColumn(name = "worker_id")
-    private User worker;
+    private User user;
 
     private String proofUrl;  // file link / screenshot path
     private String status;    // PENDING, APPROVED, REJECTED
     private String reviewComment;
     private String description;
+
+
 }
 

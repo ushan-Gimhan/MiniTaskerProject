@@ -2,6 +2,7 @@ package com.service.project.minitasker.service;
 
 import com.service.project.minitasker.dto.SubmissionDTO;
 import com.service.project.minitasker.entity.Submission;
+import com.service.project.minitasker.entity.Task;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,6 @@ public interface SubmissionService {
 
     // Delete a submission
     void deleteSubmission(Long id);
+
+    List<Task> getAllSubmittedTasksByUser(Long userId);
 }

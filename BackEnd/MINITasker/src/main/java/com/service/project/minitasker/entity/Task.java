@@ -28,4 +28,7 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
+
+    @Transient
+    private String submissionStatus;
 }

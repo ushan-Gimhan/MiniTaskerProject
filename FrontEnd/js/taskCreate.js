@@ -29,8 +29,8 @@ window.addEventListener('load', async function () {
 
         if (profileImage) profileImage.src = user.profileImage || "https://via.placeholder.com/100";
         if (sidebarName) sidebarName.textContent = user.name || user.username;
-        if (sidebarBalance) sidebarBalance.textContent = `Balance: $${(user.balance ?? 0).toFixed(2)} USD`;
-        if (sidebarUsername) sidebarUsername.textContent = `@${user.username}`;
+        if (sidebarBalance) sidebarBalance.textContent = `Balance: $${(user.walletBalance ?? 0).toFixed(2)} USD`;
+        if (sidebarUsername) sidebarUsername.textContent = `User Name:${user.username}`;
 
     } catch (err) {
         console.error("Error initializing dashboard:", err);
