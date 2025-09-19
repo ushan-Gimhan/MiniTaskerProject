@@ -8,6 +8,7 @@ import com.service.project.minitasker.entity.User;
 import com.service.project.minitasker.service.AuthService;
 import com.service.project.minitasker.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,17 +23,16 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> registerUser(
-            @RequestBody RegisterDTO registerDTO){
-        System.out.println(registerDTO.getUsername());
-        return ResponseEntity.ok(
-                new ApiResponse(
-                        200,
-                        "User registered successfully",
-                        authServiceImpl.register(registerDTO)
-                )
-        );
+    public ResponseEntity<ApiResponse> registerUser(@RequestBody RegisterDTO registerDTO) {
+        try {
+            String newUser = authServiceImpl.register(registerDTO);
+            return ResponseEntity.ok(new ApiResponse(200, "User registered successfully", newUser));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse(400, ex.getMessage(), null));
+        }
     }
+
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody AuthDTO authDTO) {
         System.out.println(authDTO.username);

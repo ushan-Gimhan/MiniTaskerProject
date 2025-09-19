@@ -216,25 +216,5 @@ document.querySelector("#task-search-input")?.addEventListener("input", function
         row.style.display = title.includes(searchTerm) || user.includes(searchTerm) ? "" : "none";
     });
 });
-// ✅ Update Task via PUT
-function updateTask(taskId, updatedTaskData) {
-    const token = localStorage.getItem("jwtToken");
 
-    $.ajax({
-        url: `http://localhost:8080/task/update/${taskId}`,
-        type: "PUT",
-        contentType: "application/json",
-        dataType: "json",
-        headers: { "Authorization": `Bearer ${token}` },
-        data: JSON.stringify(updatedTaskData),
-        success: function (response) {
-            console.log("✅ Task updated:", response);
-            alert("Task updated successfully!");
-        },
-        error: function (xhr) {
-            console.error("❌ Error updating task:", xhr.responseText);
-            alert("Failed to update task. (" + xhr.status + ")");
-        }
-    });
-}
 
