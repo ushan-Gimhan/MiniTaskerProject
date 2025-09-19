@@ -61,7 +61,7 @@ async function loadTasks(token) {
             // Status color function
             function getStatusColor(status) {
                 if (status === "Pending") return "#f59e0b";
-                if (status === "Approved") return "#10b981";
+                if (status === "APPROVED") return "#10b981";
                 if (status === "Rejected") return "#ef4444";
                 return "#d1d5db";
             }
