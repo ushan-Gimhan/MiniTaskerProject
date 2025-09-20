@@ -118,6 +118,7 @@ public class SubmissionServiceImpl implements SubmissionService {
             // 1️⃣ Update Wallet
             Wallet wallet = user.getWallet();
             wallet.setBalance(wallet.getBalance() + task.getRewardPerTask());
+            wallet.setType("earned");
             walletRepository.save(wallet);
 
             user.setWalletBalance(wallet.getBalance());

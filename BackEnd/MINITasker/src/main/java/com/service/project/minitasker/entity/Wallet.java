@@ -23,5 +23,7 @@ public class Wallet {
     @JsonBackReference
     private User user;
 
+    private String type;
+
     private Double balance;
 }
