@@ -1,11 +1,14 @@
 package com.service.project.minitasker.service.Impl;
 
 import com.service.project.minitasker.dto.TaskDTO;
+import com.service.project.minitasker.entity.Payment;
 import com.service.project.minitasker.entity.Task;
 import com.service.project.minitasker.entity.User;
+import com.service.project.minitasker.repo.PaymentRepository;
 import com.service.project.minitasker.repo.SubmissionRepository;
 import com.service.project.minitasker.repo.TaskRepository;
 import com.service.project.minitasker.service.TaskService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,23 +27,21 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final SubmissionRepository submissionRepository;
+    private final PaymentRepository paymentRepository;
 
+    @Transactional
     public Task createTask(TaskDTO taskDTO, String imageName) {
         String uploadedImageUrl = null;
 
-        // Use the image name from the DTO
-        String originalImageName = taskDTO.getImageName(); // ✅ this will not be null if frontend sends it
-
+        // --- Upload image to ImgBB ---
         if (taskDTO.getImageBase64() != null && !taskDTO.getImageBase64().isEmpty()) {
             try {
-                // Remove "data:image/...;base64," prefix if present
                 String base64Image = taskDTO.getImageBase64();
                 if (base64Image.contains(",")) {
                     base64Image = base64Image.split(",")[1];
                 }
 
-                // Prepare HTTP request to ImgBB
-                String apiKey = "b56b8866f0ddb6ccb4adcf435a94347b"; // 🔑 put your API key here
+                String apiKey = "b56b8866f0ddb6ccb4adcf435a94347b";
                 String url = "https://api.imgbb.com/1/upload?key=" + apiKey;
 
                 HttpHeaders headers = new HttpHeaders();
@@ -49,15 +51,12 @@ public class TaskServiceImpl implements TaskService {
                 body.add("image", base64Image);
 
                 HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
-
                 RestTemplate restTemplate = new RestTemplate();
-                ResponseEntity<Map> response = restTemplate.exchange(
-                        url, HttpMethod.POST, requestEntity, Map.class
-                );
+                ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
 
                 if (response.getStatusCode() == HttpStatus.OK) {
                     Map<String, Object> data = (Map<String, Object>) response.getBody().get("data");
-                    uploadedImageUrl = (String) data.get("url"); // ✅ Hosted image URL
+                    uploadedImageUrl = (String) data.get("url");
                 } else {
                     throw new RuntimeException("Failed to upload image to ImgBB");
                 }
@@ -66,22 +65,35 @@ public class TaskServiceImpl implements TaskService {
                 throw new RuntimeException("Error uploading image to ImgBB", e);
             }
         }
-        System.out.println(uploadedImageUrl);
-        // Build Task entity
+
+        // --- Build and save Task first ---
         Task task = Task.builder()
-                .title(taskDTO.getTitle())                  // ✅ matches
-                .description(taskDTO.getDescription())      // ✅ matches
-                .rewardPerTask(taskDTO.getRewardPerTask()) // ✅ matches
-                .totalQuantity(taskDTO.getTotalQuantity()) // ✅ matches
-                .availableQuantity(taskDTO.getAvailableQuantity()) // ✅ matches
-                .status(taskDTO.getStatus())               // ✅ matches
-                .totalPrice(taskDTO.getTotalPrice())      // ✅ matches
-                .imageName(uploadedImageUrl)              // ⚠️ this is different (cloud URL)// ⚠️ extra field not in your snippet
+                .title(taskDTO.getTitle())
+                .description(taskDTO.getDescription())
+                .rewardPerTask(taskDTO.getRewardPerTask())
+                .totalQuantity(taskDTO.getTotalQuantity())
+                .availableQuantity(taskDTO.getAvailableQuantity())
+                .status(taskDTO.getStatus())
+                .totalPrice(taskDTO.getTotalPrice())
+                .imageName(uploadedImageUrl)
                 .client(taskDTO.getClient())
                 .build();
 
-        return taskRepository.save(task);
+        Task savedTask = taskRepository.save(task); // ✅ save task first
+
+        // --- Now create Payment linked to saved Task ---
+        Payment payment = new Payment();
+        payment.setTask(savedTask); // ✅ task is now persisted
+        payment.setUser(taskDTO.getClient());
+        payment.setAmount(taskDTO.getTotalPrice());
+        payment.setMethod("CARD");
+        payment.setDate(LocalDateTime.now());
+
+        paymentRepository.save(payment);
+
+        return savedTask;
     }
+
 
 
     public List<Task> getAllTasks() {

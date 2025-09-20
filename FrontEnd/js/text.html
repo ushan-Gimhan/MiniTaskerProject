@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Process</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+        }
+
+        /* Modal Overlay */
+        .payment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Modal Container */
+        .payment-modal {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        /* Modal Header */
+        .modal-header {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            padding: 25px;
+            border-radius: 20px 20px 0 0;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .modal-subtitle {
+            margin: 10px 0 0;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        /* Job Summary Section */
+        .job-summary {
+            padding: 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-card {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #fbbf24;
+        }
+
+        .summary-item {
+            margin: 5px 0;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .summary-item strong {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* Cost Breakdown Section */
+        .cost-breakdown {
+            padding: 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            color: #6b7280;
+        }
+
+        .cost-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .cost-divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+            margin: 10px 0;
+        }
+
+        .total-cost {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .total-label {
+            color: #1f2937;
+        }
+
+        .total-amount {
+            color: #fbbf24;
+            font-size: 20px;
+        }
+
+        /* Payment Methods Section */
+        .payment-methods {
+            padding: 25px;
+        }
+
+        .payment-option {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .payment-option:hover {
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .payment-option.selected {
+            border-color: #fbbf24;
+            background: #fffbeb;
+        }
+
+        .payment-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .payment-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-radio {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .payment-option.selected .payment-radio {
+            background: #fbbf24;
+            border-color: #fbbf24;
+            color: white;
+            font-weight: bold;
+        }
+
+        .payment-info h4 {
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .payment-info p {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 2px 0 0;
+        }
+
+        .balance-status {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .balance-sufficient {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .balance-insufficient {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-proceed {
+            flex: 2;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-proceed.enabled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-proceed.enabled:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
+        }
+
+        /* Card Details Form */
+        .card-details-form {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .card-form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .card-form-container input {
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card-form-container input:focus {
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1) !important;
+            outline: none;
+        }
+
+        .card-form-container input.error {
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* OTP Input Styling */
+        .otp-input:focus {
+            border-color: #fbbf24 !important;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2) !important;
+            outline: none;
+        }
+
+        .otp-input.filled {
+            border-color: #10b981;
+            background: #f0fdf4;
+            color: #059669;
+        }
+
+        .otp-input.error {
+            border-color: #ef4444;
+            background: #fef2f2;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 500px;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Processing State */
+        .processing {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .processing::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Success State */
+        .success-modal {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            color: #059669;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .success-message {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .payment-modal {
+                width: 95%;
+                margin: 20px;
+            }
+
+            .modal-header {
+                padding: 20px;
+            }
+
+            .job-summary,
+            .cost-breakdown,
+            .payment-methods {
+                padding: 20px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Demo Button to Show Modal -->
+<div style="text-align: center; margin: 50px;">
+    <button onclick="showPaymentModal()" style="
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+        ">Create Job - Show Payment Modal</button>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="payment-overlay" style="display: none;">
+    <div class="payment-modal">
+        <!-- Header -->
+        <div class="modal-header">
+            <button class="close-btn" onclick="closePaymentModal()">×</button>
+            <div class="payment-icon">💳</div>
+            <h3 class="modal-title">Complete Payment</h3>
+            <p class="modal-subtitle">Review your job details and pay to publish</p>
+        </div>
+
+        <!-- Job Summary -->
+        <div class="job-summary">
+            <h4 class="section-title">📋 Job Summary</h4>
+            <div class="summary-card">
+                <div class="summary-item"><strong>Title:</strong> Data Entry for Product Catalog</div>
+                <div class="summary-item"><strong>Category:</strong> Data Entry</div>
+                <div class="summary-item"><strong>Quantity:</strong> 100 tasks</div>
+                <div class="summary-item"><strong>Reward per task:</strong> $0.50</div>
+            </div>
+        </div>
+
+        <!-- Cost Breakdown -->
+        <div class="cost-breakdown">
+            <h4 class="section-title">💰 Cost Breakdown</h4>
+            <div class="cost-item">
+                <span>Base Amount (100 × $0.50):</span>
+                <span class="cost-value">$50.00</span>
+            </div>
+            <div class="cost-item">
+                <span>Service Fee (5%):</span>
+                <span class="cost-value">$2.50</span>
+            </div>
+            <hr class="cost-divider">
+            <div class="total-cost">
+                <span class="total-label">Total Amount:</span>
+                <span class="total-amount">$52.50</span>
+            </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+            <h4 class="section-title">💳 Select Payment Method</h4>
+
+            <!-- Account Balance -->
+            <div class="payment-option" onclick="selectPaymentMethod(this, 'balance')">
+                <div class="payment-content">
+                    <div class="payment-left">
+                        <div class="payment-radio"></div>
+                        <div class="payment-info">
+                            <h4>💰 Account Balance</h4>
+                            <p>Current Balance: $75.25</p>
+                        </div>
+                    </div>
+                    <div class="balance-status balance-sufficient">✅ Sufficient</div>
+                </div>
+            </div>
+
+            <!-- Credit Card -->
+            <div class="payment-option" onclick="selectPaymentMethod(this, 'card')">
+                <div class="payment-content">
+                    <div class="payment-left">
+                        <div class="payment-radio"></div>
+                        <div class="payment-info">
+                            <h4>💳 Credit/Debit Card</h4>
+                            <p>Pay securely with your card</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Details Form (Hidden by default) -->
+            <div id="cardDetailsForm" class="card-details-form" style="display: none;">
+                <div class="card-form-container">
+                    <h5 style="margin-bottom: 20px; color: #1f2937; font-size: 16px;">💳 Enter Card Details</h5>
+
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19"
+                               oninput="formatCardNumber(this)" style="
+                                width: 100%;
+                                padding: 12px 15px;
+                                border: 2px solid #e2e8f0;
+                                border-radius: 8px;
+                                font-size: 16px;
+                                font-family: monospace;
+                                letter-spacing: 1px;
+                            ">
+                        <div class="card-icons" style="margin-top: 8px;">
+                            <span style="font-size: 24px; margin-right: 8px;">💳</span>
+                            <span style="font-size: 20px; margin-right: 8px;">💙</span>
+                            <span style="font-size: 20px; margin-right: 8px;">❤️</span>
+                            <span style="font-size: 20px;">💛</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5"
+                                   oninput="formatExpiryDate(this)" style="
+                                    width: 100%;
+                                    padding: 12px 15px;
+                                    border: 2px solid #e2e8f0;
+                                    border-radius: 8px;
+                                    font-size: 16px;
+                                    font-family: monospace;
+                                ">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cvv">CVV</label>
+                            <input type="password" id="cvv" placeholder="123" maxlength="4"
+                                   oninput="formatCVV(this)" style="
+                                    width: 100%;
+                                    padding: 12px 15px;
+                                    border: 2px solid #e2e8f0;
+                                    border-radius: 8px;
+                                    font-size: 16px;
+                                    font-family: monospace;
+                                ">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="cardName">Cardholder Name</label>
+                        <input type="text" id="cardName" placeholder="JOHN SMITH" style="
+                                width: 100%;
+                                padding: 12px 15px;
+                                border: 2px solid #e2e8f0;
+                                border-radius: 8px;
+                                font-size: 16px;
+                                text-transform: uppercase;
+                            ">
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 12px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #0ea5e9;">
+                        <div style="display: flex; align-items: center; gap: 8px; color: #0c4a6e;">
+                            <span>🔒</span>
+                            <small>Your card information is encrypted and secure</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PayPal -->
+            <div class="payment-option" onclick="selectPaymentMethod(this, 'paypal')">
+                <div class="payment-content">
+                    <div class="payment-left">
+                        <div class="payment-radio"></div>
+                        <div class="payment-info">
+                            <h4>🔵 PayPal</h4>
+                            <p>Pay with your PayPal account</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-cancel" onclick="closePaymentModal()">Cancel</button>
+                <button id="proceedBtn" class="btn btn-proceed" onclick="processPayment()">
+                    Proceed to Payment
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OTP Verification Modal -->
+<div id="otpModal" class="payment-overlay" style="display: none;">
+    <div class="payment-modal">
+        <div class="modal-header">
+            <div class="payment-icon">🔐</div>
+            <h3 class="modal-title">Verify Your Payment</h3>
+            <p class="modal-subtitle">Enter the OTP sent to your registered mobile number</p>
+        </div>
+
+        <div style="padding: 40px; text-align: center;">
+            <div style="margin-bottom: 25px;">
+                <p style="color: #6b7280; margin-bottom: 10px;">
+                    We've sent a 6-digit verification code to<br>
+                    <strong style="color: #1f2937;">+1 •••• •••• •••8</strong>
+                </p>
+                <p style="color: #059669; font-size: 14px;">
+                    ✅ Code sent successfully
+                </p>
+            </div>
+
+            <div class="otp-inputs" style="display: flex; justify-content: center; gap: 10px; margin-bottom: 25px;">
+                <input type="text" maxlength="1" class="otp-input" oninput="moveToNext(this, 0)" onkeydown="moveToPrev(this, event)" style="
+                        width: 50px;
+                        height: 50px;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        background: #f8fafc;
+                    ">
+                <input type="text" maxlength="1" class="otp-input" oninput="moveToNext(this, 1)" onkeydown="moveToPrev(this, event)" style="
+                        width: 50px;
+                        height: 50px;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        background: #f8fafc;
+                    ">
+                <input type="text" maxlength="1" class="otp-input" oninput="moveToNext(this, 2)" onkeydown="moveToPrev(this, event)" style="
+                        width: 50px;
+                        height: 50px;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        background: #f8fafc;
+                    ">
+                <input type="text" maxlength="1" class="otp-input" oninput="moveToNext(this, 3)" onkeydown="moveToPrev(this, event)" style="
+                        width: 50px;
+                        height: 50px;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        background: #f8fafc;
+                    ">
+                <input type="text" maxlength="1" class="otp-input" oninput="moveToNext(this, 4)" onkeydown="moveToPrev(this, event)" style="
+                        width: 50px;
+                        height: 50px;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        background: #f8fafc;
+                    ">
+                <input type="text" maxlength="1" class="otp-input" oninput="moveToNext(this, 5)" onkeydown="moveToPrev(this, event)" style="
+                        width: 50px;
+                        height: 50px;
+                        text-align: center;
+                        font-size: 24px;
+                        font-weight: bold;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        background: #f8fafc;
+                    ">
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
+                    Didn't receive the code?
+                </p>
+                <button id="resendOTP" onclick="resendOTP()" style="
+                        background: none;
+                        border: none;
+                        color: #fbbf24;
+                        font-weight: 600;
+                        cursor: pointer;
+                        text-decoration: underline;
+                        font-size: 14px;
+                    ">Resend OTP</button>
+                <span id="resendTimer" style="color: #9ca3af; font-size: 14px; margin-left: 10px;"></span>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-cancel" onclick="closeOTPModal()">Cancel</button>
+                <button id="verifyOTPBtn" class="btn btn-proceed" onclick="verifyOTP()">
+                    Verify & Pay
+                </button>
+            </div>
+
+            <div id="otpError" style="
+                    display: none;
+                    margin-top: 15px;
+                    padding: 12px;
+                    background: #fee2e2;
+                    color: #dc2626;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    text-align: center;
+                "></div>
+        </div>
+    </div>
+</div>
+<div id="successModal" class="payment-overlay" style="display: none;">
+    <div class="payment-modal">
+        <div class="success-modal">
+            <div class="success-icon">🎉</div>
+            <h3 class="success-title">Payment Successful!</h3>
+            <p class="success-message">Your job has been created and published successfully. Workers can now start applying!</p>
+            <button class="btn-continue" onclick="closeSuccessModal()">Continue to Dashboard</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedPaymentMethod = null;
+
+    function showPaymentModal() {
+        document.getElementById('paymentModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetSelection();
+    }
+
+    function selectPaymentMethod(element, method) {
+        selectedPaymentMethod = method;
+
+        // Remove selection from all options
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.classList.remove('selected');
+            option.querySelector('.payment-radio').innerHTML = '';
+        });
+
+        // Hide all payment forms
+        document.getElementById('cardDetailsForm').style.display = 'none';
+
+        // Add selection to clicked option
+        element.classList.add('selected');
+        element.querySelector('.payment-radio').innerHTML = '✓';
+
+        // Show card details form if card is selected
+        if (method === 'card') {
+            document.getElementById('cardDetailsForm').style.display = 'block';
+            // Disable proceed button until card details are filled
+            document.getElementById('proceedBtn').classList.remove('enabled');
+            document.getElementById('proceedBtn').textContent = 'Enter Card Details';
+            validateCardForm();
+        } else {
+            // Enable proceed button for other methods
+            const proceedBtn = document.getElementById('proceedBtn');
+            proceedBtn.classList.add('enabled');
+            proceedBtn.textContent = 'Proceed to Payment';
+        }
+    }
+
+    function processPayment() {
+        if (!selectedPaymentMethod) return;
+
+        const proceedBtn = document.getElementById('proceedBtn');
+
+        if (selectedPaymentMethod === 'card') {
+            if (!validateCardForm()) {
+                showCardError('Please fill in all card details correctly');
+                return;
+            }
+
+            proceedBtn.textContent = 'Processing Card...';
+            proceedBtn.style.opacity = '0.7';
+            proceedBtn.style.pointerEvents = 'none';
+            proceedBtn.classList.add('processing');
+
+            // Simulate card processing and show OTP
+            setTimeout(() => {
+                closePaymentModal();
+                showOTPModal();
+            }, 2000);
+        } else {
+            // Handle other payment methods
+            const originalText = proceedBtn.textContent;
+            proceedBtn.textContent = 'Processing...';
+            proceedBtn.style.opacity = '0.7';
+            proceedBtn.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                closePaymentModal();
+                showSuccessModal();
+            }, 2000);
+        }
+    }
+
+    // Card form validation and formatting
+    function formatCardNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        let formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+        if (formattedValue.length <= 19) {
+            input.value = formattedValue;
+        }
+        validateCardForm();
+    }
+
+    function formatExpiryDate(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        input.value = value;
+        validateCardForm();
+    }
+
+    function formatCVV(input) {
+        input.value = input.value.replace(/\D/g, '');
+        validateCardForm();
+    }
+
+    function validateCardForm() {
+        if (selectedPaymentMethod !== 'card') return true;
+
+        const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+        const expiryDate = document.getElementById('expiryDate').value;
+        const cvv = document.getElementById('cvv').value;
+        const cardName = document.getElementById('cardName').value.trim();
+
+        const isCardNumberValid = cardNumber.length >= 13 && cardNumber.length <= 19;
+        const isExpiryValid = /^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(expiryDate);
+        const isCVVValid = cvv.length >= 3 && cvv.length <= 4;
+        const isNameValid = cardName.length >= 2;
+
+        // Update field styles
+        updateFieldValidation('cardNumber', isCardNumberValid);
+        updateFieldValidation('expiryDate', isExpiryValid);
+        updateFieldValidation('cvv', isCVVValid);
+        updateFieldValidation('cardName', isNameValid);
+
+        const allValid = isCardNumberValid && isExpiryValid && isCVVValid && isNameValid;
+
+        const proceedBtn = document.getElementById('proceedBtn');
+        if (allValid) {
+            proceedBtn.classList.add('enabled');
+            proceedBtn.textContent = 'Proceed to Payment';
+        } else {
+            proceedBtn.classList.remove('enabled');
+            proceedBtn.textContent = 'Enter Card Details';
+        }
+
+        return allValid;
+    }
+
+    function updateFieldValidation(fieldId, isValid) {
+        const field = document.getElementById(fieldId);
+        if (field.value.length > 0) {
+            if (isValid) {
+                field.classList.remove('error');
+                field.style.borderColor = '#10b981';
+            } else {
+                field.classList.add('error');
+            }
+        } else {
+            field.classList.remove('error');
+            field.style.borderColor = '#e2e8f0';
+        }
+    }
+
+    function showCardError(message) {
+        let errorDiv = document.getElementById('cardError');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'cardError';
+            errorDiv.style.cssText = `
+                    margin-top: 15px;
+                    padding: 12px;
+                    background: #fee2e2;
+                    color: #dc2626;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    text-align: center;
+                `;
+            document.getElementById('cardDetailsForm').appendChild(errorDiv);
+        }
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    // OTP Modal functions
+    function showOTPModal() {
+        document.getElementById('otpModal').style.display = 'flex';
+        document.querySelector('.otp-input').focus();
+        startResendTimer();
+    }
+
+    function closeOTPModal() {
+        document.getElementById('otpModal').style.display = 'none';
+        clearOTPInputs();
+        clearResendTimer();
+    }
+
+    function moveToNext(current, index) {
+        if (current.value.length === 1) {
+            current.classList.add('filled');
+            if (index < 5) {
+                document.querySelectorAll('.otp-input')[index + 1].focus();
+            }
+            checkOTPComplete();
+        }
+    }
+
+    function moveToPrev(current, event) {
+        if (event.key === 'Backspace' && current.value.length === 0) {
+            const inputs = document.querySelectorAll('.otp-input');
+            const currentIndex = Array.from(inputs).indexOf(current);
+            if (currentIndex > 0) {
+                const prevInput = inputs[currentIndex - 1];
+                prevInput.focus();
+                prevInput.value = '';
+                prevInput.classList.remove('filled');
+            }
+        }
+        checkOTPComplete();
+    }
+
+    function checkOTPComplete() {
+        const inputs = document.querySelectorAll('.otp-input');
+        const otp = Array.from(inputs).map(input => input.value).join('');
+        const verifyBtn = document.getElementById('verifyOTPBtn');
+
+        if (otp.length === 6) {
+            verifyBtn.classList.add('enabled');
+        } else {
+            verifyBtn.classList.remove('enabled');
+        }
+    }
+
+    function verifyOTP() {
+        const inputs = document.querySelectorAll('.otp-input');
+        const otp = Array.from(inputs).map(input => input.value).join('');
+
+        if (otp.length !== 6) {
+            showOTPError('Please enter the complete 6-digit code');
+            return;
+        }
+
+        const verifyBtn = document.getElementById('verifyOTPBtn');
+        verifyBtn.textContent = 'Verifying...';
+        verifyBtn.style.opacity = '0.7';
+        verifyBtn.style.pointerEvents = 'none';
+
+        // Simulate OTP verification
+        setTimeout(() => {
+            if (otp === '123456') { // Demo: correct OTP
+                closeOTPModal();
+                showSuccessModal();
+            } else {
+                showOTPError('Invalid OTP. Please try again.');
+                inputs.forEach(input => {
+                    input.classList.add('error');
+                    input.classList.remove('filled');
+                });
+                setTimeout(() => {
+                    inputs.forEach(input => {
+                        input.classList.remove('error');
+                        input.value = '';
+                    });
+                    inputs[0].focus();
+                }, 1000);
+
+                verifyBtn.textContent = 'Verify & Pay';
+                verifyBtn.style.opacity = '1';
+                verifyBtn.style.pointerEvents = 'auto';
+            }
+        }, 2000);
+    }
+
+    function showOTPError(message) {
+        const errorDiv = document.getElementById('otpError');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    function clearOTPInputs() {
+        document.querySelectorAll('.otp-input').forEach(input => {
+            input.value = '';
+            input.classList.remove('filled', 'error');
+        });
+    }
+
+    let resendTimer;
+    let resendCountdown = 30;
+
+    function startResendTimer() {
+        const resendBtn = document.getElementById('resendOTP');
+        const timerSpan = document.getElementById('resendTimer');
+
+        resendBtn.style.display = 'none';
+        timerSpan.style.display = 'inline';
+
+        resendTimer = setInterval(() => {
+            timerSpan.textContent = `(${resendCountdown}s)`;
+            resendCountdown--;
+
+            if (resendCountdown < 0) {
+                clearResendTimer();
+                resendBtn.style.display = 'inline';
+                timerSpan.style.display = 'none';
+                resendCountdown = 30;
+            }
+        }, 1000);
+    }
+
+    function clearResendTimer() {
+        if (resendTimer) {
+            clearInterval(resendTimer);
+            resendTimer = null;
+        }
+    }
+
+    function resendOTP() {
+        // Simulate resending OTP
+        const resendBtn = document.getElementById('resendOTP');
+        resendBtn.textContent = 'Sending...';
+        resendBtn.style.pointerEvents = 'none';
+
+        setTimeout(() => {
+            resendBtn.textContent = 'Resend OTP';
+            resendBtn.style.pointerEvents = 'auto';
+            startResendTimer();
+
+            // Show success message
+            showOTPError = function(msg) {
+                const errorDiv = document.getElementById('otpError');
+                errorDiv.style.background = '#dcfce7';
+                errorDiv.style.color = '#166534';
+                errorDiv.textContent = '✅ New OTP sent successfully';
+                errorDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                    errorDiv.style.background = '#fee2e2';
+                    errorDiv.style.color = '#dc2626';
+                }, 3000);
+            };
+            showOTPError();
+        }, 1500);
+    }
+
+    function showSuccessModal() {
+        document.getElementById('successModal').style.display = 'flex';
+    }
+
+    function closeSuccessModal() {
+        document.getElementById('successModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        // Redirect to dashboard or reload page
+        window.location.reload();
+    }
+
+    function resetSelection() {
+        selectedPaymentMethod = null;
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.classList.remove('selected');
+            option.querySelector('.payment-radio').innerHTML = '';
+        });
+
+        const proceedBtn = document.getElementById('proceedBtn');
+        proceedBtn.classList.remove('enabled');
+        proceedBtn.textContent = 'Proceed to Payment';
+        proceedBtn.style.opacity = '0.5';
+        proceedBtn.style.pointerEvents = 'none';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('paymentModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closePaymentModal();
+        }
+    });
+
+    document.getElementById('successModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeSuccessModal();
+        }
+    });
+</script>
+</body>
+</html>

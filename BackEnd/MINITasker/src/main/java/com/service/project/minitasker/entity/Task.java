@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,4 +34,7 @@ public class Task {
 
     @Transient
     private String submissionStatus;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    private List<Payment> payments = new ArrayList<>();
 }

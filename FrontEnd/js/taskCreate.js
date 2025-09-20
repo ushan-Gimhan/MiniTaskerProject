@@ -130,6 +130,11 @@ function showMessage(message, type = 'success') {
     setTimeout(() => messageArea.innerHTML = '', 2500);
 }
 
+
+quantityInput?.addEventListener("input", updateBudget);
+workerEarnInput?.addEventListener("input", updateBudget);
+updateBudget();
+
 // --------------------- Convert Image to Base64 ---------------------
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -143,94 +148,50 @@ function getBase64(file) {
 // --------------------- Form Submission ---------------------
 $("#jobForm").on("submit", async function (e) {
     e.preventDefault();
-    const token = localStorage.getItem("jwtToken");
-    const submitBtn = document.getElementById("submitBtn");
-    if (!submitBtn) return;
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Creating Job...";
-    submitBtn.classList.add('loading');
+    const requiredFields = ["#title", "#description", "#workerEarn", "#quantity"];
+    for (let field of requiredFields) {
+        if (!$(field).val()?.trim()) {
+            alert("Please fill all required fields!");
+            return;
+        }
+    }
 
     try {
         const jobImageFile = $("#jobImage")[0]?.files[0];
-        let uploadedImageUrl = null;
         let base64Image = null;
         let originalImageName = null;
-        const user = await loadUserDetails(token);
 
-        // -------- Upload Image --------
         if (jobImageFile) {
             originalImageName = jobImageFile.name;
             base64Image = await getBase64(jobImageFile);
 
-            const formData = new FormData();
-            formData.append("image", base64Image);
-
-            const imgbbApiKey = "b56b8866f0ddb6ccb4adcf435a94347b"; // replace with your key
-            const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
-                method: "POST",
-                body: formData
-            });
-
-            const imgbbData = await imgbbResponse.json();
-            if (imgbbData.success) uploadedImageUrl = imgbbData.data.url;
-            else throw new Error("Image upload failed");
         }
+        const token = localStorage.getItem('jwtToken');
+        const user = await loadUserDetails(token);
 
-        // -------- Prepare Task Data --------
         const taskData = {
             title: $("#title").val()?.trim(),
             description: $("#description").val()?.trim(),
             rewardPerTask: parseFloat($("#workerEarn").val()) || 0,
             totalQuantity: parseInt($("#quantity").val()) || 0,
             availableQuantity: parseInt($("#quantity").val()) || 0,
-            imageName: uploadedImageUrl,
             imageBase64: base64Image,
             originalImageName: originalImageName,
             status: "PENDING",
             totalPrice: (parseFloat($("#workerEarn").val()) || 0) * (parseInt($("#quantity").val()) || 0),
-            client: user
+            client:user
         };
 
-        // -------- Send Task to Backend --------
-        const response = await fetch("http://localhost:8080/task/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                ...(token && { "Authorization": `Bearer ${token}` })
-            },
-            body: JSON.stringify(taskData)
-        });
+        // Save in sessionStorage for payment page
+        sessionStorage.setItem("pendingJobData", JSON.stringify(taskData));
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || `Request failed with status ${response.status}`);
-        }
-
-        const data = await response.json();
-        showMessage("✅ Job created successfully!", 'success');
-        alert("✅ Top-up saved successfully!");
-        window.location.href = "task.html";
-        console.log("Response:", data);
-
-        // Reset form
-        $("#jobForm")[0].reset();
-
-// ✅ Reset input styles
-        $("#jobForm input, #jobForm select, #jobForm textarea").css({
-            borderColor: "",
-            boxShadow: ""
-        });
-        totalBudgetInput.value = "";
-        setTimeout(updateBudget);
+        // Redirect to payment page
+        window.location.href = "n.html";
 
     } catch (err) {
-        showMessage(`❌ Error creating job: ${err.message}`, 'error');
-        console.error(err);
-    } finally {
-        submitBtn.classList.remove('loading');
-        submitBtn.textContent = 'Create Job';
-        submitBtn.disabled = false;
+        console.error("❌ Error preparing job:", err);
+        alert("Error: " + err.message);
     }
 });
 

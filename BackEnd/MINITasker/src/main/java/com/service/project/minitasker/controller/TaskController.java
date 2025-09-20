@@ -27,7 +27,7 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<TaskResponse> createTask(@RequestBody TaskDTO taskDTO) {
         Task createdTask = taskServiceImpl.createTask(taskDTO, taskDTO.getImageName());
-        System.out.println(taskDTO.getClient());
+        System.out.println(taskDTO);
         return ResponseEntity.ok(
                 new TaskResponse(200L, "OK", createdTask)
         );

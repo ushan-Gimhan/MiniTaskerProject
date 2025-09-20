@@ -1,12 +1,14 @@
 package com.service.project.minitasker.dto;
 
-import com.mysql.cj.xdevapi.Client;
+import com.service.project.minitasker.entity.Payment;
 import com.service.project.minitasker.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.security.PrivilegedAction;
+import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +24,5 @@ public class TaskDTO {
     private Double totalPrice;
     private String imageBase64;
     private User client;
+    private List<PaymentDTO> payments;
 }
