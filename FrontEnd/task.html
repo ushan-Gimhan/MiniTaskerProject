@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/taskHistory.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/Wallet.css">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -258,70 +259,155 @@
     </section>
     <section id="wallet" class="section">
         <!-- Header -->
-        <h2>Wallet</h2>
+        <div class="wallet-header">
+            <h2> Wallet</h2>
+        </div>
 
-        <!-- Main Content -->
-        <main class="task-main">
-            <!-- Current Balance Card -->
-            <div class="task-item glass" style="justify-content:center; flex-direction:column; text-align:center;">
-                <p class="task-client">Current Balance</p>
-                <p class="task-title" style="font-size:2rem;">12,500</p>
-                <p class="task-client">Coins</p>
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <p class="balance-label">Current Balance</p>
+            <div class="balance-amount">$12,500</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="wallet-actions">
+            <button class="action-btn">💸 Withdraw</button>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value">2,850</div>
+                <div class="stat-label">Total Earned</div>
+                <div class="stat-trend up">↗ +12% this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💸</div>
+                <div class="stat-value">1,200</div>
+                <div class="stat-label">Total Withdrawn</div>
+                <div class="stat-trend down">↘ -3% this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-value">45</div>
+                <div class="stat-label">Tasks Completed</div>
+                <div class="stat-trend up">↗ +8 this week</div>
+            </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="transaction-section">
+            <h3 class="section-title">Transaction History</h3>
+
+            <!-- Filters -->
+            <div class="transaction-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Earned</button>
+                <button class="filter-btn">Withdrawn</button>
+                <button class="filter-btn">Bonus</button>
+                <button class="filter-btn">This Month</button>
             </div>
 
-            <!-- Transaction History Title -->
-            <h2 style="margin-top:2rem; margin-bottom:1rem; font-size:1.25rem; font-weight:700;">Transaction History</h2>
-
             <!-- Transaction List -->
-            <div class="task-main">
+            <div class="transaction-list">
                 <!-- Earned Coins -->
-                <div class="task-item glass">
-                    <div class="task-info">
-                        <p class="task-title">Earned Coins</p>
-                        <p class="task-client">Task Completion</p>
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon earned">💰</div>
+                        <div class="transaction-info">
+                            <h4>Task Completion Reward</h4>
+                            <p>Data Entry for Product Catalog</p>
+                            <span class="transaction-date">2 hours ago</span>
+                        </div>
                     </div>
-                    <div class="task-rewards">
-                        <p class="coin-value completed">+500</p>
+                    <div class="transaction-right">
+                        <div class="transaction-amount positive">+500 Coins</div>
                         <span class="status-badge status-completed">Completed</span>
                     </div>
                 </div>
 
                 <!-- Withdrawal -->
-                <div class="task-item glass">
-                    <div class="task-info">
-                        <p class="task-title">Withdrawal</p>
-                        <p class="task-client">Payout Request</p>
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon withdrawal">💸</div>
+                        <div class="transaction-info">
+                            <h4>Withdrawal Request</h4>
+                            <p>Bank Transfer - Account: ****1234</p>
+                            <span class="transaction-date">1 day ago</span>
+                        </div>
                     </div>
-                    <div class="task-rewards">
-                        <p class="coin-value rejected">-1,000</p>
+                    <div class="transaction-right">
+                        <div class="transaction-amount negative">-1,000 Coins</div>
                         <span class="status-badge status-rejected">Rejected</span>
                     </div>
                 </div>
 
-                <!-- More Transactions -->
-                <div class="task-item glass">
-                    <div class="task-info">
-                        <p class="task-title">Earned Coins</p>
-                        <p class="task-client">Task Completion</p>
+                <!-- Bonus -->
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon bonus">🎁</div>
+                        <div class="transaction-info">
+                            <h4>Welcome Bonus</h4>
+                            <p>New user registration bonus</p>
+                            <span class="transaction-date">3 days ago</span>
+                        </div>
                     </div>
-                    <div class="task-rewards">
-                        <p class="coin-value completed">+200</p>
+                    <div class="transaction-right">
+                        <div class="transaction-amount positive">+100 Coins</div>
                         <span class="status-badge status-completed">Completed</span>
                     </div>
                 </div>
 
-                <div class="task-item glass">
-                    <div class="task-info">
-                        <p class="task-title">Earned Coins</p>
-                        <p class="task-client">Task Completion</p>
+                <!-- More Earned Coins -->
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon earned">💰</div>
+                        <div class="transaction-info">
+                            <h4>Survey Completion</h4>
+                            <p>Consumer Preferences Survey</p>
+                            <span class="transaction-date">5 days ago</span>
+                        </div>
                     </div>
-                    <div class="task-rewards">
-                        <p class="coin-value completed">+150</p>
+                    <div class="transaction-right">
+                        <div class="transaction-amount positive">+200 Coins</div>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                </div>
+
+                <!-- Processing Transaction -->
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon withdrawal">💳</div>
+                        <div class="transaction-info">
+                            <h4>PayPal Withdrawal</h4>
+                            <p>Email: user@example.com</p>
+                            <span class="transaction-date">1 week ago</span>
+                        </div>
+                    </div>
+                    <div class="transaction-right">
+                        <div class="transaction-amount negative">-750 Coins</div>
+                        <span class="status-badge status-processing">Processing</span>
+                    </div>
+                </div>
+
+                <!-- Another Task -->
+                <div class="transaction-item">
+                    <div class="transaction-left">
+                        <div class="transaction-icon earned">💰</div>
+                        <div class="transaction-info">
+                            <h4>Image Tagging</h4>
+                            <p>Fashion Items Classification</p>
+                            <span class="transaction-date">1 week ago</span>
+                        </div>
+                    </div>
+                    <div class="transaction-right">
+                        <div class="transaction-amount positive">+150 Coins</div>
                         <span class="status-badge status-completed">Completed</span>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </section>
     <section id="notifications" class="section">
         <div class="profile-card glass">
@@ -450,6 +536,7 @@
 <script src="js/TaskHistory.js"></script>
 <script src="js/SubmisionHistory.js"></script>
 <script src="js/payment.js"></script>
+<script src="js/wallet.js"></script>
 <script>
     // Sidebar navigation toggle
     document.addEventListener('DOMContentLoaded', () => {

@@ -62,9 +62,9 @@ public class SubmissionController {
     @PutMapping("/{id}/status")
     public ResponseEntity<SubmissionResponse> updateSubmissionStatus(
             @PathVariable Long id,
-            @RequestParam String status) {
+            @RequestParam String currentStatus) {
 
-        Submission updatedSubmission = submissionService.updateSubmissionStatus(id, status);
+        Submission updatedSubmission = submissionService.updateSubmissionStatus(id, currentStatus);
         SubmissionResponse response = new SubmissionResponse(200,"Submission status updated successfully");
         return ResponseEntity.ok(new SubmissionResponse(response));
     }

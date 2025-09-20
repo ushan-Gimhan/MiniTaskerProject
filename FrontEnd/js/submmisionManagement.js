@@ -64,33 +64,32 @@ async function loadSubmissions(token) {
                 const currentStatus = sub.status || "PENDING";
 
                 statusCell.innerHTML = `
-                    <select style="
-                        width:100%; padding:0.25rem; background-color:#374151; color:#f3f4f6;
-                        border:1px solid #4b5563; border-radius:0.25rem; font-size:0.875rem; outline:none;
-                        cursor:pointer;"
-                    >
-                        <option value="PENDING" ${currentStatus === 'PENDING' ? 'selected' : ''}>PENDING</option>
-                        <option value="APPROVED" ${currentStatus === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
-                        <option value="REJECTED" ${currentStatus === 'REJECTED' ? 'selected' : ''}>REJECTED</option>
-                        <option value="RESOLVED" ${currentStatus === 'RESOLVED' ? 'selected' : ''}>RESOLVED</option>
-                    </select>
-                    <button class="save-status-btn" style="
-                        margin-top:0.3rem; width:100%; background:#10b981; color:white; border:none; padding:0.4rem; border-radius:0.3rem;
-                        cursor:pointer;"
-                    >Save</button>
-                `;
+    <select style="
+        width:100%; padding:0.25rem; background-color:#374151; color:#f3f4f6;
+        border:1px solid #4b5563; border-radius:0.25rem; font-size:0.875rem; outline:none;
+        cursor:pointer;"
+    >
+        <option value="PENDING" ${currentStatus === 'PENDING' ? 'selected' : ''}>PENDING</option>
+        <option value="APPROVED" ${currentStatus === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+        <option value="REJECTED" ${currentStatus === 'REJECTED' ? 'selected' : ''}>REJECTED</option>
+        <option value="RESOLVED" ${currentStatus === 'RESOLVED' ? 'selected' : ''}>RESOLVED</option>
+    </select>
+    <button class="save-status-btn" style="
+        margin-top:0.3rem; width:100%; background:#10b981; color:white; border:none; padding:0.4rem; border-radius:0.3rem;
+        cursor:pointer;"
+    >Save</button>
+`;
 
                 statusCell.querySelector(".save-status-btn").addEventListener("click", async () => {
                     const newStatus = statusCell.querySelector("select").value;
 
                     try {
-                        const updateRes = await fetch(`http://localhost:8080/submission/update/${sub.id}`, {
+                        // ✅ Only use query param, remove body
+                        const updateRes = await fetch(`http://localhost:8080/submission/${sub.id}/status?currentStatus=${newStatus}`, {
                             method: "PUT",
                             headers: {
-                                "Authorization": `Bearer ${token}`,
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ status: newStatus })
+                                "Authorization": `Bearer ${token}`
+                            }
                         });
 
                         if (!updateRes.ok) throw new Error(`Update failed: ${updateRes.status}`);
