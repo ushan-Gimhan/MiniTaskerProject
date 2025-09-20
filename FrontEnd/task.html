@@ -38,7 +38,7 @@
 <!-- Enhanced Sidebar -->
 <div class="sidebar">
     <div class="profile">
-<!--        <img src="https://via.placeholder.com/100" alt="Profile">-->
+        <!--        <img src="https://via.placeholder.com/100" alt="Profile">-->
         <div class="profile-info">
             <h3>Ushan Gimhan</h3>
             <p class="balance">Balance: $0.11 USD</p>
@@ -73,68 +73,68 @@
 
     <!-- Create Job Form -->
     <section id="createJob" class="section active">
-    <form id="jobForm" class="form-section">
-        <h2>Create New Job</h2>
+        <form id="jobForm" class="form-section">
+            <h2>Create New Job</h2>
 
-        <div id="messageArea"></div>
+            <div id="messageArea"></div>
 
-        <div class="form-group">
-            <label for="category">Category <span class="required">*</span></label>
-            <select id="category" required>
-                <option value="">Select Category</option>
-                <option value="data-entry">Data Entry</option>
-                <option value="survey">Survey</option>
-                <option value="app-testing">App Testing</option>
-                <option value="content-creation">Content Creation</option>
-                <option value="research">Research</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="title">Job Title <span class="required">*</span></label>
-            <input type="text" id="title" placeholder="Enter a descriptive job title" required>
-        </div>
-
-        <div class="form-group">
-            <label for="proof">Job Proof <span class="required">*</span></label>
-            <select id="proof" required>
-                <option value="">Select Proof Type</option>
-                <option value="screenshot">Screenshot</option>
-                <option value="text-entry">Text Entry</option>
-                <option value="both">Both Required</option>
-                <option value="file-upload">File Upload</option>
-            </select>
-        </div>
-
-        <div class="inline-inputs">
             <div class="form-group">
-                <label for="quantity">Quantity <span class="required">*</span></label>
-                <input type="number" id="quantity" value="10" min="1" max="1000" required>
+                <label for="category">Category <span class="required">*</span></label>
+                <select id="category" required>
+                    <option value="">Select Category</option>
+                    <option value="data-entry">Data Entry</option>
+                    <option value="survey">Survey</option>
+                    <option value="app-testing">App Testing</option>
+                    <option value="content-creation">Content Creation</option>
+                    <option value="research">Research</option>
+                </select>
             </div>
+
             <div class="form-group">
-                <label for="workerEarn">Worker Reward <span class="required">*</span></label>
-                <input type="number" id="workerEarn" value="0.14" min="0.01" step="0.01" required>
+                <label for="title">Job Title <span class="required">*</span></label>
+                <input type="text" id="title" placeholder="Enter a descriptive job title" required>
             </div>
+
             <div class="form-group">
-                <label for="totalBudget">Total Budget</label>
-                <input type="text" id="totalBudget" value="1.40 USD" readonly style="background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #6b7280;">
+                <label for="proof">Job Proof <span class="required">*</span></label>
+                <select id="proof" required>
+                    <option value="">Select Proof Type</option>
+                    <option value="screenshot">Screenshot</option>
+                    <option value="text-entry">Text Entry</option>
+                    <option value="both">Both Required</option>
+                    <option value="file-upload">File Upload</option>
+                </select>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="jobImage">Upload Job Image (Optional)</label>
-            <input type="file" id="jobImage" accept="image/*">
-        </div>
+            <div class="inline-inputs">
+                <div class="form-group">
+                    <label for="quantity">Quantity <span class="required">*</span></label>
+                    <input type="number" id="quantity" value="10" min="1" max="1000" required>
+                </div>
+                <div class="form-group">
+                    <label for="workerEarn">Worker Reward <span class="required">*</span></label>
+                    <input type="number" id="workerEarn" value="0.14" min="0.01" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="totalBudget">Total Budget</label>
+                    <input type="text" id="totalBudget" value="1.40 USD" readonly style="background: linear-gradient(135deg, #f3f4f6, #e5e7eb); color: #6b7280;">
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label for="description">Job Description</label>
-            <textarea id="description" placeholder="Provide detailed instructions for workers. Include what they need to do, any specific requirements, and submission guidelines..."></textarea>
-        </div>
+            <div class="form-group">
+                <label for="jobImage">Upload Job Image (Optional)</label>
+                <input type="file" id="jobImage" accept="image/*">
+            </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">
-            Create Job
-        </button>
-    </form>
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea id="description" placeholder="Provide detailed instructions for workers. Include what they need to do, any specific requirements, and submission guidelines..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                Create Job
+            </button>
+        </form>
     </section>
     <!-- Task History Section -->
     <section id="taskHistory" class="section">
@@ -190,7 +190,7 @@
             <!-- Tabs -->
             <div class="tab-nav">
                 <button class="tab-link active" data-status="all">All</button>
-                <button class="tab-link" data-status="completed">Approved</button>
+                <button class="tab-link" data-status="approved">Approved</button>
                 <button class="tab-link" data-status="pending">Pending</button>
                 <button class="tab-link" data-status="rejected">Rejected</button>
             </div>
@@ -201,6 +201,7 @@
             </div>
         </div>
     </section>
+
 
 
     <section id="profile" class="section">
@@ -256,71 +257,71 @@
         </div>
     </section>
     <section id="wallet" class="section">
-            <!-- Header -->
+        <!-- Header -->
         <h2>Wallet</h2>
 
-            <!-- Main Content -->
-            <main class="task-main">
-                <!-- Current Balance Card -->
-                <div class="task-item glass" style="justify-content:center; flex-direction:column; text-align:center;">
-                    <p class="task-client">Current Balance</p>
-                    <p class="task-title" style="font-size:2rem;">12,500</p>
-                    <p class="task-client">Coins</p>
-                </div>
+        <!-- Main Content -->
+        <main class="task-main">
+            <!-- Current Balance Card -->
+            <div class="task-item glass" style="justify-content:center; flex-direction:column; text-align:center;">
+                <p class="task-client">Current Balance</p>
+                <p class="task-title" style="font-size:2rem;">12,500</p>
+                <p class="task-client">Coins</p>
+            </div>
 
-                <!-- Transaction History Title -->
-                <h2 style="margin-top:2rem; margin-bottom:1rem; font-size:1.25rem; font-weight:700;">Transaction History</h2>
+            <!-- Transaction History Title -->
+            <h2 style="margin-top:2rem; margin-bottom:1rem; font-size:1.25rem; font-weight:700;">Transaction History</h2>
 
-                <!-- Transaction List -->
-                <div class="task-main">
-                    <!-- Earned Coins -->
-                    <div class="task-item glass">
-                        <div class="task-info">
-                            <p class="task-title">Earned Coins</p>
-                            <p class="task-client">Task Completion</p>
-                        </div>
-                        <div class="task-rewards">
-                            <p class="coin-value completed">+500</p>
-                            <span class="status-badge status-completed">Completed</span>
-                        </div>
+            <!-- Transaction List -->
+            <div class="task-main">
+                <!-- Earned Coins -->
+                <div class="task-item glass">
+                    <div class="task-info">
+                        <p class="task-title">Earned Coins</p>
+                        <p class="task-client">Task Completion</p>
                     </div>
-
-                    <!-- Withdrawal -->
-                    <div class="task-item glass">
-                        <div class="task-info">
-                            <p class="task-title">Withdrawal</p>
-                            <p class="task-client">Payout Request</p>
-                        </div>
-                        <div class="task-rewards">
-                            <p class="coin-value rejected">-1,000</p>
-                            <span class="status-badge status-rejected">Rejected</span>
-                        </div>
-                    </div>
-
-                    <!-- More Transactions -->
-                    <div class="task-item glass">
-                        <div class="task-info">
-                            <p class="task-title">Earned Coins</p>
-                            <p class="task-client">Task Completion</p>
-                        </div>
-                        <div class="task-rewards">
-                            <p class="coin-value completed">+200</p>
-                            <span class="status-badge status-completed">Completed</span>
-                        </div>
-                    </div>
-
-                    <div class="task-item glass">
-                        <div class="task-info">
-                            <p class="task-title">Earned Coins</p>
-                            <p class="task-client">Task Completion</p>
-                        </div>
-                        <div class="task-rewards">
-                            <p class="coin-value completed">+150</p>
-                            <span class="status-badge status-completed">Completed</span>
-                        </div>
+                    <div class="task-rewards">
+                        <p class="coin-value completed">+500</p>
+                        <span class="status-badge status-completed">Completed</span>
                     </div>
                 </div>
-            </main>
+
+                <!-- Withdrawal -->
+                <div class="task-item glass">
+                    <div class="task-info">
+                        <p class="task-title">Withdrawal</p>
+                        <p class="task-client">Payout Request</p>
+                    </div>
+                    <div class="task-rewards">
+                        <p class="coin-value rejected">-1,000</p>
+                        <span class="status-badge status-rejected">Rejected</span>
+                    </div>
+                </div>
+
+                <!-- More Transactions -->
+                <div class="task-item glass">
+                    <div class="task-info">
+                        <p class="task-title">Earned Coins</p>
+                        <p class="task-client">Task Completion</p>
+                    </div>
+                    <div class="task-rewards">
+                        <p class="coin-value completed">+200</p>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                </div>
+
+                <div class="task-item glass">
+                    <div class="task-info">
+                        <p class="task-title">Earned Coins</p>
+                        <p class="task-client">Task Completion</p>
+                    </div>
+                    <div class="task-rewards">
+                        <p class="coin-value completed">+150</p>
+                        <span class="status-badge status-completed">Completed</span>
+                    </div>
+                </div>
+            </div>
+        </main>
     </section>
     <section id="notifications" class="section">
         <div class="profile-card glass">

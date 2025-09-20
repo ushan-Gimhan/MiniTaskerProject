@@ -126,7 +126,9 @@ public class TaskServiceImpl implements TaskService {
                         .imageName(task.getImageName())
                         .status(task.getStatus())
                         .totalPrice(task.getTotalPrice())
-                        .client(task.getClient()) // reference to User
+                        .client(task.getClient())
+                        .submissionStatus(task.getSubmissionStatus())
+                        .payments(task.getPayments())// reference to User
                         .build()
                 )
                 .orElseThrow(() -> new RuntimeException("Task not found with id: " + id));

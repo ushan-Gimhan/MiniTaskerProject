@@ -1,5 +1,6 @@
 package com.service.project.minitasker.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,5 +37,6 @@ public class Task {
     private String submissionStatus;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Payment> payments = new ArrayList<>();
 }

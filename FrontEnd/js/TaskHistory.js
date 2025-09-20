@@ -78,9 +78,9 @@ $(document).ready(async function () {
     }
 
     // Function to load tasks from API with optional status
-    function loadTasks(status = "all") {
+    function loadTasks(status = "PENDING") {
         let url = `${apiBaseURL}/${userId}`;
-        if (status !== "all") {
+        if (status !== "PENDING") {
             url += `?status=${status}`;
         }
 

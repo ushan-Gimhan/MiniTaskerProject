@@ -37,10 +37,10 @@ public class SubmissionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody SubmissionDTO submission) {
-//        return ResponseEntity.ok(submissionService.updateSubmission(id, submission));
-//    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody SubmissionDTO submission) {
+        return ResponseEntity.ok(submissionService.updateSubmission(id, submission));
+    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteSubmission(@PathVariable Long id) {
