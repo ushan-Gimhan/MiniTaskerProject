@@ -2,6 +2,11 @@
 // --------------------- Check JWT token on page load ---------------------
 window.addEventListener('load', async function () {
     const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        // no token → redirect to login
+        window.location.href = "login.html";
+        return;
+    }
 
     if (!token) {
         console.warn("No JWT token found. Showing Guest header.");

@@ -62,7 +62,7 @@ $(document).ready(async function () {
                         </div>
                         <div style="font-size:16px; color:#333; margin-bottom:10px;">
                             <span>💰 ${task.rewardPerTask != null ? '$' + task.rewardPerTask : '-'}</span><br>
-                            <span>🗂 Vacancy Available: ${task.totalQuantity || 0}</span><br>
+                            <span>🗂 Vacancy Available: ${task.availableQuantity || 0}</span><br>
                         </div>
 
                         <!-- Apply Button -->

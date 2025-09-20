@@ -21,24 +21,24 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public Wallet addBalance(Long userId, double amount) {
         Wallet wallet = getWalletByUserId(userId);
-        wallet.setAmount(wallet.getAmount() + amount);
+        wallet.setBalance(wallet.getBalance() + amount);
         return walletRepository.save(wallet);
     }
 
     @Override
     public Wallet deductBalance(Long userId, double amount) {
         Wallet wallet = getWalletByUserId(userId);
-        if (wallet.getAmount() < amount) {
+        if (wallet.getBalance() < amount) {
             throw new RuntimeException("Insufficient balance");
         }
-        wallet.setAmount(wallet.getAmount() - amount);
+        wallet.setBalance(wallet.getBalance() - amount);
         return walletRepository.save(wallet);
     }
 
     @Override
     public Wallet createWallet(Long userId) {
         Wallet wallet = new Wallet();
-        wallet.setAmount(0.0);
+        wallet.setBalance(0.0);
         return walletRepository.save(wallet);
     }
 

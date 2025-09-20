@@ -20,6 +20,7 @@ public class Notification {
     private User user;
 
     private String message;
+    private boolean is_read=false;
     private String status;
     private String timestamp;
 }

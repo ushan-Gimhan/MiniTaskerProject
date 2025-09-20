@@ -23,4 +23,5 @@ public interface SubmissionService {
     void deleteSubmission(Long id);
 
     List<Task> getAllSubmittedTasksByUser(Long userId);
+    public Submission updateSubmissionStatus(Long submissionId, String newStatus);
 }

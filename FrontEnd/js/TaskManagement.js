@@ -1,6 +1,11 @@
 // --------------------- On Page Load ---------------------
 window.addEventListener('load', async function () {
     const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        // no token → redirect to login
+        window.location.href = "login.html";
+        return;
+    }
 
     if (!token) {
         console.warn("No JWT token found. Redirecting to login...");

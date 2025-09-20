@@ -5,6 +5,7 @@ import com.service.project.minitasker.dto.AuthResponseDTO;
 import com.service.project.minitasker.dto.RegisterDTO;
 import com.service.project.minitasker.entity.Role;
 import com.service.project.minitasker.entity.User;
+import com.service.project.minitasker.entity.Wallet;
 import com.service.project.minitasker.repo.UserRepository;
 import com.service.project.minitasker.service.AuthService;
 import com.service.project.minitasker.util.JwtUtil;
@@ -52,6 +53,12 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.valueOf(registerDTO.getRole()))
                 .walletBalance(registerDTO.getWalletBalance())
                 .build();
+        Wallet wallet = Wallet.builder()
+                .balance(0.0)
+                .user(user) // link wallet to user
+                .build();
+
+        user.setWallet(wallet);
         userRepository.save(user);
         return "User registered successfully";
     }

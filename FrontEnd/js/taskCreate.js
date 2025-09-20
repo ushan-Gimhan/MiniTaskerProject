@@ -3,11 +3,10 @@ window.addEventListener('load', async function () {
     const token = localStorage.getItem('jwtToken');
 
     if (!token) {
-        console.warn("No JWT token found. Showing Guest header.");
-        updateHeader("Guest");
+        // no token → redirect to login
+        window.location.href = "login.html";
         return;
     }
-
     try {
         const user = await loadUserDetails(token);
         console.log("Logged in user:", user);
@@ -188,7 +187,7 @@ $("#jobForm").on("submit", async function (e) {
             imageName: uploadedImageUrl,
             imageBase64: base64Image,
             originalImageName: originalImageName,
-            status: "ACTIVE",
+            status: "PENDING",
             totalPrice: (parseFloat($("#workerEarn").val()) || 0) * (parseInt($("#quantity").val()) || 0),
             client: user
         };
@@ -211,6 +210,7 @@ $("#jobForm").on("submit", async function (e) {
         const data = await response.json();
         showMessage("✅ Job created successfully!", 'success');
         alert("✅ Top-up saved successfully!");
+        window.location.href = "task.html";
         console.log("Response:", data);
 
         // Reset form

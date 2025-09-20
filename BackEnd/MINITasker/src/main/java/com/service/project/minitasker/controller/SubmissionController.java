@@ -1,6 +1,8 @@
 package com.service.project.minitasker.controller;
 
+import com.service.project.minitasker.dto.ApiResponse;
 import com.service.project.minitasker.dto.SubmissionDTO;
+import com.service.project.minitasker.dto.SubmissionResponse;
 import com.service.project.minitasker.entity.Submission;
 import com.service.project.minitasker.entity.Task;
 import com.service.project.minitasker.service.SubmissionService;
@@ -35,10 +37,10 @@ public class SubmissionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody SubmissionDTO submission) {
-        return ResponseEntity.ok(submissionService.updateSubmission(id, submission));
-    }
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<Submission> updateSubmission(@PathVariable Long id, @RequestBody SubmissionDTO submission) {
+//        return ResponseEntity.ok(submissionService.updateSubmission(id, submission));
+//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteSubmission(@PathVariable Long id) {
@@ -55,5 +57,15 @@ public class SubmissionController {
         }
 
         return ResponseEntity.ok(tasks);
+    }
+    // ✅ Update submission status (APPROVED / REJECTED)
+    @PutMapping("/{id}/status")
+    public ResponseEntity<SubmissionResponse> updateSubmissionStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
+        Submission updatedSubmission = submissionService.updateSubmissionStatus(id, status);
+        SubmissionResponse response = new SubmissionResponse(200,"Submission status updated successfully");
+        return ResponseEntity.ok(new SubmissionResponse(response));
     }
 }

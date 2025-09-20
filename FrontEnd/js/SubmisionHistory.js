@@ -64,7 +64,7 @@ $(document).ready(async function () {
 
                 <div style="font-size:16px; color:#333; margin-bottom:10px;">
                     <span>💰 ${submission.rewardPerTask != null ? '$' + submission.rewardPerTask : '-'}</span><br>
-                    <span>🗂 Vacancy Available: ${submission.totalQuantity || 0}</span>
+                    <span>🗂 Vacancy Available: ${submission.availableQuantity || 0}</span>
                 </div>
             </div>
         </div>

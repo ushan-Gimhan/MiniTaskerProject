@@ -1,15 +1,14 @@
 package com.service.project.minitasker.service.Impl;
 
 import com.service.project.minitasker.dto.SubmissionDTO;
-import com.service.project.minitasker.entity.Submission;
-import com.service.project.minitasker.entity.Task;
-import com.service.project.minitasker.entity.User;
-import com.service.project.minitasker.repo.SubmissionRepository;
-import com.service.project.minitasker.repo.TaskRepository;
-import com.service.project.minitasker.repo.UserRepository;
+import com.service.project.minitasker.entity.*;
+import com.service.project.minitasker.repo.*;
 import com.service.project.minitasker.service.SubmissionService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +20,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
+    private final NotifyRepository notifyRepository;
 
     @Override
     public Submission createSubmission(SubmissionDTO dto) {
@@ -96,6 +97,46 @@ public class SubmissionServiceImpl implements SubmissionService {
             task.setSubmissionStatus(sub.getStatus()); // attach submission status
             return task;
         }).toList();
+    }
+
+    @Transactional
+    public Submission updateSubmissionStatus(Long submissionId, String newStatus) {
+        Submission submission = submissionRepository.findById(submissionId)
+                .orElseThrow(() -> new RuntimeException("Submission not found"));
+
+        Task task = submission.getTask();
+        User user = submission.getUser();
+
+        if(task == null || user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Submission missing task or user");
+        }
+
+
+        submission.setStatus(newStatus);
+
+        if ("APPROVED".equalsIgnoreCase(newStatus)) {
+            // 1️⃣ Update Wallet
+            Wallet wallet = user.getWallet();
+            wallet.setBalance(wallet.getBalance() + task.getRewardPerTask());
+            walletRepository.save(wallet);
+
+            user.setWalletBalance(wallet.getBalance());
+            userRepository.save(user);
+
+            // 2️⃣ Update Task available count
+            if (task.getAvailableQuantity() > 0) {
+                task.setAvailableQuantity(task.getAvailableQuantity() - 1);
+                taskRepository.save(task);
+            }
+
+            // 3️⃣ Create Notification
+            Notification notification = new Notification();
+            notification.setUser(user);
+            notification.setMessage("🎉 Your submission for task '" + task.getTitle() + "' was approved! Reward credited.");
+            notifyRepository.save(notification);
+        }
+
+        return submissionRepository.save(submission);
     }
 
 }
