@@ -20,7 +20,7 @@ public class NotificationImpl implements NotificationService {
 
     @Override
     public List<Notification> getByUserId(Long userId) {
-        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        return notificationRepository.findByUserIdOrderByIdDesc(userId);
     }
 
     @Override

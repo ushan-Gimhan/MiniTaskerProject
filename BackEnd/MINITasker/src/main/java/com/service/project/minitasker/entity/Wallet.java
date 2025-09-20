@@ -1,10 +1,16 @@
 package com.service.project.minitasker.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "wallet_transactions")
-public class WalletTransaction {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
