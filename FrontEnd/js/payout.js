@@ -390,7 +390,6 @@ async function submitWithdrawal() {
         if (!response.ok) throw new Error('Failed to submit withdrawal request');
 
         const result = await response.json();
-        console.log('Withdrawal saved:', result);
 
         if (typeof currentBalance === 'number') {
             currentBalance -= totalDeducted;
@@ -485,6 +484,9 @@ function setFeeBreakdown(amount) {
 document.getElementById("withdrawAmount")?.addEventListener("input", (e) => {
     setFeeBreakdown(e.target.value);
 });
+function GotoOTPModal(){
+    window.location.href = "task.html";
+}
 
 
 

@@ -10,11 +10,16 @@ $(document).ready(async function () {
     }
 
     // Load user info from JWT
-    const user = await loadUserDetails(token);
-    console.log("Logged in user:", user);
+    const user = await loadUserDetails(token).catch(err => {
+        console.error(err);
+        $(".transaction-list").html("<p class='text-red-500'>Failed to fetch user info.</p>");
+        return null;
+    });
 
+    if (!user) return;
     const userId = user.id;
 
+    // ---------------- Load Wallet ----------------
     async function loadWallet() {
         try {
             const wallet = await $.ajax({
@@ -24,26 +29,15 @@ $(document).ready(async function () {
                 headers: { "Authorization": `Bearer ${token}` },
             });
 
-            console.log("✅ Wallet data:", wallet);
-
-            // Update balance with $ prefix
+            // Update balance
             $(".balance-amount").text(`$${(wallet.balance ?? 0).toLocaleString()}`);
 
-            // Ensure transactions is always an array
             const transactions = wallet.transactions || [];
 
             // Stats
-            const totalEarned = transactions
-                .filter(tx => tx.amount > 0)
-                .reduce((sum, tx) => sum + tx.amount, 0);
-
-            const totalWithdrawn = transactions
-                .filter(tx => tx.amount < 0)
-                .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-
-            const tasksCompleted = transactions
-                .filter(tx => tx.type === "earned")
-                .length;
+            const totalEarned = transactions.filter(tx => tx.amount > 0).reduce((sum, tx) => sum + tx.amount, 0);
+            const totalWithdrawn = transactions.filter(tx => tx.amount < 0).reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+            const tasksCompleted = transactions.filter(tx => tx.type === "earned").length;
 
             $(".stat-card").eq(0).find(".stat-value").text(totalEarned.toLocaleString());
             $(".stat-card").eq(1).find(".stat-value").text(totalWithdrawn.toLocaleString());
@@ -57,6 +51,7 @@ $(document).ready(async function () {
         }
     }
 
+    // ---------------- Render Transactions ----------------
     function renderTransactions(transactions) {
         const list = $(".transaction-list");
         list.empty();
@@ -68,50 +63,78 @@ $(document).ready(async function () {
 
         transactions.forEach(tx => {
             const amountClass = tx.amount > 0 ? "positive" : "negative";
-            const statusClass = `status-${tx.status?.toLowerCase() || "unknown"}`;
 
-            const txItem = $(`
+            // Map type to icon
+            let icon = "💰"; // earned default
+            if (tx.type === "withdrawal") icon = "💸";
+            else if (tx.type === "bonus") icon = "🎁";
+
+            // Map status to class
+            let statusClass = "status-completed";
+            if (tx.status?.toLowerCase() === "rejected") statusClass = "status-rejected";
+            else if (tx.status?.toLowerCase() === "processing") statusClass = "status-processing";
+
+            const dateText = tx.timestamp ? timeAgo(tx.timestamp) : (tx.date ? new Date(tx.date).toLocaleString() : "");
+
+            const txHTML = `
                 <div class="transaction-item">
                     <div class="transaction-left">
-                        <div class="transaction-icon ${tx.type}">${tx.icon || ""}</div>
+                        <div class="transaction-icon ${tx.type}">${icon}</div>
                         <div class="transaction-info">
                             <h4>${tx.title || "No Title"}</h4>
                             <p>${tx.description || "No Description"}</p>
-                            <span class="transaction-date">${tx.date ? new Date(tx.date).toLocaleString() : ""}</span>
+                            <span class="transaction-date">${dateText}</span>
                         </div>
                     </div>
                     <div class="transaction-right">
-                        <div class="transaction-amount ${amountClass}">${tx.amount > 0 ? "+" : ""}${tx.amount || 0} Coins</div>
-                        <span class="status-badge ${statusClass}">${tx.status || "Unknown"}</span>
+                        <div class="transaction-amount ${amountClass}">${tx.amount > 0 ? "+" : ""}${tx.amount ?? 0} Coins</div>
+                        <span class="status-badge ${statusClass}">${capitalizeFirstLetter(tx.status ?? "Unknown")}</span>
                     </div>
                 </div>
-            `);
-
-            list.append(txItem);
+            `;
+            list.append(txHTML);
         });
     }
 
-    // Initial load
+    // ---------------- Helper: Time Ago ----------------
+    function timeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+
+        if (diff < 60) return `${diff}s ago`;
+        if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+        if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+        return `${Math.floor(diff / 86400)}d ago`;
+    }
+
+    // ---------------- Helper: Capitalize ----------------
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // ---------------- Load User Details ----------------
+    async function loadUserDetails(token) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "http://localhost:8080/auth/user",
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                success: function (user) {
+                    if (!user?.id) reject(new Error("Invalid user data from server"));
+                    else resolve(user);
+                },
+                error: function (xhr, status, error) {
+                    console.error("loadUserDetails error:", status, error, xhr.responseText);
+                    reject(new Error(`Failed to fetch user details (status ${xhr.status})`));
+                }
+            });
+        });
+    }
+
+    // ---------------- Initial Load ----------------
     loadWallet();
 });
-
-async function loadUserDetails(token) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: "http://localhost:8080/auth/user",
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            success: function (user) {
-                if (!user || !user.id) reject(new Error("Invalid user data from server"));
-                else resolve(user);
-            },
-            error: function (xhr, status, error) {
-                console.error("loadUserDetails error:", status, error, xhr.responseText);
-                reject(new Error(`Failed to fetch user details (status ${xhr.status})`));
-            }
-        });
-    });
-}

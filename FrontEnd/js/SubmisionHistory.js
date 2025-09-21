@@ -100,7 +100,6 @@ $(document).ready(async function () {
         headers: { "Authorization": `Bearer ${token}` },
         dataType: "json",
         success: function (response) {
-            console.log("✅ Submissions loaded:", response);
             allSubmissions = response;
             renderSubmissions(allSubmissions); // Render all initially
         },

@@ -9,7 +9,7 @@ window.addEventListener('load', async function () {
     }
     try {
         const user = await loadUserDetails(token);
-        console.log("Logged in user:", user);
+
 
         // --- Header Updates ---
         const headerUsernameEl = document.getElementById("headerUsername");

@@ -19,8 +19,6 @@ window.addEventListener('load', async function () {
         const username = user.username || "User";
         window.currentUserId = user.id; // store globally for submissions
 
-        console.log("Logged in user:", user);
-
         updateLoginHeader(username);
         const headerUsernameEl = document.getElementById("headerUsername");
         if (headerUsernameEl) {
@@ -320,7 +318,6 @@ async function submitTaskToBackend(submissionData, token) {
             data: JSON.stringify(submissionData),
             timeout: 30000, // 30 second timeout
             success: function (response) {
-                console.log("Submission successful:", response);
                 resolve(response);
             },
             error: function (xhr, status, error) {

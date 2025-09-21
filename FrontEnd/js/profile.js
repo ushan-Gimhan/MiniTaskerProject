@@ -172,7 +172,6 @@ if (profileForm.length) {
             if (profileData.avatarFile) {
                 try {
                     avatarUrl = await uploadAvatarToImgBB(profileData.avatarFile);
-                    console.log("Uploaded avatar URL:", avatarUrl);
                 } catch(err) {
                     console.error("ImgBB upload failed", err);
                     showMessage("Failed to upload avatar", "error");

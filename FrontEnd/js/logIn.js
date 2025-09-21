@@ -33,7 +33,6 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify({ username, password }),
             success: function (response) {
-                console.log(response);
 
                 // ✅ extract token from ApiResponse.data
                 const token = response.data && response.data.accessToken;

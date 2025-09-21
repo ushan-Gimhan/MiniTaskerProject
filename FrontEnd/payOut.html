@@ -672,7 +672,7 @@
     <div class="modal-container">
         <!-- Modal Header -->
         <div class="modal-header">
-            <button class="close-btn" onclick="closeWithdrawalModal()">&times;</button>
+            <button class="close-btn" onclick="GotoOTPModal()">&times;</button>
             <div class="modal-icon">💸</div>
             <h3 class="modal-title">Withdraw Funds</h3>
             <p class="modal-subtitle">Transfer your coins to your bank account</p>
@@ -814,7 +814,7 @@
 
             <!-- Action Buttons -->
             <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeWithdrawalModal()">Cancel</button>
+                <button class="btn-cancel" onclick="GotoOTPModal()">Cancel</button>
                 <button id="withdrawBtn" class="btn-withdraw" onclick="processWithdrawal()">
                     Review Withdrawal
                 </button>
@@ -870,7 +870,7 @@
             </div>
 
             <div class="modal-actions">
-                <button class="btn-cancel" onclick="closeConfirmationModal()">Cancel</button>
+                <button class="btn-cancel" onclick="GotoOTPModal()">Cancel</button>
                 <button id="confirmBtn" class="btn-confirm" onclick="submitWithdrawal()">
                     Confirm Withdrawal
                 </button>
