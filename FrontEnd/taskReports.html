@@ -855,7 +855,7 @@
       <li><a href="#" data-section="task-reports"><i class="fas fa-clipboard-list"></i> <span>Task Reports</span></a></li>
       <li><a href="#" data-section="dispute-resolution"><i class="fas fa-gavel"></i> <span>Worker Submissions</span></a></li>
       <li><a href="#" ><i class="fas fa-chart-line"></i> <span>Platform Analytics</span></a></li>
-      <li><a href="#"><i class="fas fa-shield-alt"></i> <span>Content Moderation</span></a></li>
+      <li><a href="#" data-section="managePayment"><i class="fas fa-shield-alt"></i> <span>Manage Payments</span></a></li>
       <li><a href="#" data-section="announcements"><i class="fas fa-bullhorn"></i> <span>System Announcements</span></a></li>
     </ul>
   </nav>
@@ -1129,6 +1129,96 @@
       </div>
     </section>
   </section>
+  <section id="managePayment" class="dashboard-section" style="display: none;">
+    <div class="section-header">
+      <h2>Payout Requests</h2>
+      <div class="actions">
+        <button><i class="fas fa-plus"></i> Manage Payout</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+        <tr>
+          <th>User</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Back</th>
+          <th>Account Holder Name</th>
+          <th>Account Number</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="payoutsTableBody">
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center;">
+              <img src="https://via.placeholder.com/30/3B82F6/FFFFFF?text=JD" alt="John Doe" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              John Doe
+            </div>
+          </td>
+          <td>$120.00</td>
+          <td><span class="status-badge pending">Pending</span></td>
+          <td>2025-09-20 10:15 AM</td>
+          <td>-</td>
+          <td class="action-buttons">
+            <button><i class="fas fa-eye"></i></button>
+            <button class="approve-btn"><i class="fas fa-check-circle"></i></button>
+            <button class="reject-btn"><i class="fas fa-times-circle"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center;">
+              <img src="https://via.placeholder.com/30/22C55E/FFFFFF?text=JS" alt="Jane Smith" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              Jane Smith
+            </div>
+          </td>
+          <td>$250.50</td>
+          <td><span class="status-badge completed">Completed</span></td>
+          <td>2025-09-18 2:30 PM</td>
+          <td>2025-09-19 11:00 AM</td>
+          <td class="action-buttons">
+            <button><i class="fas fa-eye"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center;">
+              <img src="https://via.placeholder.com/30/FBBF24/FFFFFF?text=RM" alt="Robert Miller" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              Robert Miller
+            </div>
+          </td>
+          <td>$75.00</td>
+          <td><span class="status-badge rejected">Rejected</span></td>
+          <td>2025-09-19 9:00 AM</td>
+          <td>2025-09-19 5:00 PM</td>
+          <td class="action-buttons">
+            <button><i class="fas fa-eye"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div style="display: flex; align-items: center;">
+              <img src="https://via.placeholder.com/30/EF4444/FFFFFF?text=AL" alt="Alice Lee" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+              Alice Lee
+            </div>
+          </td>
+          <td>$180.75</td>
+          <td><span class="status-badge pending">Pending</span></td>
+          <td>2025-09-20 8:45 AM</td>
+          <td>-</td>
+          <td class="action-buttons">
+            <button><i class="fas fa-eye"></i></button>
+            <button class="approve-btn"><i class="fas fa-check-circle"></i></button>
+            <button class="reject-btn"><i class="fas fa-times-circle"></i></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
   <section id="dispute-resolution" class="dashboard-section" style="display: none;">
     <div class="dashboard-header">
@@ -1397,5 +1487,6 @@
 <script src="js/UserManagement.js"></script>
 <script src="js/TaskManagement.js"></script>
 <script src="js/submmisionManagement.js"></script>
+<script src="js/PayOutManagement.js"></script>
 </body>
 </html>

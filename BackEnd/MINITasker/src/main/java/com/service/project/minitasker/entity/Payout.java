@@ -23,6 +23,8 @@ public class Payout {
     private String status; // PENDING, APPROVED, REJECTED
     private String accountNumber;
     private String accountHolderName;
+    private String bankName;
+    private String branch;
     private String requestedAt;
     private String processedAt;
 }

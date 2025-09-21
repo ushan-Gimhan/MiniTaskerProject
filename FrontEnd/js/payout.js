@@ -168,7 +168,7 @@ function processWithdrawal() {
 
     const processingFee = Math.ceil(amount * 0.02);
     const totalDeducted = amount + processingFee;
-    const youReceive = ((amount - processingFee) * 0.01).toFixed(2);
+    const youReceive = amount - processingFee;
 
     // Update confirmation modal
     document.getElementById('confirmAmount').textContent = `${amount} USD`;
@@ -374,7 +374,7 @@ async function submitWithdrawal() {
         payload.bankName = document.getElementById('bankName')?.value;
         payload.accountNumber = document.getElementById('accountNumber')?.value;
         payload.accountHolderName = document.getElementById('accountHolder')?.value;
-        payload.routingNumber = document.getElementById('routingNumber')?.value;
+        payload.branch = document.getElementById('routingNumber')?.value;
     } else {
         payload.bankName = 'Chase Bank';
         payload.accountNumber = '****1234';
@@ -451,6 +451,39 @@ document.getElementById('addAccountBtn').addEventListener('click', function() {
     // Clear input fields
     document.getElementById('accountNumber').value = '';
     document.getElementById('routingNumber').value = '';
+});
+// --------------------- Fee Breakdown Constants ---------------------
+const PROCESSING_FEE_PERCENT = 2; // 2%
+
+// --------------------- DOM Elements ---------------------
+const feeWithdrawal = document.getElementById("feeWithdrawal");
+const feeProcessing = document.getElementById("feeProcessing");
+const feeReceived = document.getElementById("feeReceived");
+
+/**
+ * Updates the fee breakdown section based on a withdrawal amount.
+ * @param {number} amount - The withdrawal amount entered by the user
+ */
+function setFeeBreakdown(amount) {
+    // Ensure amount is a valid number
+    amount = parseFloat(console) || 0;
+
+    // Calculate processing fee
+    const processingFee = (amount * PROCESSING_FEE_PERCENT) / 100;
+
+    // Calculate the amount the user will receive
+    const received = amount - processingFee;
+
+    // Update the DOM
+    feeWithdrawal.textContent = `${amount.toFixed(2)} USD`;
+    feeProcessing.textContent = `${processingFee.toFixed(2)} USD`;
+    feeReceived.textContent = `$${received.toFixed(2)} USD`;
+}
+
+// --------------------- Example Usage ---------------------
+// Call whenever the withdrawal input changes
+document.getElementById("withdrawAmount")?.addEventListener("input", (e) => {
+    setFeeBreakdown(e.target.value);
 });
 
 
