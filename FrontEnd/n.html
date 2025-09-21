@@ -475,7 +475,7 @@
   <div class="payment-modal">
     <!-- Header -->
     <div class="modal-header">
-      <button class="close-btn" onclick="closePaymentModal()">×</button>
+      <button class="close-btn"onclick="GotoOTPModal()">×</button>
       <div class="payment-icon">💳</div>
       <h3 class="modal-title">Complete Payment</h3>
       <p class="modal-subtitle">Review your job details and pay to publish</p>
@@ -629,7 +629,7 @@
 
       <!-- Action Buttons -->
       <div class="action-buttons">
-        <button class="btn btn-cancel" onclick="closePaymentModal()">Cancel</button>
+        <button class="btn btn-cancel" onclick="GotoOTPModal()">Cancel</button>
         <button id="proceedBtn" class="btn btn-proceed" onclick="processPayment()">
           Proceed to Payment
         </button>
@@ -738,7 +738,7 @@
       </div>
 
       <div class="action-buttons">
-        <button class="btn btn-cancel" onclick="closeOTPModal()">Cancel</button>
+        <button class="btn btn-cancel" onclick="GotoOTPModal()">Cancel</button>
         <button id="verifyOTPBtn" class="btn btn-proceed" onclick="verifyOTP()">
           Verify & Pay
         </button>

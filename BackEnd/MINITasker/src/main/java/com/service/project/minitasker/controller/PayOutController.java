@@ -33,7 +33,7 @@ public class PayOutController {
     }
 
     // --------------------- Create a new payout request ---------------------
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> createPayout(@RequestBody Payout payout) {
         Payout created = payOutService.createPayout(payout);
         return ResponseEntity.ok(new ApiResponse(200, "Payout request created successfully", created));

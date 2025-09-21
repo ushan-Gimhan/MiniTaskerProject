@@ -440,6 +440,9 @@ function verifyOTP() {
         document.getElementById("otpError").textContent = "Invalid OTP. Enter 123456 for demo.";
     }
 }
+function GotoOTPModal(){
+    window.location.href = "task.html";
+}
 
 
 

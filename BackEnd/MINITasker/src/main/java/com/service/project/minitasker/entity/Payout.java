@@ -21,6 +21,8 @@ public class Payout {
 
     private Double amount;
     private String status; // PENDING, APPROVED, REJECTED
+    private String accountNumber;
+    private String accountHolderName;
     private String requestedAt;
     private String processedAt;
 }
