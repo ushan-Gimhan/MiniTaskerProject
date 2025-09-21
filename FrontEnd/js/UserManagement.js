@@ -78,7 +78,6 @@ async function loadUsers(token) {
                 <td>${user.email}</td>
                 <td>${user.role || ''}</td>
                 <td><span class="status-badge ${user.status?.toLowerCase() || 'active'}">${user.status || 'Active'}</span></td>
-                <td>${user.lastActivity || '-'}</td>
                 <td class="action-buttons">
                     <button><i class="fas fa-eye"></i></button>
                     <button><i class="fas fa-edit"></i></button>

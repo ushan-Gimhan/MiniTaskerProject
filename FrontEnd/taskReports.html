@@ -847,15 +847,15 @@
   </div>
   <div class="logo">
     <i class="fas fa-tasks"></i>
-    <span>Microtask</span>
+    <span>MINITasker</span>
   </div>
   <nav>
     <ul>
       <li><a href="#" class="active" data-section="user-management"><i class="fas fa-users"></i> <span>User Management</span></a></li>
       <li><a href="#" data-section="task-reports"><i class="fas fa-clipboard-list"></i> <span>Task Reports</span></a></li>
       <li><a href="#" data-section="dispute-resolution"><i class="fas fa-gavel"></i> <span>Worker Submissions</span></a></li>
-      <li><a href="#" ><i class="fas fa-chart-line"></i> <span>Platform Analytics</span></a></li>
-      <li><a href="#" data-section="managePayment"><i class="fas fa-shield-alt"></i> <span>Manage Payments</span></a></li>
+      <li><a href="#" data-section="paymentsSection"><i class="fas fa-chart-line"></i> <span>Payment Management</span></a></li>
+      <li><a href="#" data-section="managePayment"><i class="fas fa-shield-alt"></i> <span>Manage PayOuts</span></a></li>
       <li><a href="#" data-section="announcements"><i class="fas fa-bullhorn"></i> <span>System Announcements</span></a></li>
     </ul>
   </nav>
@@ -870,15 +870,7 @@
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search users by name or email">
     </div>
-    <div class="user-profile">
-      <img src="https://via.placeholder.com/40/3B82F6/FFFFFF?text=SF" alt="Samuel Fernando">
-      <span>Samuel Fernando</span>
-      <div class="dropdown">
-        <a href="#"><i class="fas fa-user"></i> Profile</a>
-        <a href="#"><i class="fas fa-cog"></i> Settings</a>
-        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
-      </div>
-    </div>
+    <div id="userProfile" class="user-profile"></div>
   </header>
 
   <!-- User Management Section (Default) -->
@@ -915,7 +907,7 @@
       <div class="section-header">
         <h2>User Accounts</h2>
         <div class="actions">
-          <button><i class="fas fa-plus"></i> Add New User</button>
+          <button><i class="fas fa-plus"></i> Add New Admin</button>
         </div>
       </div>
 
@@ -927,7 +919,6 @@
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
-            <th>Last Activity</th>
             <th>Actions</th>
           </tr>
           </thead>
@@ -1222,8 +1213,8 @@
 
   <section id="dispute-resolution" class="dashboard-section" style="display: none;">
     <div class="dashboard-header">
-      <h1>Dispute Resolution</h1>
-      <p>Overview of ongoing disputes and resolution actions.</p>
+      <h1>Worker Submissions</h1>
+      <p>Overview of ongoing submissions and resolution actions.</p>
     </div>
 
     <!-- Stats Grid -->
@@ -1437,9 +1428,36 @@
           </section>
         </section>
 
+
       </main>
     </div>
+  </section>
 
+  <section id="paymentsSection" class="dashboard-section" style="display: none;">
+    <div class="section-header">
+      <h2>Manage Payments</h2>
+      <div class="actions">
+        <button id="btnRefreshPayments"><i class="fas fa-sync"></i> Refresh</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+        <tr>
+          <th>User</th>
+<!--          <th>Task</th>-->
+          <th>Amount</th>
+          <th>Method</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="tblPaymentsBody">
+        <!-- Payments will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </div>
   </section>
 
 </div>
@@ -1483,10 +1501,38 @@
       }
     });
   });
+  async function loadUserProfile() {
+    const profileDiv = document.getElementById("userProfile");
+    if (!profileDiv) return console.error("User profile div not found");
+
+    const token = localStorage.getItem("jwtToken");
+    if (!token) return console.warn("No token found");
+
+    try {
+      const res = await fetch("http://localhost:8080/auth/user", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error("Failed to fetch user");
+
+      const user = await res.json();
+
+      profileDiv.innerHTML = `
+            <span>${'Admin :' + user.username}</span>
+        `;
+    } catch (err) {
+      console.error("Error loading profile:", err);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadUserProfile);
+
+
+
 </script>
 <script src="js/UserManagement.js"></script>
 <script src="js/TaskManagement.js"></script>
 <script src="js/submmisionManagement.js"></script>
 <script src="js/PayOutManagement.js"></script>
+<script src="js/loadPayments.js"></script>
 </body>
 </html>
