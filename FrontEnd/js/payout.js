@@ -204,7 +204,8 @@ function showWithdrawalSuccess() {
                                 <p style="margin: 5px 0; color: #0c4a6e;"><strong>Status:</strong> Processing</p>
                                 <p style="margin: 5px 0; color: #0c4a6e;"><strong>Estimated Arrival:</strong> ${getBusinessDate(3)}</p>
                             </div>
-                            <button class="btn-continue" onclick="closeWithdrawalSuccess()">Back to Wallet</button>
+                            
+                            <button class="btn-continue" onclick="GotoOTPModal()">Back to DashBoard</button>
                         </div>
                     </div>
                 </div>
