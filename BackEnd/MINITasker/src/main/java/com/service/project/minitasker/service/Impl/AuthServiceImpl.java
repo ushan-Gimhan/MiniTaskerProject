@@ -7,8 +7,10 @@ import com.service.project.minitasker.entity.Role;
 import com.service.project.minitasker.entity.User;
 import com.service.project.minitasker.entity.Wallet;
 import com.service.project.minitasker.repo.UserRepository;
+import com.service.project.minitasker.repo.WalletRepository;
 import com.service.project.minitasker.service.AuthService;
 import com.service.project.minitasker.util.JwtUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +26,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    private final WalletRepository walletRepository;
+
     public AuthResponseDTO authenticate(AuthDTO authDTO){
         // validate credentials
         User user=userRepository.findByUsername(authDTO.getUsername())
@@ -38,14 +42,14 @@ public class AuthServiceImpl implements AuthService {
         String token=jwtUtil.generateToken(authDTO.username,user.getRole().name());
         return new AuthResponseDTO(token);
     }
-    // register user
-    public String register(RegisterDTO registerDTO){
-        if (userRepository.findByUsername(registerDTO.getUsername())
-                .isPresent()){
+    @Transactional
+    public String register(RegisterDTO registerDTO) {
+        if (userRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
             throw new RuntimeException("Username already exists");
         }
-        System.out.println(registerDTO.getRole());
-        User user=User.builder()
+
+        // 1️⃣ Create user (do not save yet)
+        User user = User.builder()
                 .username(registerDTO.getUsername())
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
                 .mobile(registerDTO.getMobile())
@@ -53,15 +57,28 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.valueOf(registerDTO.getRole()))
                 .walletBalance(registerDTO.getWalletBalance())
                 .build();
+
+        // 2️⃣ Create wallet and link user
         Wallet wallet = Wallet.builder()
                 .balance(0.0)
-                .user(user) // link wallet to user
+                .user(user)
                 .build();
 
+        // 3️⃣ Link wallet to user
         user.setWallet(wallet);
-        userRepository.save(user);
+
+        user.setWallet(wallet);
+        wallet.setUser(user);
+
+        // 4️⃣ Save user; wallet will be auto-saved because of cascade
+        userRepository.saveAndFlush(user);
+        System.out.println(user.getWallet().getId()); // now you get wallet ID
+
+
         return "User registered successfully";
     }
+
+
 
     public User findByUsername(String username) {
         Optional<User> userOpt = userRepository.findByUsername(username);

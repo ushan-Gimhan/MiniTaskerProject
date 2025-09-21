@@ -25,5 +25,5 @@ public class Wallet {
 
     private String type;
 
-    private Double balance;
+    private Double balance = 0.0;
 }
