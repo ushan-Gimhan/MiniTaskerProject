@@ -102,12 +102,6 @@
                     <option value="facebook-promotion">Facebook Promotion</option>
                     <option value="instagram-marketing">Instagram Marketing</option>
                     <option value="tiktok-promotion">TikTok Promotion</option>
-                    <option value="graphic-design">Graphic Design</option>
-                    <option value="video-editing">Video Editing</option>
-                    <option value="blog-writing">Blog Writing</option>
-                    <option value="seo-tasks">SEO Tasks</option>
-                    <option value="translation">Translation</option>
-                    <option value="voice-over">Voice Over</option>
                     <option value="customer-support">Customer Support</option>
                 </select>
             </div>
@@ -434,76 +428,23 @@
         <div class="profile-card glass">
             <h2 style="margin-bottom:1.5rem;">Notifications</h2>
 
-            <main class="task-main">
-                <!-- Notification List -->
-                <div class="task-main">
-                    <!-- Task Approved -->
-                    <div class="task-item glass">
-                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
-                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:#fbbf24; color:#fbbf24;">
-                                ✅
-                            </div>
-                            <div>
-                                <p class="task-title">Task Approved</p>
-                                <p class="task-client">Your task 'Data Entry for Survey' has been approved. You've earned 50 coins.</p>
-                            </div>
-                        </div>
-                        <div class="task-rewards" style="flex-shrink:0;">
-                            <span class="status-badge status-completed">2h ago</span>
-                        </div>
-                    </div>
-
-                    <!-- Payment Received -->
-                    <div class="task-item glass">
-                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
-                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:rgba(16,185,129,0.1); color:#10b981;">
-                                💰
-                            </div>
-                            <div>
-                                <p class="task-title">Payment Received</p>
-                                <p class="task-client">Your payment of 1000 coins has been processed. Check your balance.</p>
-                            </div>
-                        </div>
-                        <div class="task-rewards" style="flex-shrink:0;">
-                            <span class="status-badge status-completed">1d ago</span>
-                        </div>
-                    </div>
-
-                    <!-- Task Rejected -->
-                    <div class="task-item glass">
-                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
-                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:rgba(239,68,68,0.1); color:#ef4444;">
-                                ❌
-                            </div>
-                            <div>
-                                <p class="task-title">Task Rejected</p>
-                                <p class="task-client">Your task 'Image Tagging' has been rejected due to incorrect tags. Please review and resubmit.</p>
-                            </div>
-                        </div>
-                        <div class="task-rewards" style="flex-shrink:0;">
-                            <span class="status-badge status-rejected">3d ago</span>
-                        </div>
-                    </div>
-
-                    <!-- Bonus Received -->
-                    <div class="task-item glass">
-                        <div class="task-info" style="display:flex; align-items:flex-start; gap:1rem;">
-                            <div class="avatar-preview glass" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; flex-shrink:0; background:rgba(59,130,246,0.1); color:#3b82f6;">
-                                🎁
-                            </div>
-                            <div>
-                                <p class="task-title">Bonus Received</p>
-                                <p class="task-client">You've received a bonus of 20 coins for completing 10 tasks this week.</p>
-                            </div>
-                        </div>
-                        <div class="task-rewards" style="flex-shrink:0;">
-                            <span class="status-badge status-completed">5d ago</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Container for notifications -->
+            <main id="taskMain" class="task-main">
+                <!-- Notifications will be injected here by JS -->
             </main>
+
+            <!-- Loading spinner -->
+            <div id="loadingSpinner" style="display:none;">Loading...</div>
+
+            <!-- Empty state -->
+            <div id="emptyState" style="display:none; margin-top:1rem; font-style:italic;"></div>
+
+            <!-- Buttons -->
+            <button class="load-btn" style="display: none">Load Notifications</button>
+            <button id="clearBtn" style="display:none; margin-left:1rem;">Clear Notifications</button>
         </div>
     </section>
+
     <section id="settings" class="section">
         <div class="settings-container">
             <!-- Notification Preferences -->

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Assignment.iml" filepath="$PROJECT_DIR$/.idea/Assignment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BackEnd/MINITasker/MINITasker.iml" filepath="$PROJECT_DIR$/BackEnd/MINITasker/MINITasker.iml" />
     </modules>
   </component>
 </project>

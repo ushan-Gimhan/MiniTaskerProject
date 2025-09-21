@@ -1047,7 +1047,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </schema>
     <schema id="305" parent="1" name="minitasker">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2025-09-21.14:40:18</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-09-21.18:10:51</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="306" parent="1" name="mysql">
@@ -1555,65 +1555,70 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Position>8</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <index id="423" parent="328" name="PRIMARY">
+    <foreign-key id="423" parent="328" name="FKiketdt058p0ancr2ud2jcob73">
+      <ColNames>wallet_id</ColNames>
+      <RefColNames>id</RefColNames>
+      <RefTableName>wallet_transactions</RefTableName>
+    </foreign-key>
+    <index id="424" parent="328" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="424" parent="328" name="wallet_id">
+    <index id="425" parent="328" name="UKqdajoj4ecbjj1u8sq5fqra57g">
       <ColNames>wallet_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="425" parent="328" name="PRIMARY">
+    <key id="426" parent="328" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="426" parent="328" name="wallet_id">
-      <UnderlyingIndexName>wallet_id</UnderlyingIndexName>
+    <key id="427" parent="328" name="UKqdajoj4ecbjj1u8sq5fqra57g">
+      <UnderlyingIndexName>UKqdajoj4ecbjj1u8sq5fqra57g</UnderlyingIndexName>
     </key>
-    <column id="427" parent="329" name="id">
+    <column id="428" parent="329" name="id">
       <AutoIncrement>9</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="428" parent="329" name="user_id">
+    <column id="429" parent="329" name="user_id">
       <Position>2</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="429" parent="329" name="description">
+    <column id="430" parent="329" name="description">
       <Position>3</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="430" parent="329" name="timestamp">
+    <column id="431" parent="329" name="timestamp">
       <Position>4</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="431" parent="329" name="type">
+    <column id="432" parent="329" name="type">
       <Position>5</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="432" parent="329" name="balance">
+    <column id="433" parent="329" name="balance">
       <Position>6</Position>
       <StoredType>double|0s</StoredType>
     </column>
-    <foreign-key id="433" parent="329" name="FKk9pv2r3fli5rqhxdjll8xu9p6">
+    <foreign-key id="434" parent="329" name="FKk9pv2r3fli5rqhxdjll8xu9p6">
       <ColNames>user_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>user</RefTableName>
     </foreign-key>
-    <index id="434" parent="329" name="PRIMARY">
+    <index id="435" parent="329" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="435" parent="329" name="FKk9pv2r3fli5rqhxdjll8xu9p6">
+    <index id="436" parent="329" name="FKk9pv2r3fli5rqhxdjll8xu9p6">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="436" parent="329" name="PRIMARY">
+    <key id="437" parent="329" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
