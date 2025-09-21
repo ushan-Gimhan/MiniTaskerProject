@@ -1,9 +1,15 @@
 package com.service.project.minitasker.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "payouts")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payout {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,7 +17,7 @@ public class Payout {
 
     @ManyToOne
     @JoinColumn(name = "worker_id")
-    private User worker;
+    private User user;
 
     private Double amount;
     private String status; // PENDING, APPROVED, REJECTED

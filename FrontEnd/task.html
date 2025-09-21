@@ -23,6 +23,15 @@
             color: #fbbf24; /* Highlight color */
             font-weight: bold;
         }
+        #taskList{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+            padding: 0.5rem;
+            flex-direction: column;
+        }
+
     </style>
 </head>
 <body>
@@ -271,7 +280,7 @@
 
         <!-- Action Buttons -->
         <div class="wallet-actions">
-            <button class="action-btn">💸 Withdraw</button>
+            <button class="action-btn" id="withdraw-btn">💸 Withdraw</button>
         </div>
 
         <!-- Statistics Cards -->
@@ -598,6 +607,12 @@
             submitBtn.disabled = false;
             submitBtn.textContent = "Top Up";
         }
+    });
+</script>
+<script>
+    document.getElementById("withdraw-btn").addEventListener("click", function() {
+        // Redirect to n.html when button is clicked
+        window.location.href = "payOut.html";
     });
 </script>
 

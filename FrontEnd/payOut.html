@@ -666,18 +666,13 @@
     </style>
 </head>
 <body>
-<!-- Demo Wallet -->
-<div class="wallet-container">
-    <div class="balance-card">
-        <p style="color: rgba(255,255,255,0.8);">Current Balance</p>
-        <div class="balance-amount" id="currentBalance">12,500</div>
-        <p style="color: rgba(255,255,255,0.6);">Coins</p>
-    </div>
-    <button class="withdraw-btn" onclick="showWithdrawalModal()">Withdraw Funds</button>
-</div>
+<!--&lt;!&ndash; Demo Wallet &ndash;&gt;-->
+<!--<div class="wallet-container">-->
+<!--    <button class="withdraw-btn" onclick="showWithdrawalModal()">Withdraw Funds</button>-->
+<!--</div>-->
 
 <!-- Withdrawal Modal -->
-<div id="withdrawalModal" class="modal-overlay" style="display: none;">
+<div id="withdrawalModal" class="modal-overlay">
     <div class="modal-container">
         <!-- Modal Header -->
         <div class="modal-header">
@@ -1072,7 +1067,7 @@
             // Show success
             closeConfirmationModal();
             showWithdrawalSuccess();
-        }, 3000);
+        }, 30);
     }
 
     function showWithdrawalSuccess() {
