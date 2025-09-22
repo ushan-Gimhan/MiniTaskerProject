@@ -1,18 +1,43 @@
+function validateAndLoadDashboard() {
+    let token = localStorage.getItem('jwtToken');
+
+    if (!token) {
+        window.location.href = 'Home.html';
+        return;
+    }
+
+    const tokenParts = token.split('.');
+
+    if (tokenParts.length !== 3) {
+        window.location.href = 'Home.html';
+        return;
+    }
+
+    try {
+        const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+        const currentTimestamp = Math.floor(Date.now() / 10000);
+
+
+        if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+            alert('Session expired. Please login again.');
+            localStorage.removeItem('jwtToken');
+            window.location.href = 'Home.html';
+            return;
+        }
+
+
+    } catch (error) {
+        console.error('Invalid token:', error);
+        window.location.href = 'Home.html';
+    }
+}
+
 
 // --------------------- Check JWT token on page load ---------------------
 window.addEventListener('load', async function () {
     const token = localStorage.getItem('jwtToken');
-    if (!token) {
-        // no token → redirect to login
-        window.location.href = "login.html";
-        return;
-    }
-
-    if (!token) {
-        console.warn("No JWT token found. Showing Guest header.");
-        updateLoginHeader("Guest");
-        return;
-    }
+    validateAndLoadDashboard();
 
     try {
         const user = await loadUserDetails(token);
@@ -180,16 +205,13 @@ function closeTaskForm() {
 $("#taskSubmissionForm").on("submit", async function (e) {
     e.preventDefault();
 
-    // Get form elements and show loading state
     const submitBtn = $(this).find('button[type="submit"]');
     const originalBtnText = submitBtn.text();
     submitBtn.prop('disabled', true).html('<i class="spinner"></i> Submitting...');
 
-    // Show loading overlay if exists
     showLoadingOverlay();
 
     try {
-        // Get form data
         const token = localStorage.getItem('jwtToken');
         const taskId = $("#taskId").val();
         const workerId = window.currentUserId;
@@ -197,21 +219,32 @@ $("#taskSubmissionForm").on("submit", async function (e) {
         const reviewComment = $("#reviewComment").val().trim();
         const file = $("#proofFile")[0].files[0];
 
-        // Validate required fields
         if (!validateSubmissionForm(taskId, workerId, description, file)) {
-            return; // Validation failed, exit early
+            hideLoadingOverlay();
+            submitBtn.prop('disabled', false).text(originalBtnText);
+            return;
         }
 
-        // Show upload progress
-        showProgressMessage("📤 Uploading proof file...", "info");
+        Swal.fire({
+            title: '📤 Uploading proof file...',
+            toast: true,
+            position: 'top-end',
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => toast.addEventListener('mouseenter', Swal.stopTimer)
+        });
 
-        // Upload file to ImgBB
         const proofUrl = await uploadFileToImgBB(file);
 
-        // Show submission progress
-        showProgressMessage("📝 Submitting your task...", "info");
+        Swal.fire({
+            title: '📝 Submitting your task...',
+            toast: true,
+            position: 'top-end',
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => toast.addEventListener('mouseenter', Swal.stopTimer)
+        });
 
-        // Submit task with proof URL
         await submitTaskToBackend({
             taskId,
             workerId,
@@ -221,28 +254,40 @@ $("#taskSubmissionForm").on("submit", async function (e) {
             status: "PENDING"
         }, token);
 
-        // Success - show celebration message
-        showSuccessMessage("🎉 Task submitted successfully!",
-            "Your work has been submitted for review. You'll be notified once it's approved!");
+        Swal.fire({
+            icon: 'success',
+            title: '🎉 Task submitted successfully!',
+            text: "Your work has been submitted for review. You'll be notified once it's approved!",
+            showConfirmButton: false,
+            timer: 4000,
+            position: 'center'
+        });
 
-        // Redirect after short delay
         setTimeout(() => {
             window.location.href = "dashboard.html";
         }, 2000);
 
-        // Clean up
         closeTaskForm();
         refreshDashboardData(token);
 
     } catch (error) {
         console.error("Task submission error:", error);
-        showErrorMessage("❌ Submission Failed", error.message);
+        Swal.fire({
+            icon: 'error',
+            title: '❌ Submission Failed',
+            text: error.message,
+            position: 'top-end',
+            toast: true,
+            timer: 4000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
     } finally {
-        // Reset button state
         submitBtn.prop('disabled', false).text(originalBtnText);
         hideLoadingOverlay();
     }
 });
+
 
 // Validation function
 function validateSubmissionForm(taskId, workerId, description, file) {
@@ -250,9 +295,9 @@ function validateSubmissionForm(taskId, workerId, description, file) {
 
     if (!taskId) errors.push("Task ID is missing");
     if (!workerId) errors.push("User not logged in");
-    if (!description || description.length < 10) {
-        errors.push("Please provide a detailed description (at least 10 characters)");
-    }
+    // if (!description || description.length < 10) {
+    //     errors.push("Please provide a detailed description (at least 10 characters)");
+    // }
     if (!file) {
         errors.push("Please select a proof file to upload");
     } else {
@@ -367,12 +412,20 @@ function showProgressMessage(message, type = "info") {
 }
 
 function showSuccessMessage(title, message) {
-    const successHtml = `
-        <div class="alert alert-success success-message" style="margin: 15px 0; text-align: center;">
-            <h5>${title}</h5>
-            <p class="mb-0">${message}</p>
-        </div>
-    `;
+    Swal.fire({
+        icon: 'success',
+        title: title,
+        text: message,
+        toast: true,
+        position: 'top-end',   // you can change position as needed
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
 
     $(".progress-message").remove();
     $("#taskSubmissionForm").prepend(successHtml);
@@ -446,8 +499,8 @@ $("#proofFile").on("change", function() {
         // Validate file type
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
-            showErrorMessage("⚠️ Invalid File Type", "Please select an image file (JPEG, PNG, GIF, or WebP)");
-            this.value = ''; // Clear the input
+            Swal.fire({ icon:'error', title:'Invalid File Type', text:'Only JPEG, PNG, GIF, WebP allowed' });
+            this.value = '';
             return;
         }
 
@@ -531,9 +584,7 @@ $("#proofFile").on("change", function() {
             });
 
             // Show file size warning if too large
-            if (fileSize > 5) {
-                showErrorMessage("⚠️ File Size Warning", "This file is larger than 5MB and may fail to upload. Please consider resizing it.");
-            }
+            if (fileSize > 5) Swal.fire({ icon:'warning', title:'File Size Warning', text:'File >5MB may fail to upload' });
         };
 
         reader.readAsDataURL(file);

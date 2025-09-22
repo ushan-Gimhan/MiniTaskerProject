@@ -21,20 +21,15 @@ async function getCurrentUser() {
 async function loadUserNotifications() {
     const container = document.querySelector("#taskMain");
     const spinner = document.getElementById("loadingSpinner");
-    const loadBtn = document.querySelector(".load-btn");
-    const clearBtn = document.getElementById("clearBtn");
     const emptyState = document.getElementById("emptyState");
 
     if (!container) return console.error("Notifications container not found!");
 
     try {
         // Show loading state
-        loadBtn.disabled = true;
-        loadBtn.textContent = 'Loading...';
         spinner.style.display = 'block';
         container.innerHTML = "";
         container.style.display = 'flex';
-        clearBtn.style.display = 'none';
         emptyState.style.display = 'none';
 
         const user = await getCurrentUser();
@@ -59,14 +54,11 @@ async function loadUserNotifications() {
             element.style.transform = 'translateY(0)';
         }
 
-        clearBtn.style.display = 'none';
     } catch (err) {
         console.error("Error loading notifications:", err);
         showEmptyState("Error loading notifications");
     } finally {
         spinner.style.display = 'none';
-        loadBtn.disabled = false;
-        loadBtn.textContent = 'Load Notifications';
     }
 }
 
@@ -120,25 +112,6 @@ function showEmptyState(message) {
     emptyState.textContent = message;
 }
 
-// ------------------- Clear notifications -------------------
-function clearNotifications() {
-    const container = document.getElementById('taskMain');
-    const clearBtn = document.getElementById('clearBtn');
-    const notifications = container.querySelectorAll('.task-item');
-
-    notifications.forEach((notif, index) => {
-        setTimeout(() => {
-            notif.style.transform = 'translateX(100%) scale(0.8)';
-            notif.style.opacity = '0';
-        }, index * 100);
-    });
-
-    setTimeout(() => {
-        container.innerHTML = '';
-        clearBtn.style.display = 'none';
-    }, notifications.length * 100 + 300);
-}
-
 // ------------------- Convert timestamp to "time ago" -------------------
 function timeAgo(dateString) {
     const date = new Date(dateString);
@@ -151,9 +124,7 @@ function timeAgo(dateString) {
     return `${Math.floor(diff / 86400)}d ago`;
 }
 
-// ------------------- Event listeners -------------------
-document.querySelector(".load-btn")?.addEventListener("click", loadUserNotifications);
-document.getElementById("clearBtn")?.addEventListener("click", clearNotifications);
-
-// Auto-load notifications on page load
+// ------------------- Auto-load notifications on page load -------------------
 window.addEventListener("DOMContentLoaded", loadUserNotifications);
+
+

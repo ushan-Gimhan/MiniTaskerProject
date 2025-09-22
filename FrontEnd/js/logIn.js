@@ -1,4 +1,4 @@
-// Password toggle functionality
+// ---------------- Password toggle ----------------
 function togglePassword() {
     const passwordInput = document.getElementById('password');
     const toggleBtn = document.querySelector('.password-toggle');
@@ -13,15 +13,13 @@ function togglePassword() {
 }
 
 $(document).ready(function () {
-    // Form submission with AJAX
+    // ---------------- Form submission ----------------
     $("#loginForm").on("submit", function (e) {
         e.preventDefault();
 
         const loginBtn = $("#loginBtn");
-        const errorMessage = $("#errorMessage");
 
         loginBtn.addClass("loading").text("");
-        errorMessage.hide();
 
         // ✅ must match AuthDTO field names
         const username = $("#username").val();
@@ -34,39 +32,65 @@ $(document).ready(function () {
             data: JSON.stringify({ username, password }),
             success: function (response) {
 
-                // ✅ extract token from ApiResponse.data
-                const token = response.data && response.data.accessToken;
+                // ✅ extract token (adjust if backend sends `token` instead of `accessToken`)
+                const token = response.data?.token || response.data?.accessToken;
 
                 if (token) {
                     // Save the token
                     localStorage.setItem("jwtToken", token);
 
-                    // Decode token payload (assuming JWT is in standard format header.payload.signature)
-                    const payload = JSON.parse(atob(token.split(".")[1]));
-                    const userRole = payload.role; // make sure backend includes "role" in JWT
+                    // Decode token payload (assuming JWT format header.payload.signature)
+                    let payload;
+                    try {
+                        payload = JSON.parse(atob(token.split(".")[1]));
+                    } catch (e) {
+                        Swal.fire("Error", "Invalid token format.", "error");
+                        return;
+                    }
+
+                    const userRole = payload.role; // backend must include "role" in JWT
 
                     // Redirect based on role
                     if (userRole === "ADMIN") {
-                        alert("Welcome Admin! Redirecting to Admin Dashboard...");
-                        window.location.href = "taskReports.html";
+                        Swal.fire({
+                            title: "Welcome Admin!",
+                            text: "Redirecting to Admin Dashboard...",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = "taskReports.html";
+                        });
                     } else if (userRole === "USER") {
-                        alert("Login successful! Redirecting to User Dashboard...");
-                        window.location.href = "dashboard.html";
+                        Swal.fire({
+                            title: "Login Successful!",
+                            text: "Redirecting to User Dashboard...",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = "dashboard.html";
+                        });
                     } else {
-                        alert("Login successful! Redirecting...");
-                        window.location.href = "dashboard.html"; // fallback
+                        Swal.fire({
+                            title: "Login Successful!",
+                            text: "Redirecting...",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            window.location.href = "dashboard.html"; // fallback
+                        });
                     }
 
                 } else {
-                    errorMessage.show().text("Login failed: token missing.");
+                    Swal.fire("Error", "Login failed: token missing.", "error");
                 }
-
             },
             error: function (xhr) {
                 console.error("Login error:", xhr);
                 const msg = xhr.responseJSON?.message || "Invalid credentials. Please try again.";
-                errorMessage.show().text(msg);
-                errorMessage[0].scrollIntoView({ behavior: "smooth", block: "center" });
+                Swal.fire("Login Failed", msg, "error");
             },
             complete: function () {
                 loginBtn.removeClass("loading").text("Sign In");
@@ -74,13 +98,13 @@ $(document).ready(function () {
         });
     });
 
-    // Social login handlers
+    // ---------------- Social login handlers ----------------
     $(".social-btn").on("click", function () {
         const provider = $(this).hasClass("google") ? "Google" : "Facebook";
-        alert(`${provider} login functionality would be implemented here`);
+        Swal.fire("Info", `${provider} login functionality would be implemented here`, "info");
     });
 
-    // Input focus animations
+    // ---------------- Input focus animations ----------------
     $(".form-input").on("focus", function () {
         $(this).parent().addClass("focused");
     }).on("blur", function () {
