@@ -6,6 +6,7 @@ import com.service.project.minitasker.dto.AuthDTO;
 import com.service.project.minitasker.dto.RegisterDTO;
 import com.service.project.minitasker.entity.User;
 import com.service.project.minitasker.service.AuthService;
+import com.service.project.minitasker.service.Impl.EmailService;
 import com.service.project.minitasker.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.List;
 public class AuthController {
     private final AuthService authServiceImpl;
     private final JwtUtil jwtUtil;
+    private final EmailService emailService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> registerUser(@RequestBody RegisterDTO registerDTO) {
@@ -80,4 +82,14 @@ public class AuthController {
         }
     }
 
+    @GetMapping("/confirm")
+    public ResponseEntity<ApiResponse> confirmEmail(@RequestParam String token) {
+        try {
+            String message = emailService.confirmEmail(token);
+            return ResponseEntity.ok(new ApiResponse(200, message, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(400, e.getMessage(), null));
+        }
+    }
 }

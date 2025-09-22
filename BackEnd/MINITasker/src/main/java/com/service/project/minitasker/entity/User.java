@@ -32,4 +32,6 @@ public class User {
     @JsonManagedReference
     private Wallet wallet;
 
+    private boolean enabled;
+
 }

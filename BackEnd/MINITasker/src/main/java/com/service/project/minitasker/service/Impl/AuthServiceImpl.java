@@ -3,11 +3,12 @@ package com.service.project.minitasker.service.Impl;
 import com.service.project.minitasker.dto.AuthDTO;
 import com.service.project.minitasker.dto.AuthResponseDTO;
 import com.service.project.minitasker.dto.RegisterDTO;
+import com.service.project.minitasker.entity.EmailConfirmationToken;
 import com.service.project.minitasker.entity.Role;
 import com.service.project.minitasker.entity.User;
 import com.service.project.minitasker.entity.Wallet;
+import com.service.project.minitasker.repo.EmailTokenRepository;
 import com.service.project.minitasker.repo.UserRepository;
-import com.service.project.minitasker.repo.WalletRepository;
 import com.service.project.minitasker.service.AuthService;
 import com.service.project.minitasker.util.JwtUtil;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    private final WalletRepository walletRepository;
+    private final EmailService emailService;
+
+    private final EmailTokenRepository emailTokenRepository;
 
     public AuthResponseDTO authenticate(AuthDTO authDTO){
         // validate credentials
@@ -48,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Username already exists!! Try another User Name");
         }
 
-        // 1️⃣ Create user (do not save yet)
+        // 1️⃣ Create user
         User user = User.builder()
                 .username(registerDTO.getUsername())
                 .password(passwordEncoder.encode(registerDTO.getPassword()))
@@ -56,6 +60,7 @@ public class AuthServiceImpl implements AuthService {
                 .email(registerDTO.getEmail())
                 .role(Role.valueOf(registerDTO.getRole()))
                 .walletBalance(registerDTO.getWalletBalance())
+                .enabled(false) // disable until email confirmed
                 .build();
 
         // 2️⃣ Create wallet and link user
@@ -63,20 +68,29 @@ public class AuthServiceImpl implements AuthService {
                 .balance(0.0)
                 .user(user)
                 .build();
-
-        // 3️⃣ Link wallet to user
         user.setWallet(wallet);
 
-        user.setWallet(wallet);
-        wallet.setUser(user);
-
-        // 4️⃣ Save user; wallet will be auto-saved because of cascade
+        // 3️⃣ Save user (wallet saved via cascade)
         userRepository.saveAndFlush(user);
-        System.out.println(user.getWallet().getId()); // now you get wallet ID
 
+        // 4️⃣ Generate token and link to user
+        String token = UUID.randomUUID().toString();
+        EmailConfirmationToken confirmationToken = new EmailConfirmationToken();
+        confirmationToken.setToken(token);
+        confirmationToken.setUser(user);  // link user before saving
+        emailTokenRepository.save(confirmationToken);
 
-        return "User registered successfully";
+        // 5️⃣ Send email
+        String link = "http://localhost:8080/auth/confirm?token=" + token;
+        emailService.sendEmail(
+                registerDTO.getEmail(),
+                "Confirm your email",
+                "Click this link to confirm your email: " + link
+        );
+
+        return "User registered successfully! Check your email to confirm.";
     }
+
 
 
 

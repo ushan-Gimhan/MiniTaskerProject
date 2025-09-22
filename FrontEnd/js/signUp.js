@@ -1,9 +1,12 @@
 let selectedUserType = '';
 
-// Password toggle
+// ------------------- Password toggle -------------------
 function togglePassword(inputId) {
     const passwordInput = document.getElementById(inputId);
+    if (!passwordInput) return;
+
     const toggleBtn = passwordInput.nextElementSibling;
+    if (!toggleBtn) return;
 
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
@@ -14,9 +17,12 @@ function togglePassword(inputId) {
     }
 }
 
-// Password validation
+// ------------------- Password validation -------------------
 function validatePassword() {
-    const password = document.getElementById('password').value;
+    const passwordInput = document.getElementById('password');
+    if (!passwordInput) return false;
+
+    const password = passwordInput.value;
     const requirements = {
         length: password.length >= 8,
         uppercase: /[A-Z]/.test(password),
@@ -26,6 +32,8 @@ function validatePassword() {
 
     Object.keys(requirements).forEach(key => {
         const element = document.getElementById(key);
+        if (!element) return;
+
         if (requirements[key]) {
             element.classList.add('valid');
             element.classList.remove('invalid');
@@ -38,14 +46,14 @@ function validatePassword() {
     return Object.values(requirements).every(Boolean);
 }
 
-// Form validation
+// ------------------- Form validation -------------------
 function validateForm() {
-    const UserName = document.getElementById('UserName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const terms = document.getElementById('terms').checked;
+    const UserName = document.getElementById('UserName')?.value.trim() || '';
+    const email = document.getElementById('email')?.value.trim() || '';
+    const phone = document.getElementById('phone')?.value.trim() || '';
+    const password = document.getElementById('password')?.value || '';
+    const confirmPassword = document.getElementById('confirmPassword')?.value || '';
+    const terms = document.getElementById('terms')?.checked || false;
 
     const isPasswordValid = validatePassword();
     const doPasswordsMatch = password === confirmPassword;
@@ -55,19 +63,25 @@ function validateForm() {
     const isFormValid = UserName && isEmailValid && isPhoneValid &&
         isPasswordValid && doPasswordsMatch && terms;
 
-    document.getElementById('signupBtn').disabled = !isFormValid;
+    const signupBtn = document.getElementById('signupBtn');
+    if (signupBtn) signupBtn.disabled = !isFormValid;
+
     return isFormValid;
 }
 
-// Real-time validation
-document.getElementById('password').addEventListener('input', validatePassword);
-document.querySelectorAll('.form-input, .terms-checkbox').forEach(input => {
-    input.addEventListener('input', validateForm);
-    input.addEventListener('change', validateForm);
+// ------------------- Real-time validation -------------------
+document.addEventListener('DOMContentLoaded', () => {
+    const passwordInput = document.getElementById('password');
+    if (passwordInput) passwordInput.addEventListener('input', validatePassword);
+
+    document.querySelectorAll('.form-input, .terms-checkbox').forEach(input => {
+        input.addEventListener('input', validateForm);
+        input.addEventListener('change', validateForm);
+    });
 });
 
-// Submit form
-document.getElementById('signupForm').addEventListener('submit', function(e) {
+// ------------------- Submit form -------------------
+document.getElementById('signupForm')?.addEventListener('submit', function(e) {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -77,10 +91,10 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
 
     const formData = {
         role: "USER",
-        username: document.getElementById('UserName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        mobile: document.getElementById('phone').value.trim(),
-        password: document.getElementById('password').value,
+        username: document.getElementById('UserName')?.value.trim(),
+        email: document.getElementById('email')?.value.trim(),
+        mobile: document.getElementById('phone')?.value.trim(),
+        password: document.getElementById('password')?.value,
         walletBalance: 0.00
     };
 
@@ -94,35 +108,35 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
         data: JSON.stringify(formData),
         success: function(response) {
             Swal.fire({
-                icon: 'success',
-                title: 'Account Created!',
-                text: 'Your account has been created successfully. Redirecting to login...',
-                timer: 2000,
+                icon: 'info',
+                title: 'Check your email!',
+                text: 'A confirmation link has been sent to your email. Please confirm before logging in.',
+                timer: 5000,
                 timerProgressBar: true,
                 toast: true,
                 position: 'top-end',
-                showConfirmButton: false
-            }).then(() => {
-                window.location.href = "login.html";
+                showConfirmButton: true
             });
-
-            // Fallback redirection after timer expires
-            setTimeout(() => window.location.href = "login.html", 2200);
+            signupBtn.prop("disabled", false).text("Create Account");
+            setTimeout(function() {
+                window.location.href = "LogIn.html"; // replace with your actual login page path
+            }, 1000);
         },
         error: function(xhr) {
             const msg = xhr.responseJSON?.message || "Signup failed. Please try again.";
+            console.log(msg);
             showError(msg);
 
-            // Highlight the username field if username already exists
             const usernameInput = document.getElementById('UserName');
-            if (msg.toLowerCase().includes('username already exists')) {
-                usernameInput.style.border = '2px solid #ef4444';  // Red border
-                usernameInput.style.backgroundColor = '#fee2e2';   // Light red background
-            } else {
-                usernameInput.style.border = '';         // Reset to default
-                usernameInput.style.backgroundColor = ''; // Reset to default
+            if (usernameInput) {
+                if (msg.toLowerCase().includes('username already exists')) {
+                    usernameInput.style.border = '2px solid #ef4444';
+                    usernameInput.style.backgroundColor = '#fee2e2';
+                } else {
+                    usernameInput.style.border = '';
+                    usernameInput.style.backgroundColor = '';
+                }
             }
-
         },
         complete: function() {
             signupBtn.prop("disabled", false).text("Create Account");
@@ -130,7 +144,7 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     });
 });
 
-// ------------------- SweetAlert2 Helper Functions -------------------
+// ------------------- SweetAlert2 Helper -------------------
 function showError(msg) {
     Swal.fire({
         icon: 'error',
