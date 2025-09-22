@@ -115,7 +115,6 @@ async function loadTasks(token) {
                         border:1px solid #4b5563; border-radius:0.5rem; font-size:0.875rem; outline:none;
                         cursor:pointer;"
                     >
-                        <option value="Pending" ${currentStatus === 'Pending' ? 'selected' : ''}>PENDING</option>
                         <option value="APPROVED" ${currentStatus === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
                         <option value="Rejected" ${currentStatus === 'Rejected' ? 'selected' : ''}>REJECT</option>
                     </select>

@@ -2,14 +2,14 @@ function validateAndLoadDashboard() {
     let token = localStorage.getItem('jwtToken');
 
     if (!token) {
-        window.location.href = 'Home.html';
+        window.location.href = '/Home.html';
         return;
     }
 
     const tokenParts = token.split('.');
 
     if (tokenParts.length !== 3) {
-        window.location.href = 'Home.html';
+        window.location.href = '/Home.html';
         return;
     }
 
@@ -22,17 +22,16 @@ function validateAndLoadDashboard() {
         if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
             alert('Session expired. Please login again.');
             localStorage.removeItem('jwtToken');
-            window.location.href = 'Home.html';
+            window.location.href = '/Home.html';
             return;
         }
 
 
     } catch (error) {
         console.error('Invalid token:', error);
-        window.location.href = 'Home.html';
+        window.location.href = '../HTML/Login.html';
     }
 }
-
 
 // --------------------- Check JWT token on page load ---------------------
 window.addEventListener('load', async function () {
@@ -43,15 +42,14 @@ window.addEventListener('load', async function () {
         const user = await loadUserDetails(token);
         const username = user.username || "User";
         window.currentUserId = user.id; // store globally for submissions
-
         updateLoginHeader(username);
+
         const headerUsernameEl = document.getElementById("headerUsername");
         if (headerUsernameEl) {
             headerUsernameEl.textContent = `Welcome!!!, ${username}!`;
         }
 
         initializeDashboard();
-
     } catch (err) {
         console.error("Error initializing dashboard:", err);
         updateLoginHeader("Guest");
@@ -73,7 +71,6 @@ async function loadUserDetails(token) {
 
     const user = await response.json();
     if (!user || !user.username) throw new Error("Invalid user data from server");
-
     return user;
 }
 
@@ -89,11 +86,12 @@ function updateLoginHeader(username) {
 // --------------------- Initialize Dashboard ---------------------
 function initializeDashboard() {
     console.log("Initializing dashboard...");
-
     const progressBars = document.querySelectorAll('.progress-fill');
     progressBars.forEach(bar => {
         const width = bar.getAttribute("data-progress") || bar.style.width;
-        setTimeout(() => { bar.style.width = width; }, 500);
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 500);
     });
 }
 
@@ -101,7 +99,6 @@ function initializeDashboard() {
 $(document).ready(async function () {
     const apiURL = "http://localhost:8080/task/approved";
     const token = localStorage.getItem('jwtToken');
-
     const user = await loadUserDetails(token);
     const username = user.username || "User";
 
@@ -132,7 +129,7 @@ $(document).ready(async function () {
                             <div class="task-description" style="font-size:16px; color:#555; margin-bottom:8px;">${task.description || ''}</div>
                         </div>
                         <div style="font-size:16px; color:#333; margin-bottom:10px;">
-                            <span>💰Price:${task.rewardPerTask != null ? '$' + task.rewardPerTask : '-'}</span><br>
+                            <span>💰Price: ${task.rewardPerTask != null ? '$' + task.rewardPerTask : '-'}</span><br>
                             <span>🗂 Vacancy Available: ${task.availableQuantity || 0}</span><br>
                             <span>🗂 Total Vacancy Available: ${task.totalQuantity || 0}</span><br>
                         </div>
@@ -141,10 +138,9 @@ $(document).ready(async function () {
                 </div>
             `);
 
-            // ✅ Hook Apply button
+            // Hook Apply button
             taskItem.find(".apply-btn").on("click", function () {
-                $("#taskId").val(task.id);
-                // set hidden input with taskId
+                $("#taskId").val(task.id); // set hidden input with taskId
                 updateTaskInfo(task);
                 openTaskForm(); // show modal
             });
@@ -156,11 +152,11 @@ $(document).ready(async function () {
     function loadTasks() {
         $.ajax({
             url: apiURL,
-            type: "POST", // using POST
+            type: "POST",
             contentType: "application/json",
             dataType: "json",
-            headers: {"Authorization": `Bearer ${token}`},
-            data: JSON.stringify({username: username}),
+            headers: { "Authorization": `Bearer ${token}` },
+            data: JSON.stringify({ username: username }),
             success: function (response) {
                 console.log("✅ Approved tasks:", response);
                 renderTasks(response);
@@ -190,17 +186,14 @@ function openTaskForm() {
     $('#taskSubmissionModal').fadeIn();
     $('body').addClass('modal-open');
 }
+
 function closeTaskForm() {
     $('#taskSubmissionModal').fadeOut();
     $('body').removeClass('modal-open');
 
-    // Reload dashboard automatically after modal closes
     const token = localStorage.getItem('jwtToken');
-    if (token) {
-        loadSubmissions(token);
-    }
+    if (token) loadSubmissions(token);
 }
-
 
 $("#taskSubmissionForm").on("submit", async function (e) {
     e.preventDefault();
@@ -219,173 +212,89 @@ $("#taskSubmissionForm").on("submit", async function (e) {
         const reviewComment = $("#reviewComment").val().trim();
         const file = $("#proofFile")[0].files[0];
 
-        if (!validateSubmissionForm(taskId, workerId, description, file)) {
-            hideLoadingOverlay();
-            submitBtn.prop('disabled', false).text(originalBtnText);
-            return;
-        }
+        if (!validateSubmissionForm(taskId, workerId, description, file)) return;
 
-        Swal.fire({
-            title: '📤 Uploading proof file...',
-            toast: true,
-            position: 'top-end',
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => toast.addEventListener('mouseenter', Swal.stopTimer)
-        });
-
+        showProgressMessage("📤 Uploading proof file...", "info");
         const proofUrl = await uploadFileToImgBB(file);
 
-        Swal.fire({
-            title: '📝 Submitting your task...',
-            toast: true,
-            position: 'top-end',
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => toast.addEventListener('mouseenter', Swal.stopTimer)
-        });
+        showProgressMessage("📝 Submitting your task...", "info");
+        await submitTaskToBackend({ taskId, workerId, description, proofUrl, reviewComment, status: "PENDING" }, token);
 
-        await submitTaskToBackend({
-            taskId,
-            workerId,
-            description,
-            proofUrl,
-            reviewComment,
-            status: "PENDING"
-        }, token);
-
-        Swal.fire({
-            icon: 'success',
-            title: '🎉 Task submitted successfully!',
-            text: "Your work has been submitted for review. You'll be notified once it's approved!",
-            showConfirmButton: false,
-            timer: 4000,
-            position: 'center'
-        });
-
-        setTimeout(() => {
-            window.location.href = "dashboard.html";
-        }, 2000);
-
+        showSuccessMessage("🎉 Task submitted successfully!", "Your work has been submitted for review. You'll be notified once it's approved!");
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 2000);
         closeTaskForm();
         refreshDashboardData(token);
 
     } catch (error) {
         console.error("Task submission error:", error);
-        Swal.fire({
-            icon: 'error',
-            title: '❌ Submission Failed',
-            text: error.message,
-            position: 'top-end',
-            toast: true,
-            timer: 4000,
-            timerProgressBar: true,
-            showConfirmButton: false
-        });
+        showErrorMessage("❌ Submission Failed", error.message);
     } finally {
         submitBtn.prop('disabled', false).text(originalBtnText);
         hideLoadingOverlay();
     }
 });
 
-
-// Validation function
+// --------------------- Form Validation ---------------------
 function validateSubmissionForm(taskId, workerId, description, file) {
     const errors = [];
-
     if (!taskId) errors.push("Task ID is missing");
     if (!workerId) errors.push("User not logged in");
-    // if (!description || description.length < 10) {
-    //     errors.push("Please provide a detailed description (at least 10 characters)");
-    // }
-    if (!file) {
-        errors.push("Please select a proof file to upload");
-    } else {
-        // Validate file type and size
+    if (!description || description.length < 10) errors.push("Please provide a detailed description (at least 10 characters)");
+    if (!file) errors.push("Please select a proof file to upload");
+    else {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        const maxSize = 5 * 1024 * 1024; // 5MB
-
-        if (!allowedTypes.includes(file.type)) {
-            errors.push("Please upload an image file (JPEG, PNG, GIF, or WebP)");
-        }
-        if (file.size > maxSize) {
-            errors.push("File size must be less than 5MB");
-        }
+        const maxSize = 5 * 1024 * 1024;
+        if (!allowedTypes.includes(file.type)) errors.push("Please upload an image file (JPEG, PNG, GIF, or WebP)");
+        if (file.size > maxSize) errors.push("File size must be less than 5MB");
     }
-
     if (errors.length > 0) {
         showErrorMessage("⚠️ Please fix the following issues:", errors.join("<br>• "));
         return false;
     }
-
     return true;
 }
 
-// File upload function
+// --------------------- ImgBB File Upload ---------------------
 async function uploadFileToImgBB(file) {
-    const imgbbApiKey = "b56b8866f0ddb6ccb4adcf435a94347b"; // Replace with your key
+    const imgbbApiKey = "b56b8866f0ddb6ccb4adcf435a94347b";
     const formData = new FormData();
     formData.append("image", file);
 
     try {
-        const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
-        }
-
+        const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, { method: "POST", body: formData });
+        if (!response.ok) throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
         const result = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.error?.message || "Image upload failed");
-        }
-
+        if (!result.success) throw new Error(result.error?.message || "Image upload failed");
         return result.data.url;
-
     } catch (error) {
         throw new Error(`Failed to upload image: ${error.message}`);
     }
 }
 
-// Backend submission function
+// --------------------- Backend Submission ---------------------
 async function submitTaskToBackend(submissionData, token) {
     return new Promise((resolve, reject) => {
         $.ajax({
             url: "http://localhost:8080/submission/create",
             method: "POST",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
+            headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
             data: JSON.stringify(submissionData),
-            timeout: 30000, // 30 second timeout
-            success: function (response) {
+            timeout: 30000,
+            success: function(response) {
+                // ✅ Show alert after successful save
+                alert("✅ Task submitted successfully!");
                 resolve(response);
             },
             error: function (xhr, status, error) {
                 let errorMessage = "Unknown error occurred";
-
                 if (xhr.responseText) {
-                    try {
-                        const errorData = JSON.parse(xhr.responseText);
-                        errorMessage = errorData.message || errorData.error || xhr.responseText;
-                    } catch {
-                        errorMessage = xhr.responseText;
-                    }
-                } else if (status === "timeout") {
-                    errorMessage = "Request timed out. Please try again.";
-                } else if (xhr.status === 401) {
+                    try { errorMessage = JSON.parse(xhr.responseText).message || xhr.responseText; }
+                    catch { errorMessage = xhr.responseText; }
+                } else if (status === "timeout") errorMessage = "Request timed out. Please try again.";
+                else if (xhr.status === 401) {
                     errorMessage = "Session expired. Please login again.";
-                    // Redirect to login after delay
-                    setTimeout(() => {
-                        window.location.href = "login.html";
-                    }, 2000);
-                } else {
-                    errorMessage = `Server error (${xhr.status}): ${error}`;
-                }
+                    setTimeout(() => { window.location.href = "login.html"; }, 2000);
+                } else errorMessage = `Server error (${xhr.status}): ${error}`;
 
                 reject(new Error(errorMessage));
             }
@@ -393,78 +302,48 @@ async function submitTaskToBackend(submissionData, token) {
     });
 }
 
-// UI Helper Functions
+// --------------------- UI Helpers ---------------------
 function showProgressMessage(message, type = "info") {
-    // Remove existing progress messages
     $(".progress-message").remove();
-
     const alertClass = type === "info" ? "alert-info" : "alert-warning";
-    const progressHtml = `
+    const progressHtml = $(`
         <div class="alert ${alertClass} progress-message" style="margin: 15px 0;">
             <div class="d-flex align-items-center">
                 <div class="spinner-border spinner-border-sm me-2" role="status"></div>
                 <span>${message}</span>
             </div>
         </div>
-    `;
-
+    `);
     $("#taskSubmissionForm").prepend(progressHtml);
 }
 
 function showSuccessMessage(title, message) {
-    Swal.fire({
-        icon: 'success',
-        title: title,
-        text: message,
-        toast: true,
-        position: 'top-end',   // you can change position as needed
-        showConfirmButton: false,
-        timer: 3500,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer);
-            toast.addEventListener('mouseleave', Swal.resumeTimer);
-        }
-    });
-
     $(".progress-message").remove();
+    const successHtml = $(`
+        <div class="alert alert-success success-message" style="margin: 15px 0; text-align: center;">
+            <h5>${title}</h5>
+            <p class="mb-0">${message}</p>
+        </div>
+    `);
     $("#taskSubmissionForm").prepend(successHtml);
 }
 
 function showErrorMessage(title, message) {
-    const errorHtml = `
+    $(".progress-message").remove();
+    const errorHtml = $(`
         <div class="alert alert-danger error-message" style="margin: 15px 0;">
             <h6>${title}</h6>
             <div>${message}</div>
         </div>
-    `;
-
-    $(".progress-message").remove();
+    `);
     $("#taskSubmissionForm").prepend(errorHtml);
 }
 
 function showLoadingOverlay() {
     if ($("#loadingOverlay").length === 0) {
         $("body").append(`
-            <div id="loadingOverlay" style="
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            ">
-                <div style="
-                    background: white;
-                    padding: 30px;
-                    border-radius: 10px;
-                    text-align: center;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                ">
+            <div id="loadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+                <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
                     <div class="spinner-border text-primary mb-3" role="status"></div>
                     <h5>Processing your submission...</h5>
                     <p class="text-muted mb-0">Please wait while we upload and submit your work.</p>
@@ -479,126 +358,65 @@ function hideLoadingOverlay() {
 }
 
 function refreshDashboardData(token) {
-    // Reload tasks and submissions
-    if (typeof loadTasks === "function") {
-        loadTasks();
-    }
-
-    if (typeof loadSubmissions === "function") {
-        loadSubmissions(token);
-    }
+    if (typeof loadTasks === "function") loadTasks();
+    if (typeof loadSubmissions === "function") loadSubmissions(token);
 }
 
-
-// Add file preview functionality with enhanced styling
-$("#proofFile").on("change", function() {
+// --------------------- File Preview ---------------------
+$("#proofFile").on("change", function () {
     const file = this.files[0];
     const preview = $("#filePreview");
 
     if (file) {
-        // Validate file type
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
-            Swal.fire({ icon:'error', title:'Invalid File Type', text:'Only JPEG, PNG, GIF, WebP allowed' });
+            showErrorMessage("⚠️ Invalid File Type", "Please select an image file (JPEG, PNG, GIF, or WebP)");
             this.value = '';
             return;
         }
 
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const fileSize = (file.size / 1024 / 1024).toFixed(2);
-            const previewHtml = `
-                <div id="filePreview" style="
-                    margin-top: 15px;
-                    padding: 15px;
-                    border: 2px solid #e2e8f0;
-                    border-radius: 12px;
-                    background: linear-gradient(145deg, #f8fafc, #ffffff);
-                    text-align: center;
-                    position: relative;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-                ">
+            const previewHtml = $(`
+                <div id="filePreview" style="margin-top: 15px; padding: 15px; border: 2px solid #e2e8f0; border-radius: 12px; background: linear-gradient(145deg, #f8fafc, #ffffff); text-align: center; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                     <div style="position: relative; display: inline-block;">
-                        <img src="${e.target.result}" style="
-                            max-width: 250px; 
-                            max-height: 200px; 
-                            border-radius: 8px; 
-                            border: 2px solid #fbbf24;
-                            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                            object-fit: cover;
-                        ">
-                        <button type="button" id="removePreview" style="
-                            position: absolute;
-                            top: -8px;
-                            right: -8px;
-                            background: #ef4444;
-                            color: white;
-                            border: none;
-                            border-radius: 50%;
-                            width: 24px;
-                            height: 24px;
-                            font-size: 12px;
-                            cursor: pointer;
-                            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-                        " title="Remove image">×</button>
+                        <img src="${e.target.result}" style="max-width: 250px; max-height: 200px; border-radius: 8px; border: 2px solid #fbbf24; box-shadow: 0 4px 15px rgba(0,0,0,0.2); object-fit: cover;">
+                        <button type="button" id="removePreview" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3);" title="Remove image">×</button>
                     </div>
                     <div style="margin-top: 10px;">
-                        <p style="
-                            margin: 5px 0;
-                            font-weight: 600;
-                            color: #1f2937;
-                            font-size: 14px;
-                        ">📎 ${file.name}</p>
+                        <p style="margin: 5px 0; font-weight: 600; color: #1f2937; font-size: 14px;">📎 ${file.name}</p>
                         <div style="display: flex; justify-content: center; gap: 15px; margin-top: 8px;">
-                            <span style="
-                                background: #fbbf24;
-                                color: white;
-                                padding: 4px 8px;
-                                border-radius: 6px;
-                                font-size: 12px;
-                                font-weight: 600;
-                            ">📏 ${fileSize} MB</span>
-                            <span style="
-                                background: ${fileSize > 5 ? '#ef4444' : '#10b981'};
-                                color: white;
-                                padding: 4px 8px;
-                                border-radius: 6px;
-                                font-size: 12px;
-                                font-weight: 600;
-                            ">${fileSize > 5 ? '⚠️ Too Large' : '✅ Size OK'}</span>
+                            <span style="background: #fbbf24; color: white; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">📏 ${fileSize} MB</span>
+                            <span style="background: ${fileSize > 5 ? '#ef4444' : '#10b981'}; color: white; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 600;">${fileSize > 5 ? '⚠️ Too Large' : '✅ Size OK'}</span>
                         </div>
                     </div>
                 </div>
-            `;
+            `);
 
-            if (preview.length === 0) {
-                $("#proofFile").after(previewHtml);
-            } else {
-                preview.replaceWith(previewHtml);
-            }
+            if (preview.length === 0) $("#proofFile").after(previewHtml);
+            else preview.replaceWith(previewHtml);
 
-            // Add remove functionality
-            $("#removePreview").on("click", function() {
-                $("#proofFile").val(''); // Clear file input
-                $("#filePreview").remove(); // Remove preview
+            $("#removePreview").on("click", function () {
+                $("#proofFile").val('');
+                $("#filePreview").remove();
             });
 
-            // Show file size warning if too large
-            if (fileSize > 5) Swal.fire({ icon:'warning', title:'File Size Warning', text:'File >5MB may fail to upload' });
+            if (fileSize > 5) {
+                showErrorMessage("⚠️ File Size Warning", "This file is larger than 5MB and may fail to upload. Please consider resizing it.");
+            }
         };
-
         reader.readAsDataURL(file);
     } else {
         $("#filePreview").remove();
     }
 });
 
+// --------------------- Update Task Info in Modal ---------------------
 function updateTaskInfo(task) {
-    // Update title
     const titleEl = document.getElementById("taskTitle");
     if (titleEl) titleEl.textContent = task.title || "Untitled Task";
 
-    // Update description (with steps as list)
     const descEl = document.getElementById("taskDescription");
     if (descEl) {
         let stepsHtml = "";
@@ -608,13 +426,9 @@ function updateTaskInfo(task) {
         descEl.innerHTML = `<p>${task.description || ""}</p>${stepsHtml}`;
     }
 
-    // Update reward with user-friendly formatting
     const rewardEl = document.getElementById("taskReward");
     if (rewardEl) {
-        rewardEl.textContent = task.rewardPerTask != null
-            ? task.rewardPerTask.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
-            : "-";
+        rewardEl.textContent = task.rewardPerTask != null ?
+            task.rewardPerTask.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : "-";
     }
 }
-
-

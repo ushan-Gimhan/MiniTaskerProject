@@ -5,16 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="173b1e01-147c-4058-ac39-00eb520bfb5e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/054c8ee9-50f2-433c-b9ed-7edf049bd222.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/054c8ee9-50f2-433c-b9ed-7edf049bd222.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/repo/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/repo/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/AuthServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/Admin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/Announsment.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/Announsment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/content.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/content.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/dis.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/dis.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/PayOutManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/PayOutManagement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/TaskManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/TaskManagement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/UserManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/UserManagement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/logIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/logIn.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FrontEnd/js/signUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/signUp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/submmisionManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/submmisionManagement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/taskReports.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/AdminDashBoard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/userManagement.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/userManagement.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,11 +30,11 @@
       <list>
         <option value="TypeScript File" />
         <option value="Exception" />
-        <option value="JavaScript File" />
         <option value="CSS File" />
         <option value="HTML File" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -90,6 +94,9 @@
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.service.project.minitasker.dto" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\AAD\Assignment\Assignment\BackEnd\MINITasker\src\main\resources\static" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\AAD\Assignment\Assignment\BackEnd\MINITasker\uploads" />
     </key>
@@ -121,7 +128,7 @@
       <updated>1758040904945</updated>
       <workItem from="1758040906022" duration="207790000" />
       <workItem from="1758510495961" duration="6819000" />
-      <workItem from="1758549378613" duration="16367000" />
+      <workItem from="1758549378613" duration="21097000" />
     </task>
     <servers />
   </component>

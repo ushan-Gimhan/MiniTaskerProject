@@ -88,7 +88,7 @@ async function loadPayouts(token) {
                     ${payout.accountNumber || '-'}
                 </td>
                 <td style="padding:0.75rem; border:1px solid #374151;">
-                    ${payout.status === "PENDING" ? `<button class="update-btn" style="
+                    ${payout.status === "PENDING"  ? `<button class="update-btn" style="
                         background: linear-gradient(135deg, #1173d4 0%, #0ea5e9 100%);
                         color:white; border:none; padding:0.5rem 1rem; border-radius:0.5rem;
                         cursor:pointer; font-weight:500; font-size:0.875rem;">Update</button>` : ''}
@@ -141,7 +141,7 @@ async function updatePayout(token, payoutId, newStatus, payoutAmount, userWallet
         if (userWalletBalance < payoutAmount && newStatus === "APPROVED") {
             alert(`❌ Cannot approve payout. User wallet balance ($${userWalletBalance.toFixed(2)}) is less than payout amount ($${payoutAmount.toFixed(2)}).`);
             setTimeout(() => {
-                window.location.href = "taskReports.html";
+                window.location.href = "AdminDashBoard.html";
             }, 100);
 
 
@@ -167,9 +167,9 @@ async function updatePayout(token, payoutId, newStatus, payoutAmount, userWallet
 
     } catch (err) {
         console.error("❌ Failed to update payout:", err);
-        setTimeout(() => {
-            window.location.href = "taskReports.html";
-        }, 100);
+        // setTimeout(() => {
+        //     window.location.href = "AdminDashBoard.html";
+        // }, 100);
         alert("❌ " + err.message);
     }
 }

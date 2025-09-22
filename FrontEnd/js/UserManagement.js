@@ -83,6 +83,7 @@ async function loadUsers(token) {
                     <button><i class="fas fa-edit"></i></button>
                     <button class="delete-btn"><i class="fas fa-user-slash"></i></button>
                 </td>
+                <td>${user.enabled}</td>
             `;
             tbody.appendChild(tr);
         });

@@ -120,7 +120,7 @@ document.getElementById('signupForm')?.addEventListener('submit', function(e) {
             signupBtn.prop("disabled", false).text("Create Account");
             setTimeout(function() {
                 window.location.href = "LogIn.html"; // replace with your actual login page path
-            }, 1000);
+            }, 3000);
         },
         error: function(xhr) {
             const msg = xhr.responseJSON?.message || "Signup failed. Please try again.";

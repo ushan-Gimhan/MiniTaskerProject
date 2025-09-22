@@ -59,7 +59,7 @@ $(document).ready(function () {
                             timer: 2000,
                             showConfirmButton: false
                         }).then(() => {
-                            window.location.href = "taskReports.html";
+                            window.location.href = "AdminDashBoard.html";
                         });
                     } else if (userRole === "USER") {
                         Swal.fire({
