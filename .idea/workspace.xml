@@ -5,18 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="173b1e01-147c-4058-ac39-00eb520bfb5e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/a917e031-8852-4ba0-831a-3244e0d66f9d.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/a917e031-8852-4ba0-831a-3244e0d66f9d/storage_v2/_src_/schema/minitasker.CTwF9A.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtAuthFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/LogIn.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/LogIn.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/loadNotifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/loadNotifications.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/logIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/logIn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/task.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/AuthServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/Signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/Signup.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/css/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/css/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/HOME.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/signUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/signUp.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +118,7 @@
       <updated>1758040904945</updated>
       <workItem from="1758040906022" duration="207790000" />
       <workItem from="1758510495961" duration="6819000" />
-      <workItem from="1758549378613" duration="6327000" />
+      <workItem from="1758549378613" duration="8804000" />
     </task>
     <servers />
   </component>

@@ -81,10 +81,9 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
         email: document.getElementById('email').value.trim(),
         mobile: document.getElementById('phone').value.trim(),
         password: document.getElementById('password').value,
-        walletBalance:0.00
+        walletBalance: 0.00
     };
 
-    console.log(formData)
     const signupBtn = $("#signupBtn");
     signupBtn.prop("disabled", true).text("Creating...");
 
@@ -94,14 +93,36 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function(response) {
-            showSuccess("Account created successfully! Redirecting...");
-            setTimeout(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Account Created!',
+                text: 'Your account has been created successfully. Redirecting to login...',
+                timer: 2000,
+                timerProgressBar: true,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false
+            }).then(() => {
                 window.location.href = "login.html";
-            }, 1500);
+            });
+
+            // Fallback redirection after timer expires
+            setTimeout(() => window.location.href = "login.html", 2200);
         },
         error: function(xhr) {
             const msg = xhr.responseJSON?.message || "Signup failed. Please try again.";
             showError(msg);
+
+            // Highlight the username field if username already exists
+            const usernameInput = document.getElementById('UserName');
+            if (msg.toLowerCase().includes('username already exists')) {
+                usernameInput.style.border = '2px solid #ef4444';  // Red border
+                usernameInput.style.backgroundColor = '#fee2e2';   // Light red background
+            } else {
+                usernameInput.style.border = '';         // Reset to default
+                usernameInput.style.backgroundColor = ''; // Reset to default
+            }
+
         },
         complete: function() {
             signupBtn.prop("disabled", false).text("Create Account");
@@ -109,15 +130,16 @@ document.getElementById('signupForm').addEventListener('submit', function(e) {
     });
 });
 
-// Helper functions
+// ------------------- SweetAlert2 Helper Functions -------------------
 function showError(msg) {
-    $("#errorMessage").text(msg).fadeIn();
-}
-function showSuccess(msg) {
-    $("#successMessage").text(msg).fadeIn();
-}
-
-// Navigation
-function showLogin() {
-    window.location.href = "login.html";
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: msg,
+        timer: 3000,
+        timerProgressBar: true,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false
+    });
 }

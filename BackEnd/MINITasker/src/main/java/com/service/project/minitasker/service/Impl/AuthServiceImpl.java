@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public String register(RegisterDTO registerDTO) {
         if (userRepository.findByUsername(registerDTO.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new RuntimeException("Username already exists!! Try another User Name");
         }
 
         // 1️⃣ Create user (do not save yet)
