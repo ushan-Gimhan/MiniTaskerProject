@@ -852,7 +852,7 @@
   <nav>
     <ul>
       <li><a href="#" class="active" data-section="user-management"><i class="fas fa-users"></i> <span>User Management</span></a></li>
-      <li><a href="#" data-section="task-reports"><i class="fas fa-clipboard-list"></i> <span>Task Reports</span></a></li>
+      <li><a href="#" data-section="task-reports"><i class="fas fa-clipboard-list"></i> <span>Manage Tasks</span></a></li>
       <li><a href="#" data-section="dispute-resolution"><i class="fas fa-gavel"></i> <span>Worker Submissions</span></a></li>
       <li><a href="#" data-section="paymentsSection"><i class="fas fa-chart-line"></i> <span>Payment Management</span></a></li>
       <li><a href="#" data-section="managePayment"><i class="fas fa-shield-alt"></i> <span>Manage PayOuts</span></a></li>
@@ -1464,57 +1464,6 @@
 </div>
 
 <script>
-  function validateAndLoadDashboard() {
-    let token = localStorage.getItem('jwtToken');
-
-    if (!token) {
-      window.location.href = '/Home.html';
-      return;
-    }
-
-    const tokenParts = token.split('.');
-    if (tokenParts.length !== 3) {
-      window.location.href = '/Home.html';
-      return;
-    }
-
-    try {
-      const tokenPayload = JSON.parse(atob(tokenParts[1]));
-      const currentTimestamp = Math.floor(Date.now() / 1000); // ❌ ඔබේ code එකේ 10000, should be 1000
-
-      if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
-        alert('Session expired. Please login again.');
-        localStorage.removeItem('jwtToken');
-        window.location.href = '/Home.html';
-        return;
-      }
-
-      // ✅ Role check
-      if (tokenPayload.role) {
-        if (tokenPayload.role === 'admin') {
-          console.log('Admin logged in');
-          // admin dashboard logic
-        } else if (tokenPayload.role === 'user') {
-          console.log('User logged in');
-          // user dashboard logic
-        } else {
-          console.warn('Unknown role, redirecting to login');
-          window.location.href = '/Home.html';
-        }
-      } else {
-        console.warn('Role not found in token');
-        window.location.href = '/Home.html';
-      }
-
-    } catch (error) {
-      console.error('Invalid token:', error);
-      window.location.href = '/Home.html';
-    }
-  }
-  document.addEventListener("DOMContentLoaded", function() {
-    validateAndLoadDashboard();
-  });
-  document.addEventListener("DOMContentLoaded", validateAndLoadDashboard);
   // Toggle sidebar functionality
   document.querySelector('.toggle-sidebar').addEventListener('click', function() {
     document.querySelector('.sidebar').classList.toggle('collapsed');

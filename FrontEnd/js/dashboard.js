@@ -1,57 +1,56 @@
-
-function validateAndLoadDashboard() {
-    let token = localStorage.getItem('jwtToken');
-
-    if (!token) {
-        window.location.href = '/Home.html';
-        return;
-    }
-
-    const tokenParts = token.split('.');
-    if (tokenParts.length !== 3) {
-        window.location.href = '/Home.html';
-        return;
-    }
-
-    try {
-        const tokenPayload = JSON.parse(atob(tokenParts[1]));
-        const currentTimestamp = Math.floor(Date.now() / 1000); // ❌ ඔබේ code එකේ 10000, should be 1000
-
-        if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
-            alert('Session expired. Please login again.');
-            localStorage.removeItem('jwtToken');
-            window.location.href = '/Home.html';
-            return;
-        }
-
-        // ✅ Role check
-        if (tokenPayload.role) {
-            if (tokenPayload.role === 'ADMIN') {
-                console.log('Admin logged in');
-                // admin dashboard logic
-            } else if (tokenPayload.role === 'USER') {
-                console.log('User logged in');
-                // user dashboard logic
-            } else {
-                console.warn('Unknown role, redirecting to login');
-                window.location.href = '/Home.html';
-            }
-        } else {
-            console.warn('Role not found in token');
-            window.location.href = '/Home.html';
-        }
-
-    } catch (error) {
-        console.error('Invalid token:', error);
-        window.location.href = '/Home.html';
-    }
-}
+//
+// function validateAndLoadDashboard() {
+//     let token = localStorage.getItem('jwtToken');
+//
+//     if (!token) {
+//         window.location.href = '/Home.html';
+//         return;
+//     }
+//
+//     const tokenParts = token.split('.');
+//     if (tokenParts.length !== 3) {
+//         window.location.href = '/Home.html';
+//         return;
+//     }
+//
+//     try {
+//         const tokenPayload = JSON.parse(atob(tokenParts[1]));
+//         const currentTimestamp = Math.floor(Date.now() / 1000); // ❌ ඔබේ code එකේ 10000, should be 1000
+//
+//         if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
+//             alert('Session expired. Please login again.');
+//             localStorage.removeItem('jwtToken');
+//             window.location.href = '/Home.html';
+//             return;
+//         }
+//
+//         // ✅ Role check
+//         if (tokenPayload.role) {
+//             if (tokenPayload.role === 'ADMIN') {
+//                 console.log('Admin logged in');
+//                 // admin dashboard logic
+//             } else if (tokenPayload.role === 'USER') {
+//                 console.log('User logged in');
+//                 // user dashboard logic
+//             } else {
+//                 console.warn('Unknown role, redirecting to login');
+//                 window.location.href = '/Home.html';
+//             }
+//         } else {
+//             console.warn('Role not found in token');
+//             window.location.href = '/Home.html';
+//         }
+//
+//     } catch (error) {
+//         console.error('Invalid token:', error);
+//         window.location.href = '/Home.html';
+//     }
+// }
 
 
 // --------------------- Check JWT token on page load ---------------------
 window.addEventListener('load', async function () {
     const token = localStorage.getItem('jwtToken');
-    validateAndLoadDashboard();
 
     try {
         const user = await loadUserDetails(token);
@@ -254,7 +253,7 @@ function validateSubmissionForm(taskId, workerId, description, file) {
     const errors = [];
     if (!taskId) errors.push("Task ID is missing");
     if (!workerId) errors.push("User not logged in");
-    if (!description || description.length < 10) errors.push("Please provide a detailed description (at least 10 characters)");
+    // if (!description || description.length < 10) errors.push("Please provide a detailed description (at least 10 characters)");
     if (!file) errors.push("Please select a proof file to upload");
     else {
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];

@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="173b1e01-147c-4058-ac39-00eb520bfb5e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/Wallet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/PayOutServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/PayOutServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/PayOutManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/PayOutManagement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/payout.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/payout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/wallet.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/wallet.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/payOut.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/payOut.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/task.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/AdminDashBoard.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/AdminDashBoard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +124,7 @@
       <workItem from="1758040906022" duration="207790000" />
       <workItem from="1758510495961" duration="6819000" />
       <workItem from="1758549378613" duration="28749000" />
-      <workItem from="1758579930988" duration="17841000" />
+      <workItem from="1758579930988" duration="19794000" />
     </task>
     <servers />
   </component>
