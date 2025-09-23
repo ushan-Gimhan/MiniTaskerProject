@@ -1,5 +1,6 @@
 // --------------------- Load Submissions List with Update ---------------------
 async function loadSubmissions(token) {
+    token=localStorage.getItem('jwtToken');
     try {
         const res = await fetch("http://localhost:8080/submission/getAll", {
             method: "GET",
@@ -83,6 +84,7 @@ async function loadSubmissions(token) {
 
                 statusCell.querySelector(".save-status-btn").addEventListener("click", async () => {
                     const newStatus = statusCell.querySelector("select").value;
+                    token=localStorage.getItem('jwtToken');
 
                     try {
                         const updateRes = await fetch(`http://localhost:8080/submission/${sub.id}/status?currentStatus=${newStatus}`, {
