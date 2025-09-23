@@ -5,28 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="173b1e01-147c-4058-ac39-00eb520bfb5e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/054c8ee9-50f2-433c-b9ed-7edf049bd222.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/054c8ee9-50f2-433c-b9ed-7edf049bd222.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/config/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/config/ApplicationConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/dto/TaskResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/dto/TaskResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/Payout.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/Payout.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/Wallet.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/entity/Wallet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/PayOutServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/service/Impl/PayOutServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtAuthFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtAuthFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/BackEnd/MINITasker/src/main/java/com/service/project/minitasker/util/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/AdminDashBoard.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/AdminDashBoard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/LogIn.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/LogIn.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FrontEnd/js/PayOutManagement.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/PayOutManagement.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/dashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/loadNotifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/loadNotifications.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/loadPayments.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/loadPayments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/logIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/logIn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/payment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FrontEnd/js/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/payout.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/payout.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/js/wallet.js" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/js/wallet.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd/payOut.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/payOut.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FrontEnd/task.html" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd/task.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -144,7 +130,7 @@
       <workItem from="1758040906022" duration="207790000" />
       <workItem from="1758510495961" duration="6819000" />
       <workItem from="1758549378613" duration="28749000" />
-      <workItem from="1758579930988" duration="13125000" />
+      <workItem from="1758579930988" duration="17841000" />
     </task>
     <servers />
   </component>

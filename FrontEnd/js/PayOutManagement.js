@@ -1,38 +1,3 @@
-function validateAndLoadDashboard() {
-    let token = localStorage.getItem('jwtToken');
-
-    if (!token) {
-        window.location.href = 'Home.html';
-        return;
-    }
-
-    const tokenParts = token.split('.');
-
-    if (tokenParts.length !== 3) {
-        window.location.href = 'Home.html';
-        return;
-    }
-
-    try {
-        const tokenPayload = JSON.parse(atob(tokenParts[1]));
-
-        const currentTimestamp = Math.floor(Date.now() / 10000);
-
-
-        if (tokenPayload.exp && currentTimestamp >= tokenPayload.exp) {
-            alert('Session expired. Please login again.');
-            localStorage.removeItem('jwtToken');
-            window.location.href = '.Home.html';
-            return;
-        }
-
-
-    } catch (error) {
-        console.error('Invalid token:', error);
-        window.location.href = 'Home.html';
-    }
-}
-
 // --------------------- On Page Load ---------------------
 window.addEventListener('load', async function () {
     const token = localStorage.getItem('jwtToken');
@@ -219,5 +184,3 @@ document.querySelector("#payout-search-input")?.addEventListener("input", functi
         row.style.display = user.includes(searchTerm) ? "" : "none";
     });
 });
-
-

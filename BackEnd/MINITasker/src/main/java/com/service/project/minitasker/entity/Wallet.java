@@ -27,10 +27,10 @@ public class Wallet {
     @JsonManagedReference
     private User user;
 
-//    public void setUser(User user) {
-//        this.user = user;
-//        if (user.getWallet() != this) {
-//            user.setWallet(this);
-//        }
-//    }
+    public void setUser(User user) {
+        this.user = user;
+        if (user.getWallet() != this) {
+            user.setWallet(this);
+        }
+    }
 }

@@ -3,6 +3,7 @@ let currentBalance = 12500;
 
 // --------------------- Load User Details ---------------------
 async function loadUserDetails(token) {
+    token = localStorage.getItem('jwtToken');
     const response = await fetch("http://localhost:8080/auth/user", {
         method: "GET",
         headers: {
@@ -25,7 +26,7 @@ async function loadUserBalance(token) {
         const user = await loadUserDetails(token);
 
         // Assuming user.wallet.balance contains the balance
-        const balance = user.wallet?.balance || 0;
+        const balance = user.walletBalance;
         currentBalance=balance;
 
 
@@ -384,7 +385,10 @@ async function submitWithdrawal() {
     try {
         const response = await fetch('http://localhost:8080/payouts/create', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // ✅ Add JWT here
+            },
             body: JSON.stringify(payload)
         });
 

@@ -48,22 +48,25 @@ public class PayOutServiceImpl implements PayOutService {
         }
 
         User user = payout.getUser();
-        Wallet wallet = user.getWallet();
-        user.setWalletBalance(user.getWalletBalance()-payout.getAmount());
 
-        // Check if wallet has enough balance
-        if (wallet.getBalance() < payout.getAmount()) {
-            throw new InsufficientBalanceException("Insufficient wallet balance to create payout.");
+        // Check if user has enough wallet balance
+        if (user.getWalletBalance() < payout.getAmount()) {
+            throw new InsufficientBalanceException(
+                    "Insufficient wallet balance to create payout."
+            );
         }
 
-        // Deduct wallet balance immediately
-        wallet.setBalance(wallet.getBalance() - payout.getAmount());
-        walletRepository.save(wallet);
+        // Deduct balance from user's walletBalance field
+        user.setWalletBalance(user.getWalletBalance() - payout.getAmount());
 
+        // Save user to persist the updated walletBalance
+        userRepository.save(user);
 
         // Save the payout itself
         return payOutRepository.save(payout);
     }
+
+
 
     @Override
     public Payout updateStatus(Long id, String status) {

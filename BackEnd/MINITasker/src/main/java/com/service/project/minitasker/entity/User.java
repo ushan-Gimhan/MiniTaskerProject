@@ -35,10 +35,10 @@ public class User {
     @JsonBackReference
     private Wallet wallet;
 
-//    public void setWallet(Wallet wallet) {
-//        this.wallet = wallet;
-//        if (wallet.getUser() != this) {
-//            wallet.setUser(this);
-//        }
-//    }
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+        if (wallet.getUser() != this) {
+            wallet.setUser(this);
+        }
+    }
 }
