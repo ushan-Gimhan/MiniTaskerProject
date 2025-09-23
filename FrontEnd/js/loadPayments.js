@@ -41,8 +41,23 @@ async function loadPayments() {
         const currentUser = await loadUserByToken();
 
         // 2️⃣ Get all payments
-        const res = await fetch(paymentsApiURL + "/getAll");
+        const token = localStorage.getItem("jwtToken"); // get JWT token
+
+        const res = await fetch(paymentsApiURL + "/getAll", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` // send token
+            }
+        });
+
+        if (!res.ok) {
+            throw new Error(`Failed to fetch payments: ${res.status}`);
+        }
+
         const data = await res.json();
+        console.log("Payments data:", data);
+
 
         // 3️⃣ Unwrap data safely
         const payments = Array.isArray(data) ? data : (data.data || []);

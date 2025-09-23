@@ -41,15 +41,31 @@ public class PayOutServiceImpl implements PayOutService {
     }
 
     @Override
+    @Transactional
     public Payout createPayout(Payout payout) {
         if (payout.getStatus() == null) {
             payout.setStatus("PENDING");
         }
+
+        User user = payout.getUser();
+        Wallet wallet = user.getWallet();
+        user.setWalletBalance(user.getWalletBalance()-payout.getAmount());
+
+        // Check if wallet has enough balance
+        if (wallet.getBalance() < payout.getAmount()) {
+            throw new InsufficientBalanceException("Insufficient wallet balance to create payout.");
+        }
+
+        // Deduct wallet balance immediately
+        wallet.setBalance(wallet.getBalance() - payout.getAmount());
+        walletRepository.save(wallet);
+
+
+        // Save the payout itself
         return payOutRepository.save(payout);
     }
 
     @Override
-    @Transactional
     public Payout updateStatus(Long id, String status) {
         Payout payout = getPayoutById(id); // fetch existing payout
         String previousStatus = payout.getStatus();
@@ -59,29 +75,7 @@ public class PayOutServiceImpl implements PayOutService {
             return payout; // nothing to do
         }
 
-        // If approving payout, check wallet balance first
-        if ("APPROVED".equalsIgnoreCase(status)) {
-            User user = payout.getUser();
-
-            Wallet wallet = user.getWallet();
-
-            if (wallet.getBalance() < payout.getAmount()) {
-                throw new InsufficientBalanceException("Insufficient wallet balance for payout.");
-            }
-
-            // Deduct amount
-            wallet.setBalance(wallet.getBalance() - payout.getAmount());
-            walletRepository.save(wallet);
-
-            // Create notification
-            Notification notification = new Notification();
-            notification.setUser(user);
-            notification.setMessage("Your payout of $" + payout.getAmount() + " has been approved and deducted from your wallet.");
-            notification.setTimestamp(String.valueOf(LocalDateTime.now()));
-            notifyRepository.save(notification);
-        }
-
-        // Update payout status
+        // ✅ Just update the status without touching wallet or notifications
         payout.setStatus(status);
         return payOutRepository.save(payout);
     }

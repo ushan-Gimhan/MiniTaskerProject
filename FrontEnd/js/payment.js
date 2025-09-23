@@ -383,63 +383,64 @@ document.getElementById('successModal').addEventListener('click', function(e) {
 
 let selectedMethod = "balance"; // or 'card', 'paypal', etc. depending on selection
 
-function verifyOTP() {
+async function verifyOTP() {
     const otpInputs = document.querySelectorAll(".otp-input");
     const enteredOTP = Array.from(otpInputs).map(inp => inp.value).join("");
 
     const demoOTP = "123456"; // Demo OTP
 
     if (enteredOTP === demoOTP) {
-        // ---------------- Get pending job data ----------------
+        // Get pending job data
         const jobData = JSON.parse(sessionStorage.getItem("pendingJobData"));
         if (!jobData) {
             alert("No job data found!");
             return;
         }
-        console.log(selectedMethod);
-        // Add payments array
+
+        // Only e-wallet payment
         jobData.payments = [
             {
-                method: selectedMethod, // e.g., "balance" or "card"
+                method: "e-wallet",
                 amount: parseFloat(sessionStorage.getItem("paymentTotal")) || 0,
                 date: new Date().toISOString()
             }
         ];
 
-        console.log("Job data with payments:", jobData);
-
-        // ---------------- AJAX call to save the job ----------------
-        fetch("http://localhost:8080/task/create", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(jobData)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data && (data.success || data.id)) {
-                    // Clear pending data
-                    sessionStorage.removeItem("pendingJobData");
-                    sessionStorage.removeItem("paymentTotal");
-
-                    // Close OTP modal and show success
-                    document.getElementById("otpModal").style.display = "none";
-                    document.getElementById("successModal").style.display = "flex";
-                } else {
-                    document.getElementById("otpError").style.display = "block";
-                    document.getElementById("otpError").textContent = "Payment succeeded, but saving task failed.";
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById("otpError").style.display = "block";
-                document.getElementById("otpError").textContent = "Error connecting to server.";
+        const token = localStorage.getItem("jwtToken");
+        try {
+            const response = await fetch("http://localhost:8080/task/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(jobData)
             });
+
+            if (!response.ok) throw new Error(`Server error ${response.status}`);
+
+            const data = await response.json();
+            console.log("Server response:", data);
+
+            // ✅ On success, redirect to task.html
+            alert("Jon Create Successfully!!!");
+            sessionStorage.clear();
+            window.location.href = "task.html";
+
+        } catch (err) {
+            console.error("Error saving task:", err);
+            const otpError = document.getElementById("otpError");
+            otpError.style.display = "block";
+            otpError.textContent = "Error connecting to server.";
+        }
     } else {
-        // Show OTP error
-        document.getElementById("otpError").style.display = "block";
-        document.getElementById("otpError").textContent = "Invalid OTP. Enter 123456 for demo.";
+        const otpError = document.getElementById("otpError");
+        otpError.style.display = "block";
+        otpError.textContent = "Invalid OTP. Enter 123456 for demo.";
     }
 }
+
+
 function GotoOTPModal(){
     window.location.href = "task.html";
 }

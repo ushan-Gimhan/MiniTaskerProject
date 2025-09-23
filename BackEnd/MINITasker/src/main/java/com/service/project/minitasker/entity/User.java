@@ -1,7 +1,7 @@
 package com.service.project.minitasker.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,8 +11,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,13 +25,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role; // WORKER, CLIENT, ADMIN
 
-    private Double walletBalance = 0.0;
-
-    // 🟢 Instead of balance here, link to Wallet
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private Wallet wallet;
-
     private boolean enabled;
 
+    private Double walletBalance = 0.0;
+
+    // User now owns the relationship
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "wallet_id") // <-- foreign key in User table now
+    @JsonBackReference
+    private Wallet wallet;
+
+//    public void setWallet(Wallet wallet) {
+//        this.wallet = wallet;
+//        if (wallet.getUser() != this) {
+//            wallet.setUser(this);
+//        }
+//    }
 }

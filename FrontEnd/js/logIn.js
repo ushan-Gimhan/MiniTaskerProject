@@ -1,3 +1,4 @@
+
 // ---------------- Password toggle ----------------
 function togglePassword() {
     const passwordInput = document.getElementById('password');

@@ -13,10 +13,12 @@ public class TaskResponse {
     private String title;
     private String status;
     private String message;
+    private Task task;
 
-    public TaskResponse(Long i, String ok, Task task) {
-        this.id=i;
+    public TaskResponse(long l, String ok, Task createdTask) {
+        this.id=l;
         this.title=ok;
         this.status=ok;
+        this.task=createdTask;
     }
 }

@@ -35,8 +35,14 @@ async function loadUserNotifications() {
         const user = await getCurrentUser();
         if (!user) return showEmptyState("Please log in to view notifications");
 
-        const res = await fetch(`http://localhost:8080/notify/user/${user.id}`);
+        const token = localStorage.getItem("jwtToken");
+        const res = await fetch(`http://localhost:8080/notify/user/${user.id}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
         if (!res.ok) throw new Error("Failed to fetch notifications");
+
 
         const responseData = await res.json();
         const notifications = responseData.data || [];

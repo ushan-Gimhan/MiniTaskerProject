@@ -199,7 +199,13 @@ if (profileForm.length) {
                     profileData.profile = data;
                     profileData.avatar = data.avatar;
 
-                    showMessage(`Profile ${endpoint}d successfully!`, "success");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Saved!',
+                        text: 'Changes have been saved successfully.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
 
                     // Update sidebar
                     sidebarName.text(data.fullName);

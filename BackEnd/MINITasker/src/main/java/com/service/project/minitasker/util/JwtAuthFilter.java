@@ -1,3 +1,4 @@
+
 package com.service.project.minitasker.util;
 
 import jakarta.servlet.FilterChain;
@@ -25,44 +26,34 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        try {
-            String header = request.getHeader("Authorization");
 
-            if (header != null && header.startsWith("Bearer ")) {
-                String token = header.substring(7);
-
-                String username = jwtUtil.extractUsername(token); // may throw exceptions
-
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-                    if (jwtUtil.validateToken(token, userDetails)) {
-                        UsernamePasswordAuthenticationToken auth =
-                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                    }
-                }
-            }
-
+        final String authHeader = request.getHeader("Authorization");
+        final String jwtToken;
+        final String username;
+        if (authHeader==null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-
-        } catch (io.jsonwebtoken.MalformedJwtException ex) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\":\"Invalid JWT format\"}");
-        } catch (io.jsonwebtoken.ExpiredJwtException ex) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\":\"JWT expired\"}");
-        } catch (io.jsonwebtoken.SignatureException ex) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\":\"Invalid JWT signature\"}");
-        } catch (Exception ex) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"error\":\"Authentication failed: " + ex.getMessage() + "\"}");
+            return;
         }
+        jwtToken = authHeader.substring(7);
+        username=jwtUtil.extractUsername(jwtToken);
+        if (username!=null && SecurityContextHolder.getContext()
+                .getAuthentication()==null) {
+            UserDetails userDetails=userDetailsService
+                    .loadUserByUsername(username);
+            if (jwtUtil.validateToken(jwtToken)){
+                UsernamePasswordAuthenticationToken authToken
+                        =new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        filterChain.doFilter(request, response);
     }
-
 }

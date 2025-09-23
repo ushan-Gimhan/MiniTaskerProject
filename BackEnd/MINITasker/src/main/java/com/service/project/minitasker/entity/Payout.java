@@ -27,4 +27,8 @@ public class Payout {
     private String branch;
     private String requestedAt;
     private String processedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "wallet_id")
+    private Wallet wallet;
 }

@@ -1,0 +1,43 @@
+package com.service.project.minitasker.entity;
+
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // The task that this payment is for
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", nullable = false)
+    @JsonBackReference
+    private Task task;
+
+    // The user who made the payment
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private User user;
+
+    // Payment amount
+    @Column(nullable = false)
+    private double amount;
+
+    // Payment method (balance, card, paypal, etc.)
+    @Column(nullable = false)
+    private String method;
+
+    private LocalDateTime date;
+}
