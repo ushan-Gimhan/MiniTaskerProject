@@ -860,7 +860,10 @@
     </ul>
   </nav>
   <div class="logout">
-    <a href="Home.html"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+    <a href="#" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </a>
   </div>
 </aside>
 
@@ -1464,8 +1467,40 @@
 </div>
 
 <script>
+
+  document.addEventListener("DOMContentLoaded", () => validateAndLoadDashboard(['ADMIN', 'USER'])); // set allowed roles
+
+  function validateAndLoadDashboard(allowedRoles = []) {
+    let token = localStorage.getItem('jwtToken');
+
+    if (!token) {
+      console.log('No token found.');
+    } else {
+      try {
+        const tokenParts = token.split('.');
+        if (tokenParts.length !== 3) throw new Error('Invalid token format');
+
+        // Decode the payload (middle part of JWT)
+        const tokenPayload = JSON.parse(atob(tokenParts[1]));
+
+        // Extract role
+        const role = tokenPayload.role;
+        console.log('User role:', role);
+
+        // Example check
+        if (role === 'ADMIN') {
+          console.log('Access granted for role:', role);
+        } else {
+          console.log('Access denied for role:', role);
+          window.location.href = 'Home.html';
+        }
+      } catch (err) {
+        console.error('Failed to decode token:', err);
+      }
+    }
+  }
   // Toggle sidebar functionality
-  document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+  document.querySelector('.toggle-sidebar').addEventListener('click', function () {
     document.querySelector('.sidebar').classList.toggle('collapsed');
     document.querySelector('.main-content').classList.toggle('expanded');
 
@@ -1479,7 +1514,7 @@
 
   // Section navigation
   document.querySelectorAll('.sidebar nav ul li a').forEach(link => {
-    link.addEventListener('click', function(e) {
+    link.addEventListener('click', function (e) {
       e.preventDefault();
 
       // Remove active class from all links
@@ -1502,6 +1537,7 @@
       }
     });
   });
+
   async function loadUserProfile() {
     const profileDiv = document.getElementById("userProfile");
     if (!profileDiv) return console.error("User profile div not found");
@@ -1511,7 +1547,7 @@
 
     try {
       const res = await fetch("http://localhost:8080/auth/user", {
-        headers: { "Authorization": `Bearer ${token}` }
+        headers: {"Authorization": `Bearer ${token}`}
       });
       if (!res.ok) throw new Error("Failed to fetch user");
 
@@ -1526,6 +1562,15 @@
   }
 
   document.addEventListener("DOMContentLoaded", loadUserProfile);
+
+    function logout() {
+    localStorage.clear(); // Clear all saved tokens or user data
+    window.location.href = 'Home.html'; // Redirect to Home page
+  }
+
+
+
+
 
 
 
